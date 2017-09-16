@@ -31,16 +31,7 @@ func TestLogSets_GetLogSets(t *testing.T) {
 		},
 	}
 
-	requestMatcher := testutils.RequestMatcher{
-		ExpectedRequest: testutils.ExpectedRequest {
-			HttpMethod: http.MethodGet,
-			Url: "/management/logsets",
-		},
-		Response: &logSetCollection{
-			expectedLogSets,
-		},
-	}
-
+	requestMatcher := testutils.NewRequestMatcher(http.MethodGet, "/management/logsets", nil, &logSetCollection{expectedLogSets,})
 	logSets := getLogSetsClient(requestMatcher)
 
 	returnedLogSets, err := logSets.GetLogSets()
@@ -68,15 +59,8 @@ func TestLogSets_GetLogSet(t *testing.T) {
 			},
 	}
 
-	requestMatcher := testutils.RequestMatcher{
-		ExpectedRequest: testutils.ExpectedRequest {
-			HttpMethod: http.MethodGet,
-			Url: fmt.Sprintf("/management/logset/%s", expectedLogSet.Id),
-		},
-		Response: &getLogSet{
-			expectedLogSet,
-		},
-	}
+	url := fmt.Sprintf("/management/logsets/%s", expectedLogSet.Id)
+	requestMatcher := testutils.NewRequestMatcher(http.MethodGet, url, nil, &getLogSet{expectedLogSet,})
 
 	logSets := getLogSetsClient(requestMatcher)
 
@@ -118,17 +102,7 @@ func TestLogSets_PostLogSet(t *testing.T) {
 		UserData: UserData{},
 	}
 
-	requestMatcher := testutils.RequestMatcher{
-		ExpectedRequest: testutils.ExpectedRequest {
-			HttpMethod: http.MethodPost,
-			Url: "/management/logsets",
-			Payload: postLogSet,
-		},
-		Response: &getLogSet{
-			expectedLogSet,
-		},
-	}
-
+	requestMatcher := testutils.NewRequestMatcher(http.MethodPost, "/management/logsets", postLogSet, &getLogSet{expectedLogSet,})
 	logSets := getLogSetsClient(requestMatcher)
 
 	returnedLogSet, err := logSets.PostLogSet(postLogSet)
@@ -137,7 +111,7 @@ func TestLogSets_PostLogSet(t *testing.T) {
 
 }
 
-func getLogSetsClient(requestMatcher testutils.RequestMatcher) LogSets {
+func getLogSetsClient(requestMatcher testutils.TestRequestMatcher) LogSets {
 	c := getTestClient(requestMatcher)
 	return LogSets{c}
 }
