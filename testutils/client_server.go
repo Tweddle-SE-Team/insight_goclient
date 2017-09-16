@@ -16,11 +16,12 @@ func (t *TestClientServer) matchRequest(w http.ResponseWriter, r *http.Request) 
 	if err := t.RequestMatcher.match(r); err != nil {
 		return err
 	} else {
-		resp, err := json.Marshal(t.RequestMatcher.Response)
+		resp, err := json.Marshal(t.RequestMatcher.Response.Payload)
 		if err != nil {
 			return fmt.Errorf("ERROR THROWN WHILE MARHSALING THE MOCK RESPONSE [%s] - Error: %s", resp, err)
 		}
 		if resp != nil {
+			w.WriteHeader(t.RequestMatcher.Response.HttpStatusCode)
 			w.Write([]byte(resp))
 		}
 		return nil

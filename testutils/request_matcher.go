@@ -13,19 +13,24 @@ type ExpectedRequest struct {
 	Payload interface{}
 }
 
-type TestRequestMatcher struct {
-	ExpectedRequest ExpectedRequest
-	Response interface{}
+type Response struct {
+	HttpStatusCode int
+	Payload interface{}
 }
 
-func NewRequestMatcher(expectedHttpMethod, expectedPath string, expectedPayload interface{}, response interface{}) TestRequestMatcher {
+type TestRequestMatcher struct {
+	ExpectedRequest ExpectedRequest
+	Response Response
+}
+
+func NewRequestMatcher(expectedHttpMethod, expectedPath string, expectedPayload interface{}, responseStatusCode int, response interface{}) TestRequestMatcher {
 	return 	TestRequestMatcher{
 		ExpectedRequest: ExpectedRequest {
 			HttpMethod: expectedHttpMethod,
 			Url:        expectedPath,
 			Payload:    expectedPayload,
 		},
-		Response: response,
+		Response: Response{responseStatusCode, response,},
 	}
 }
 

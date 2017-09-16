@@ -31,7 +31,7 @@ func TestLogSets_GetLogSets(t *testing.T) {
 		},
 	}
 
-	requestMatcher := testutils.NewRequestMatcher(http.MethodGet, "/management/logsets", nil, &logSetCollection{expectedLogSets,})
+	requestMatcher := testutils.NewRequestMatcher(http.MethodGet, "/management/logsets", nil, http.StatusOK, &logSetCollection{expectedLogSets,})
 	logSets := getLogSetsClient(requestMatcher)
 
 	returnedLogSets, err := logSets.GetLogSets()
@@ -60,7 +60,7 @@ func TestLogSets_GetLogSet(t *testing.T) {
 	}
 
 	url := fmt.Sprintf("/management/logsets/%s", expectedLogSet.Id)
-	requestMatcher := testutils.NewRequestMatcher(http.MethodGet, url, nil, &getLogSet{expectedLogSet,})
+	requestMatcher := testutils.NewRequestMatcher(http.MethodGet, url, nil, http.StatusOK, &getLogSet{expectedLogSet,})
 
 	logSets := getLogSetsClient(requestMatcher)
 
@@ -102,7 +102,7 @@ func TestLogSets_PostLogSet(t *testing.T) {
 		UserData: UserData{},
 	}
 
-	requestMatcher := testutils.NewRequestMatcher(http.MethodPost, "/management/logsets", postLogSet, &getLogSet{expectedLogSet,})
+	requestMatcher := testutils.NewRequestMatcher(http.MethodPost, "/management/logsets", postLogSet, http.StatusCreated ,&getLogSet{expectedLogSet,})
 	logSets := getLogSetsClient(requestMatcher)
 
 	returnedLogSet, err := logSets.PostLogSet(postLogSet)
@@ -153,7 +153,7 @@ func TestLogSets_PutLogSet(t *testing.T) {
 	}
 
 	url := fmt.Sprintf("/management/logsets/%s", logSetId)
-	requestMatcher := testutils.NewRequestMatcher(http.MethodPut, url, putLogSet, &getLogSet{expectedLogSet,})
+	requestMatcher := testutils.NewRequestMatcher(http.MethodPut, url, putLogSet, http.StatusOK, &getLogSet{expectedLogSet,})
 	logSets := getLogSetsClient(requestMatcher)
 
 	returnedLogSet, err := logSets.PutLogSet(logSetId, putLogSet)
@@ -161,6 +161,18 @@ func TestLogSets_PutLogSet(t *testing.T) {
 	assert.EqualValues(t, expectedLogSet, returnedLogSet)
 
 }
+
+func TestLogSets_DeleteLogSet(t *testing.T) {
+	logSetId := "log-set-uuid"
+
+	url := fmt.Sprintf("/management/logsets/%s", logSetId)
+	requestMatcher := testutils.NewRequestMatcher(http.MethodDelete, url, nil, http.StatusNoContent, nil)
+	logSets := getLogSetsClient(requestMatcher)
+
+	err := logSets.DeleteLogSet(logSetId)
+	assert.Nil(t, err)
+}
+
 
 func getLogSetsClient(requestMatcher testutils.TestRequestMatcher) LogSets {
 	c := getTestClient(requestMatcher)

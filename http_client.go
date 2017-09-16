@@ -3,7 +3,6 @@ package logentries_goclient
 import (
 	"net/http"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"bytes"
 )
@@ -36,6 +35,14 @@ func (httpClient *HttpClient) Put(url string, headers map[string]string, in inte
 	}
 }
 
+func (httpClient *HttpClient) Delete(url string, headers map[string]string) (*http.Response, error) {
+	if req, err := httpClient.prepareRequest(http.MethodDelete, url, headers, nil); err != nil {
+		return nil, err
+	} else {
+		return httpClient.performRequest(req, nil)
+	}
+}
+
 func (httpClient *HttpClient) prepareRequest(method, url string, headers map[string]string, in interface{}) (*http.Request, error) {
 
 	var body []byte
@@ -63,10 +70,6 @@ func (httpClient *HttpClient) performRequest(request *http.Request, out interfac
 
 	if err != nil {
 		return nil, err
-	}
-
-	if resp.StatusCode != http.StatusOK  && resp.StatusCode != http.StatusCreated  {
-		return nil, fmt.Errorf("[StatusCode=%s] Response %s", resp.StatusCode, resp)
 	}
 
 	if out != nil {

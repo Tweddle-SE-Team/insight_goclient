@@ -1,6 +1,8 @@
 package logentries_goclient
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type LogSets struct {
 	Client *client `json:"-"`
@@ -65,7 +67,7 @@ func (l *LogSets) getPath() string {
 
 func (l *LogSets) GetLogSets() ([]LogSet, error) {
 	logSets := &logSetCollection{}
-	if _, err := l.Client.get(l.getPath(), logSets); err != nil {
+	if err := l.Client.get(l.getPath(), logSets); err != nil {
 		return nil, err
 	}
 	return logSets.LogSets, nil
@@ -75,7 +77,7 @@ func (l *LogSets) GetLogSet(id string) (LogSet, error) {
 	logSetEndPoint := fmt.Sprintf("%s/%s", l.getPath(), id)
 
 	logSet := &getLogSet{}
-	if _, err := l.Client.get(logSetEndPoint, logSet); err != nil {
+	if err := l.Client.get(logSetEndPoint, logSet); err != nil {
 		return LogSet{}, err
 	}
 	return logSet.LogSet, nil
@@ -83,7 +85,7 @@ func (l *LogSets) GetLogSet(id string) (LogSet, error) {
 
 func (l *LogSets) PostLogSet(postLogSet PostLogSet) (LogSet, error) {
 	logSet := &getLogSet{}
-	if _, err := l.Client.post(l.getPath(), postLogSet, logSet); err != nil {
+	if err := l.Client.post(l.getPath(), postLogSet, logSet); err != nil {
 		return LogSet{}, err
 	}
 	return logSet.LogSet, nil
@@ -92,8 +94,17 @@ func (l *LogSets) PostLogSet(postLogSet PostLogSet) (LogSet, error) {
 func (l *LogSets) PutLogSet(logSetId string, putLogSet PutLogSet) (LogSet, error) {
 	logSetEndPoint := fmt.Sprintf("%s/%s", l.getPath(), logSetId)
 	logSet := &getLogSet{}
-	if _, err := l.Client.put(logSetEndPoint, putLogSet, logSet); err != nil {
+	if err := l.Client.put(logSetEndPoint, putLogSet, logSet); err != nil {
 		return LogSet{}, err
 	}
 	return logSet.LogSet, nil
+}
+
+func (l *LogSets) DeleteLogSet(logSetId string) (error) {
+	logSetEndPoint := fmt.Sprintf("%s/%s", l.getPath(), logSetId)
+	var err error
+	if err = l.Client.delete(logSetEndPoint); err != nil {
+		return err
+	}
+	return nil
 }
