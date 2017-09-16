@@ -5,6 +5,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"fmt"
 	"reflect"
+	"net/http"
+	"github.com/dikhan/logentries_goclient/testutils"
 )
 
 func TestLogSets_GetLogSets(t *testing.T) {
@@ -29,31 +31,17 @@ func TestLogSets_GetLogSets(t *testing.T) {
 		},
 	}
 
-	mockLogSetResponse := fmt.Sprintf(`{
-    "logsets": [
-        {
-			"id": "%s",
-			"name": "%s",
-            "description": "%s",
-            "logs_info": [
-                {
-                    "id": "%s",
-					"name": "%s",
-                    "links": [
-                        {
-                            "href": "%s",
-                            "rel": "%s"
-                        }
-                    ]
-                }
-			],
-            "user_data": {}
-		}
-	]}`, expectedLogSets[0].Id, expectedLogSets[0].Name, expectedLogSets[0].Description,
-		expectedLogSets[0].LogsInfo[0].Id, expectedLogSets[0].LogsInfo[0].Name,
-			expectedLogSets[0].LogsInfo[0].Links[0].Href, expectedLogSets[0].LogsInfo[0].Links[0].Rel)
+	requestMatcher := testutils.RequestMatcher{
+		ExpectedRequest: testutils.ExpectedRequest {
+			HttpMethod: http.MethodGet,
+			Url: "/management/logsets",
+		},
+		Response: &logSetCollection{
+			expectedLogSets,
+		},
+	}
 
-	logSets := getLogSetsClient("/management/logsets", mockLogSetResponse)
+	logSets := getLogSetsClient(requestMatcher)
 
 	returnedLogSets, err := logSets.GetLogSets()
 	assert.Nil(t, err)
@@ -80,31 +68,17 @@ func TestLogSets_GetLogSet(t *testing.T) {
 			},
 	}
 
-	mockLogSetResponse := fmt.Sprintf(
-		`{
-			"logset": {
-				"id": "%s",
-				"name": "%s",
-				"description": "%s",
-				"user_data": {},
-				"logs_info": [
-					{
-						"id": "%s",
-						"name": "%s",
-						"links": [
-							{
-								"href": "%s",
-								"rel": "%s"
-							}
-						]
-					}
-				]
-			}
-		}`, expectedLogSet.Id, expectedLogSet.Name, expectedLogSet.Description, expectedLogSet.LogsInfo[0].Id,
-			expectedLogSet.LogsInfo[0].Name, expectedLogSet.LogsInfo[0].Links[0].Href, expectedLogSet.LogsInfo[0].Links[0].Rel)
+	requestMatcher := testutils.RequestMatcher{
+		ExpectedRequest: testutils.ExpectedRequest {
+			HttpMethod: http.MethodGet,
+			Url: fmt.Sprintf("/management/logset/%s", expectedLogSet.Id),
+		},
+		Response: &getLogSet{
+			expectedLogSet,
+		},
+	}
 
-
-	logSets := getLogSetsClient(fmt.Sprintf("/management/logsets/%s", expectedLogSet.Id), mockLogSetResponse)
+	logSets := getLogSetsClient(requestMatcher)
 
 	returnedLogSet, err := logSets.GetLogSet(expectedLogSet.Id)
 	assert.Nil(t, err)
@@ -144,31 +118,18 @@ func TestLogSets_PostLogSet(t *testing.T) {
 		UserData: UserData{},
 	}
 
-	mockLogSetResponse := fmt.Sprintf(
-		`{
-			"logset": {
-				"id": "%s",
-				"name": "%s",
-				"description": "%s",
-				"user_data": {},
-				"logs_info": [
-					{
-						"id": "%s",
-						"name": "%s",
-						"links": [
-							{
-								"href": "%s",
-								"rel": "%s"
-							}
-						]
-					}
-				]
-			}
-		}`, expectedLogSet.Id, expectedLogSet.Name, expectedLogSet.Description, expectedLogSet.LogsInfo[0].Id,
-		expectedLogSet.LogsInfo[0].Name, expectedLogSet.LogsInfo[0].Links[0].Href, expectedLogSet.LogsInfo[0].Links[0].Rel)
+	requestMatcher := testutils.RequestMatcher{
+		ExpectedRequest: testutils.ExpectedRequest {
+			HttpMethod: http.MethodPost,
+			Url: "/management/logsets",
+			Payload: postLogSet,
+		},
+		Response: &getLogSet{
+			expectedLogSet,
+		},
+	}
 
-
-	logSets := getLogSetsClient("/management/logsets", mockLogSetResponse)
+	logSets := getLogSetsClient(requestMatcher)
 
 	returnedLogSet, err := logSets.PostLogSet(postLogSet)
 	assert.Nil(t, err)
@@ -176,7 +137,7 @@ func TestLogSets_PostLogSet(t *testing.T) {
 
 }
 
-func getLogSetsClient(path, mockLogSetResponse string) LogSets {
-	c := getTestClient(path, &MockResponse{mockLogSetResponse})
+func getLogSetsClient(requestMatcher testutils.RequestMatcher) LogSets {
+	c := getTestClient(requestMatcher)
 	return LogSets{c}
 }
