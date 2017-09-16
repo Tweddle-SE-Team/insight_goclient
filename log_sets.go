@@ -18,6 +18,13 @@ type PostLogInfo struct {
 	Id string `json:"id"`
 }
 
+type PutLogSet struct {
+	Name string `json:"name"`
+	Description string `json:"description"`
+	UserData UserData `json:"user_data"`
+	LogsInfo []LogInfo `json:"logs_info"`
+}
+
 type LogSet struct {
 	Id string `json:"id"`
 	Name string `json:"name"`
@@ -77,6 +84,15 @@ func (l *LogSets) GetLogSet(id string) (LogSet, error) {
 func (l *LogSets) PostLogSet(postLogSet PostLogSet) (LogSet, error) {
 	logSet := &getLogSet{}
 	if _, err := l.Client.post(l.getPath(), postLogSet, logSet); err != nil {
+		return LogSet{}, err
+	}
+	return logSet.LogSet, nil
+}
+
+func (l *LogSets) PutLogSet(logSetId string, putLogSet PutLogSet) (LogSet, error) {
+	logSetEndPoint := fmt.Sprintf("%s/%s", l.getPath(), logSetId)
+	logSet := &getLogSet{}
+	if _, err := l.Client.put(logSetEndPoint, putLogSet, logSet); err != nil {
 		return LogSet{}, err
 	}
 	return logSet.LogSet, nil

@@ -28,6 +28,14 @@ func (httpClient *HttpClient) Post(url string, headers map[string]string, in int
 	}
 }
 
+func (httpClient *HttpClient) Put(url string, headers map[string]string, in interface{}, out interface{}) (*http.Response, error) {
+	if req, err := httpClient.prepareRequest(http.MethodPut, url, headers, in); err != nil {
+		return nil, err
+	} else {
+		return httpClient.performRequest(req, out)
+	}
+}
+
 func (httpClient *HttpClient) prepareRequest(method, url string, headers map[string]string, in interface{}) (*http.Request, error) {
 
 	var body []byte

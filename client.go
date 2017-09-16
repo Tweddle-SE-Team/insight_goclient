@@ -53,6 +53,17 @@ func (c *client) post(path string, in interface{}, out interface{}) (*http.Respo
 	return resp, nil
 }
 
+func (c *client) put(path string, in interface{}, out interface{}) (*http.Response, error){
+	url := c.getLogEntriesUrl(path)
+	reqHeaders := c.requestHeaders()
+
+	resp, err := c.httpClient.Put(url, reqHeaders, in, out)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
 func (c *client) getLogEntriesUrl(path string) string {
 	return fmt.Sprintf("%s/%s", c.logEntriesUrl, path)
 }
