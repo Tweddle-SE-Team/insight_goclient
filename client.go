@@ -3,8 +3,6 @@ package logentries_goclient
 import (
 	"net/http"
 	"fmt"
-	"encoding/json"
-	"io/ioutil"
 )
 
 const LOG_ENTRIES_API = "https://rest.logentries.com"
@@ -15,7 +13,7 @@ type LogEntriesClient struct {
 }
 
 func NewLogEntriesClient(apiKey string) LogEntriesClient {
-	c := &client{LOG_ENTRIES_API,apiKey, &http.Client{}}
+	c := &client{LOG_ENTRIES_API,apiKey, &HttpClient{&http.Client{}}}
 	return LogEntriesClient{
 		LogSets: LogSets{c},
 	}
@@ -24,45 +22,37 @@ func NewLogEntriesClient(apiKey string) LogEntriesClient {
 type client struct {
 	logEntriesUrl string
 	api_key       string
-	httpClient    *http.Client
+	httpClient    *HttpClient
 }
 
-func (c *client) prepareRequest(method, url string) (*http.Request, error) {
-
-	req, err := http.NewRequest(method, url, nil)
-	if err != nil {
-		return nil, err
-	}
-	req.Header.Set("x-api-key", c.api_key)
-	return req, nil
+func (c *client) requestHeaders() map[string]string{
+	headers := map[string]string{}
+	headers["x-api-key"] = c.api_key
+	return headers
 }
 
 func (c *client) get(path string, data interface{}) (*http.Response, error) {
-	url := fmt.Sprintf("%s/%s", c.logEntriesUrl, path)
-	req, err := c.prepareRequest(http.MethodGet, url)
+	url := c.getLogEntriesUrl(path)
+	reqHeaders := c.requestHeaders()
+
+	resp, err := c.httpClient.Get(url, reqHeaders, data)
 	if err != nil {
 		return nil, err
 	}
-	resp, err := c.httpClient.Do(req)
-	defer resp.Body.Close()
-
-	if err != nil {
-		return nil, err
-	}
-
-	if resp.StatusCode != http.StatusOK  && resp.StatusCode != http.StatusCreated  {
-		return nil, fmt.Errorf("[StatusCode=%s] Response %s", resp.StatusCode, resp)
-	}
-
-	if data != nil {
-		var body []byte
-		if body, err = ioutil.ReadAll(resp.Body); err != nil {
-			return nil, err
-		}
-		if err = json.Unmarshal(body, &data); err != nil {
-			return nil, err
-		}
-	}
-
 	return resp, nil
+}
+
+func (c *client) post(path string, in interface{}, out interface{}) (*http.Response, error){
+	url := c.getLogEntriesUrl(path)
+	reqHeaders := c.requestHeaders()
+
+	resp, err := c.httpClient.Post(url, reqHeaders, in, out)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (c *client) getLogEntriesUrl(path string) string {
+	return fmt.Sprintf("%s/%s", c.logEntriesUrl, path)
 }

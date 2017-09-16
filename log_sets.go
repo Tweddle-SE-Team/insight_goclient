@@ -1,11 +1,21 @@
 package logentries_goclient
 
+import "fmt"
+
 type LogSets struct {
 	Client *client `json:"-"`
 }
 
-type LogSetCollection struct {
-	LogSets []LogSet `json:"logsets"`
+// Structs meant for clients
+type PostLogSet struct {
+	Name string `json:"name"`
+	Description string `json:"description"`
+	UserData UserData `json:"user_data"`
+	LogsInfo []PostLogInfo `json:"logs_info"`
+}
+
+type PostLogInfo struct {
+	Id string `json:"id"`
 }
 
 type LogSet struct {
@@ -33,14 +43,41 @@ type Link struct {
 	Rel string `json:"rel"`
 }
 
+// Structs meant for marshalling/un-marshalling purposes
+type logSetCollection struct {
+	LogSets []LogSet `json:"logsets"`
+}
+
+type getLogSet struct {
+	LogSet LogSet `json:"logset"`
+}
+
 func (l *LogSets) getPath() string {
 	return "management/logsets"
 }
 
-func (l *LogSets) GetLogSets() (*LogSetCollection, error) {
-	logSets := &LogSetCollection{}
+func (l *LogSets) GetLogSets() ([]LogSet, error) {
+	logSets := &logSetCollection{}
 	if _, err := l.Client.get(l.getPath(), logSets); err != nil {
 		return nil, err
 	}
-	return logSets, nil
+	return logSets.LogSets, nil
+}
+
+func (l *LogSets) GetLogSet(id string) (LogSet, error) {
+	logSetEndPoint := fmt.Sprintf("%s/%s", l.getPath(), id)
+
+	logSet := &getLogSet{}
+	if _, err := l.Client.get(logSetEndPoint, logSet); err != nil {
+		return LogSet{}, err
+	}
+	return logSet.LogSet, nil
+}
+
+func (l *LogSets) PostLogSet(postLogSet PostLogSet) (LogSet, error) {
+	logSet := &getLogSet{}
+	if _, err := l.Client.post(l.getPath(), postLogSet, logSet); err != nil {
+		return LogSet{}, err
+	}
+	return logSet.LogSet, nil
 }
