@@ -80,7 +80,7 @@ func (l *LogSets) GetLogSets() ([]LogSet, error) {
 
 func (l *LogSets) GetLogSet(logSetId string) (LogSet, error) {
 	if logSetId == "" {
-		return LogSet{}, errors.New("missing log logSetId")
+		return LogSet{}, errors.New("logSetId input parameter is mandatory")
 	}
 
 	logSetEndPoint := fmt.Sprintf("%s/%s", l.getPath(), logSetId)
@@ -102,7 +102,7 @@ func (l *LogSets) PostLogSet(postLogSet PostLogSet) (LogSet, error) {
 
 func (l *LogSets) PutLogSet(logSetId string, putLogSet PutLogSet) (LogSet, error) {
 	if logSetId == "" {
-		return LogSet{}, errors.New("missing log id")
+		return LogSet{}, errors.New("logSetId input parameter is mandatory")
 	}
 
 	logSetEndPoint := fmt.Sprintf("%s/%s", l.getPath(), logSetId)

@@ -75,7 +75,7 @@ func TestLogSets_GetLogSetErrorsIfLogSetIdIsEmpty(t *testing.T) {
 	logSets := LogSets{nil}
 	_, err := logSets.GetLogSet("")
 	assert.NotNil(t, err)
-	assert.Error(t, err, "missing log logSetId")
+	assert.Error(t, err, "logSetId input parameter is mandatory")
 }
 
 func TestLogSets_PostLogSet(t *testing.T) {
@@ -174,7 +174,7 @@ func TestLogSets_PutLogSetSetErrorsIfLogSetIdIsEmpty(t *testing.T) {
 	logSets := LogSets{nil}
 	_, err := logSets.PutLogSet("", PutLogSet{})
 	assert.NotNil(t, err)
-	assert.Error(t, err, "missing log logSetId")
+	assert.Error(t, err, "logSetId input parameter is mandatory")
 }
 
 func TestLogSets_DeleteLogSet(t *testing.T) {
@@ -192,7 +192,7 @@ func TestLogSets_DeleteLogSetSetErrorsIfLogSetIdIsEmpty(t *testing.T) {
 	logSets := LogSets{nil}
 	err := logSets.DeleteLogSet("")
 	assert.NotNil(t, err)
-	assert.Error(t, err, "missing log logSetId")
+	assert.Error(t, err, "logSetId input parameter is mandatory")
 }
 
 func getLogSetsClient(requestMatcher testutils.TestRequestMatcher) LogSets {
