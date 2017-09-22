@@ -65,7 +65,7 @@ func checkResponseStatusCode(res *http.Response, err error, expectedResponseStat
 		return err
 	}
 	if res.StatusCode != expectedResponseStatusCode {
-		return fmt.Errorf("RECEIVED NON EXPECTED RESPONSE STATUS CODE %d, EXPECTED CODE WAS %d. Response: %s", res.StatusCode, expectedResponseStatusCode, res)
+		return fmt.Errorf("received a non expected response status code %d, expected code was %d. Response: %s", res.StatusCode, expectedResponseStatusCode, res)
 	}
 	return nil
 }

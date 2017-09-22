@@ -115,7 +115,7 @@ func (l *LogSets) PutLogSet(logSetId string, putLogSet PutLogSet) (LogSet, error
 
 func (l *LogSets) DeleteLogSet(logSetId string) error {
 	if logSetId == "" {
-		return errors.New("missing log id")
+		return errors.New("logSetId input parameter is mandatory")
 	}
 
 	logSetEndPoint := fmt.Sprintf("%s/%s", l.getPath(), logSetId)

@@ -248,10 +248,10 @@ func TestTags_PutTag(t *testing.T) {
 		},
 		Actions: []PostAction{
 			{
-				MinMatchesCount:  1,
+				MinMatchesCount:  0,
 				MinReportCount:   1,
-				MinMatchesPeriod: "Day",
-				MinReportPeriod:  "Day",
+				MinMatchesPeriod: "Hour",
+				MinReportPeriod:  "Hour",
 				Targets: Targets{
 					{
 						Type: "mailto",
@@ -268,10 +268,10 @@ func TestTags_PutTag(t *testing.T) {
 		Labels: Labels{
 			{
 				Id:       "label-uuid",
-				Name:     "Login Failure",
+				Name:     "Test Label",
 				Reserved: false,
-				Color:    "007afb",
-				SN:       1056,
+				Color:    "3498db",
+				SN:       1025,
 			},
 		},
 		Patterns: []string{"/Foo Bar/"},
