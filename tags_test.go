@@ -130,11 +130,11 @@ func TestTags_GetTag(t *testing.T) {
 
 }
 
-func TestTags_GetTagSetErrorsIfTagIdIsEmpty(t *testing.T) {
+func TestTags_GetTagErrorsIfTagIdIsEmpty(t *testing.T) {
 	tags := Tags{nil}
 	_, err := tags.GetTag("")
 	assert.NotNil(t, err)
-	assert.Error(t, err, "missing log logSetId")
+	assert.Error(t, err, "tagId input parameter is mandatory")
 }
 
 func TestTags_PostTag(t *testing.T) {
@@ -232,7 +232,113 @@ func TestTags_PostTag(t *testing.T) {
 	returnedTag, err := tags.PostTag(postTag)
 	assert.Nil(t, err)
 	assert.EqualValues(t, expectedTag, returnedTag)
+}
 
+func TestTags_PutTag(t *testing.T) {
+
+	tagId := "tagId"
+
+	putTag := PostTag{
+		Name: "Foo Bar Tag",
+		Type: "Alert",
+		Sources: []PostSource{
+			{
+				Id: "source-uuid",
+			},
+		},
+		Actions: []PostAction{
+			{
+				MinMatchesCount:  1,
+				MinReportCount:   1,
+				MinMatchesPeriod: "Day",
+				MinReportPeriod:  "Day",
+				Targets: Targets{
+					{
+						Type: "mailto",
+						ParamsSet: ParamsSet{
+							Direct: "test@test.com",
+						},
+					},
+				},
+				AlertContentSet: map[string]string{"le_context": "true"},
+				Enabled:         true,
+				Type:            "Alert",
+			},
+		},
+		Labels: Labels{
+			{
+				Id:       "label-uuid",
+				Name:     "Login Failure",
+				Reserved: false,
+				Color:    "007afb",
+				SN:       1056,
+			},
+		},
+		Patterns: []string{"/Foo Bar/"},
+	}
+
+	expectedTag := Tag{
+		Id:   "new-tag-uuid",
+		Name: putTag.Name,
+		Type: putTag.Type,
+		Sources: []Source{
+			{
+				Id:              putTag.Sources[0].Id,
+				Name:            "auth.log",
+				RetentionPeriod: "default",
+				StoredDays:      []int{},
+			},
+		},
+		Actions: []Action{
+			{
+				Id:               "new-action-uuid",
+				MinMatchesCount:  putTag.Actions[0].MinMatchesCount,
+				MinReportCount:   putTag.Actions[0].MinReportCount,
+				MinMatchesPeriod: putTag.Actions[0].MinMatchesPeriod,
+				MinReportPeriod:  putTag.Actions[0].MinReportPeriod,
+				Targets: Targets{
+					{
+						Id:   "new-target-uuid",
+						Type: putTag.Actions[0].Targets[0].Type,
+						ParamsSet: ParamsSet{
+							Direct: putTag.Actions[0].Targets[0].ParamsSet.Direct,
+							Teams:  putTag.Actions[0].Targets[0].ParamsSet.Teams,
+							Users:  putTag.Actions[0].Targets[0].ParamsSet.Users,
+						},
+					},
+				},
+				AlertContentSet: putTag.Actions[0].AlertContentSet,
+				Enabled:         putTag.Actions[0].Enabled,
+				Type:            putTag.Actions[0].Type,
+			},
+		},
+		Labels: Labels{
+			{
+				Id:       putTag.Labels[0].Id,
+				Name:     putTag.Labels[0].Name,
+				Reserved: putTag.Labels[0].Reserved,
+				Color:    putTag.Labels[0].Color,
+				SN:       putTag.Labels[0].SN,
+			},
+		},
+		Patters: putTag.Patterns,
+	}
+
+	url := fmt.Sprintf("/management/tags/%s", tagId)
+	requestMatcher := testutils.NewRequestMatcher(http.MethodPut, url, putTag, http.StatusOK, &getTag{expectedTag})
+
+	tags := getTagsClient(requestMatcher)
+
+	returnedTag, err := tags.PutTag(tagId, putTag)
+	assert.Nil(t, err)
+	assert.EqualValues(t, expectedTag, returnedTag)
+}
+
+func TestTags_PutTagErrorsIfTagIdIsEmpty(t *testing.T) {
+	tags := Tags{nil}
+	_, err := tags.PutTag("", PostTag{})
+	assert.NotNil(t, err)
+	assert.Error(t, err, "tagId input parameter is mandatory")
 }
 
 func getTagsClient(requestMatcher testutils.TestRequestMatcher) Tags {

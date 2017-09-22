@@ -115,12 +115,12 @@ func (t *Tags) GetTags() ([]Tag, error) {
 	return tags.Tags, nil
 }
 
-func (t *Tags) GetTag(id string) (Tag, error) {
-	if id == "" {
-		return Tag{}, errors.New("missing tag id")
+func (t *Tags) GetTag(tagId string) (Tag, error) {
+	if tagId == "" {
+		return Tag{}, errors.New("tagId input parameter is mandatory")
 	}
 
-	tagEndPoint := fmt.Sprintf("%s/%s", t.getPath(), id)
+	tagEndPoint := fmt.Sprintf("%s/%s", t.getPath(), tagId)
 	tag := &getTag{}
 	if err := t.client.get(tagEndPoint, tag); err != nil {
 		return Tag{}, err
@@ -131,6 +131,19 @@ func (t *Tags) GetTag(id string) (Tag, error) {
 func (t *Tags) PostTag(postTag PostTag) (Tag, error) {
 	tag := &getTag{}
 	if err := t.client.post(t.getPath(), postTag, tag); err != nil {
+		return Tag{}, err
+	}
+	return tag.Tag, nil
+}
+
+func (t *Tags) PutTag(tagId string, postTag PostTag) (Tag, error) {
+	if tagId == "" {
+		return Tag{}, errors.New("tagId input parameter is mandatory")
+	}
+
+	tagEndPoint := fmt.Sprintf("%s/%s", t.getPath(), tagId)
+	tag := &getTag{}
+	if err := t.client.put(tagEndPoint, postTag, tag); err != nil {
 		return Tag{}, err
 	}
 	return tag.Tag, nil
