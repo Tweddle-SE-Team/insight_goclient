@@ -33,7 +33,7 @@ func (t *TestClientServer) TestClientServer(requestMatcher TestRequestMatcher) (
 	httpServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		defer r.Body.Close()
 		if err := t.matchRequest(w, r); err != nil {
-			fmt.Println("unexpected error thrown - " + err.Error())
+			fmt.Println("\nAn unexpected error occurred => " + err.Error())
 		}
 	}))
 

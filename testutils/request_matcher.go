@@ -46,7 +46,7 @@ func (rm *TestRequestMatcher) match(r *http.Request) error {
 			return nil
 		} else {
 			if rm.ExpectedRequest.Payload == nil {
-				fmt.Println("request matcher missing expected request payload, please populate the expected paylaod field")
+				fmt.Println("Request matcher missing expected request payload, please populate the expected paylaod field")
 			}
 			expectedRequest, err := json.Marshal(rm.ExpectedRequest.Payload)
 			if err != nil {
@@ -57,5 +57,5 @@ func (rm *TestRequestMatcher) match(r *http.Request) error {
 			}
 		}
 	}
-	return fmt.Errorf("no matching expected request found\n- [ExpectedRequest=%s]\n- [ActualRequest=%s %s %s]\n", rm.ExpectedRequest, r.Method, r.URL.Path, string(body))
+	return fmt.Errorf("No matching expected request found:\n- ExpectedRequest = %s\n- ActualRequest = %s %s %s\n", rm.ExpectedRequest, r.Method, r.URL.Path, string(body))
 }
