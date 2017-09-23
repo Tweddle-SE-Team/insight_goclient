@@ -4,7 +4,8 @@ import (
 	"net/http"
 	"encoding/json"
 	"io/ioutil"
-	"bytes"
+	"strings"
+	"fmt"
 )
 
 type HttpClient struct {
@@ -20,6 +21,7 @@ func (httpClient *HttpClient) Get(url string, headers map[string]string, out int
 }
 
 func (httpClient *HttpClient) Post(url string, headers map[string]string, in interface{}, out interface{}) (*http.Response, error) {
+	headers["Content-Type"] = "application/json"
 	if req, err := httpClient.prepareRequest(http.MethodPost, url, headers, in); err != nil {
 		return nil, err
 	} else {
@@ -28,6 +30,7 @@ func (httpClient *HttpClient) Post(url string, headers map[string]string, in int
 }
 
 func (httpClient *HttpClient) Put(url string, headers map[string]string, in interface{}, out interface{}) (*http.Response, error) {
+	headers["Content-Type"] = "application/json"
 	if req, err := httpClient.prepareRequest(http.MethodPut, url, headers, in); err != nil {
 		return nil, err
 	} else {
@@ -49,12 +52,13 @@ func (httpClient *HttpClient) prepareRequest(method, url string, headers map[str
 	var err error
 	if in != nil {
 		body, err = json.Marshal(in)
+		fmt.Println(string(body))
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	req, err := http.NewRequest(method, url, bytes.NewBufferString(string(body)))
+	req, err := http.NewRequest(method, url, strings.NewReader(string(body)))
 	if err != nil {
 		return nil, err
 	}
@@ -64,12 +68,12 @@ func (httpClient *HttpClient) prepareRequest(method, url string, headers map[str
 	return req, nil
 }
 
-func (httpClient *HttpClient) performRequest(request *http.Request, out interface{}) (*http.Response, error) {
-	resp, err := httpClient.httpClient.Do(request)
+func (httpClient *HttpClient) performRequest(req *http.Request, out interface{}) (*http.Response, error) {
+	resp, err := httpClient.httpClient.Do(req)
 	defer resp.Body.Close()
 
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("request %s %s %s failed. Response Error [%s]: '%s'", req.Method, req.URL, req.Proto, resp.Status, err.Error())
 	}
 
 	if out != nil {
@@ -78,7 +82,7 @@ func (httpClient *HttpClient) performRequest(request *http.Request, out interfac
 			return nil, err
 		}
 		if err = json.Unmarshal(body, &out); err != nil {
-			return nil, err
+			return nil, fmt.Errorf("unable to unmarshal response body ['%s'] for request = '%s %s %s'. Response = '%s'",  err.Error(), req.Method, req.URL, req.Proto, resp.Status)
 		}
 	}
 	return resp, nil
