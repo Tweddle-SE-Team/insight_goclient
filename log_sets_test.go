@@ -88,7 +88,7 @@ func TestLogSets_PostLogSet(t *testing.T) {
 				Id: "logs-info-uuid",
 			},
 		},
-		UserData: UserData{},
+		UserData: map[string]string{},
 	}
 
 	expectedLogSet := LogSet{
@@ -107,7 +107,7 @@ func TestLogSets_PostLogSet(t *testing.T) {
 				},
 			},
 		},
-		UserData: UserData{},
+		UserData: map[string]string{},
 	}
 
 	requestMatcher := testutils.NewRequestMatcher(http.MethodPost, "/management/logsets", postLogSet, http.StatusCreated, &getLogSet{expectedLogSet})
@@ -138,7 +138,7 @@ func TestLogSets_PutLogSet(t *testing.T) {
 				},
 			},
 		},
-		UserData: UserData{},
+		UserData: map[string]string{},
 	}
 
 	expectedLogSet := LogSet{
@@ -157,7 +157,7 @@ func TestLogSets_PutLogSet(t *testing.T) {
 				},
 			},
 		},
-		UserData: UserData{},
+		UserData: map[string]string{},
 	}
 
 	url := fmt.Sprintf("/management/logsets/%s", logSetId)

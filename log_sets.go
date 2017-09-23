@@ -16,9 +16,9 @@ func NewLogSets(c *client) LogSets {
 // Structs meant for clients
 type PostLogSet struct {
 	Name        string        `json:"name"`
-	Description string        `json:"description"`
-	UserData    UserData      `json:"user_data"`
-	LogsInfo    []PostLogInfo `json:"logs_info"`
+	Description string        `json:"description,omitempty"`
+	UserData    map[string]string      `json:"user_data,omitempty"`
+	LogsInfo    []PostLogInfo `json:"logs_info,omitempty"`
 }
 
 type PostLogInfo struct {
@@ -27,16 +27,16 @@ type PostLogInfo struct {
 
 type PutLogSet struct {
 	Name        string    `json:"name"`
-	Description string    `json:"description"`
-	UserData    UserData  `json:"user_data"`
-	LogsInfo    []LogInfo `json:"logs_info"`
+	Description string    `json:"description,omitempty"`
+	UserData    map[string]string  `json:"user_data,omitempty"`
+	LogsInfo    []LogInfo `json:"logs_info,omitempty"`
 }
 
 type LogSet struct {
 	Id          string    `json:"id"`
 	Name        string    `json:"name"`
 	Description string    `json:"description"`
-	UserData    UserData  `json:"user_data"`
+	UserData    map[string]string  `json:"user_data"`
 	LogsInfo    []LogInfo `json:"logs_info"`
 }
 
@@ -66,6 +66,14 @@ type getLogSet struct {
 	LogSet LogSet `json:"logset"`
 }
 
+type postLogSet struct {
+	PostLogSet PostLogSet `json:"logset"`
+}
+
+type putLogSet struct {
+	PutLogSet PutLogSet `json:"logset"`
+}
+
 func (l *LogSets) getPath() string {
 	return "management/logsets"
 }
@@ -92,21 +100,23 @@ func (l *LogSets) GetLogSet(logSetId string) (LogSet, error) {
 	return logSet.LogSet, nil
 }
 
-func (l *LogSets) PostLogSet(postLogSet PostLogSet) (LogSet, error) {
+func (l *LogSets) PostLogSet(p PostLogSet) (LogSet, error) {
 	logSet := &getLogSet{}
+	postLogSet := &postLogSet{p}
 	if err := l.client.post(l.getPath(), postLogSet, logSet); err != nil {
 		return LogSet{}, err
 	}
 	return logSet.LogSet, nil
 }
 
-func (l *LogSets) PutLogSet(logSetId string, putLogSet PutLogSet) (LogSet, error) {
+func (l *LogSets) PutLogSet(logSetId string, p PutLogSet) (LogSet, error) {
 	if logSetId == "" {
 		return LogSet{}, errors.New("logSetId input parameter is mandatory")
 	}
 
 	logSetEndPoint := fmt.Sprintf("%s/%s", l.getPath(), logSetId)
 	logSet := &getLogSet{}
+	putLogSet := &putLogSet{p}
 	if err := l.client.put(logSetEndPoint, putLogSet, logSet); err != nil {
 		return LogSet{}, err
 	}
