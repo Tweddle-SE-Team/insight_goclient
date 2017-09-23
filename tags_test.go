@@ -42,9 +42,9 @@ func TestTags_GetTags(t *testing.T) {
 								Teams:  "some-team",
 								Users:  "user@example.com",
 							},
+							AlertContentSet: map[string]string{},
 						},
 					},
-					AlertContentSet: map[string]string{},
 					Enabled:         true,
 					Type:            "Alert",
 				},
@@ -58,7 +58,7 @@ func TestTags_GetTags(t *testing.T) {
 					SN:       1056,
 				},
 			},
-			Patters: []string{"Power Button as"},
+			Patterns: []string{"Power Button as"},
 		},
 	}
 
@@ -100,9 +100,9 @@ func TestTags_GetTag(t *testing.T) {
 							Teams:  "some-team",
 							Users:  "user@example.com",
 						},
+						AlertContentSet: map[string]string{},
 					},
 				},
-				AlertContentSet: map[string]string{},
 				Enabled:         true,
 				Type:            "Alert",
 			},
@@ -116,7 +116,7 @@ func TestTags_GetTag(t *testing.T) {
 				SN:       1056,
 			},
 		},
-		Patters: []string{"Power Button as"},
+		Patterns: []string{"Power Button as"},
 	}
 
 	url := fmt.Sprintf("/management/tags/%s", expectedTag.Id)
@@ -153,15 +153,15 @@ func TestTags_PostTag(t *testing.T) {
 				MinReportCount:   1,
 				MinMatchesPeriod: "Day",
 				MinReportPeriod:  "Day",
-				Targets: Targets{
+				Targets: PostTargets{
 					{
 						Type: "mailto",
 						ParamsSet: ParamsSet{
 							Direct: "test@test.com",
 						},
+						AlertContentSet: map[string]string{"le_context": "true"},
 					},
 				},
-				AlertContentSet: map[string]string{"le_context": "true"},
 				Enabled:         true,
 				Type:            "Alert",
 			},
@@ -206,9 +206,9 @@ func TestTags_PostTag(t *testing.T) {
 							Teams:  postTag.Actions[0].Targets[0].ParamsSet.Teams,
 							Users:  postTag.Actions[0].Targets[0].ParamsSet.Users,
 						},
+						AlertContentSet: postTag.Actions[0].Targets[0].AlertContentSet,
 					},
 				},
-				AlertContentSet: postTag.Actions[0].AlertContentSet,
 				Enabled:         postTag.Actions[0].Enabled,
 				Type:            postTag.Actions[0].Type,
 			},
@@ -222,7 +222,7 @@ func TestTags_PostTag(t *testing.T) {
 				SN:       postTag.Labels[0].SN,
 			},
 		},
-		Patters: postTag.Patterns,
+		Patterns: postTag.Patterns,
 	}
 
 	requestMatcher := testutils.NewRequestMatcher(http.MethodPost, "/management/tags", postTag, http.StatusCreated, &getTag{expectedTag})
@@ -252,15 +252,15 @@ func TestTags_PutTag(t *testing.T) {
 				MinReportCount:   1,
 				MinMatchesPeriod: "Hour",
 				MinReportPeriod:  "Hour",
-				Targets: Targets{
+				Targets: PostTargets{
 					{
 						Type: "mailto",
 						ParamsSet: ParamsSet{
 							Direct: "test@test.com",
 						},
+						AlertContentSet: map[string]string{"le_context": "true"},
 					},
 				},
-				AlertContentSet: map[string]string{"le_context": "true"},
 				Enabled:         true,
 				Type:            "Alert",
 			},
@@ -305,9 +305,9 @@ func TestTags_PutTag(t *testing.T) {
 							Teams:  putTag.Actions[0].Targets[0].ParamsSet.Teams,
 							Users:  putTag.Actions[0].Targets[0].ParamsSet.Users,
 						},
+						AlertContentSet: putTag.Actions[0].Targets[0].AlertContentSet,
 					},
 				},
-				AlertContentSet: putTag.Actions[0].AlertContentSet,
 				Enabled:         putTag.Actions[0].Enabled,
 				Type:            putTag.Actions[0].Type,
 			},
@@ -321,7 +321,7 @@ func TestTags_PutTag(t *testing.T) {
 				SN:       putTag.Labels[0].SN,
 			},
 		},
-		Patters: putTag.Patterns,
+		Patterns: putTag.Patterns,
 	}
 
 	url := fmt.Sprintf("/management/tags/%s", tagId)

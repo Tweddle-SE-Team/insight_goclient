@@ -19,18 +19,18 @@ type PostTag struct {
 	Name     string      `json:"name"`
 	Sources  PostSources `json:"sources"`
 	Actions  PostActions `json:"actions"`
-	Patterns []string    `json:"patters"`
+	Patterns []string    `json:"patterns"`
 	Labels   Labels      `json:"labels"`
 }
 
 type Tag struct {
-	Id      string   `json:"id"`
-	Type    string   `json:"type"`
-	Name    string   `json:"name"`
-	Sources Sources  `json:"sources"`
-	Actions Actions  `json:"actions"`
-	Patters []string `json:"patters"`
-	Labels  Labels   `json:"labels"`
+	Id       string   `json:"id"`
+	Type     string   `json:"type"`
+	Name     string   `json:"name"`
+	Sources  Sources  `json:"sources"`
+	Actions  Actions  `json:"actions"`
+	Patterns []string `json:"patterns"`
+	Labels   Labels   `json:"labels"`
 }
 
 type PostSource struct {
@@ -49,8 +49,7 @@ type PostAction struct {
 	MinReportCount   int               `json:"min_report_count"`
 	MinMatchesPeriod string            `json:"min_matches_period"`
 	MinReportPeriod  string            `json:"min_report_period"`
-	Targets          Targets           `json:"targets"`
-	AlertContentSet  map[string]string `json:"alert_content_set"`
+	Targets          PostTargets           `json:"targets"`
 	Enabled          bool              `json:"enabled"`
 	Type             string            `json:"type"`
 }
@@ -62,7 +61,6 @@ type Action struct {
 	MinMatchesPeriod string            `json:"min_matches_period"`
 	MinReportPeriod  string            `json:"min_report_period"`
 	Targets          Targets           `json:"targets"`
-	AlertContentSet  map[string]string `json:"alert_content_set"`
 	Enabled          bool              `json:"enabled"`
 	Type             string            `json:"type"`
 }
@@ -71,6 +69,13 @@ type Target struct {
 	Id        string    `json:"id"`
 	Type      string    `json:"type"`
 	ParamsSet ParamsSet `json:"params_set"`
+	AlertContentSet  map[string]string `json:"alert_content_set"`
+}
+
+type PostTarget struct {
+	Type      string    `json:"type"`
+	ParamsSet ParamsSet `json:"params_set"`
+	AlertContentSet  map[string]string `json:"alert_content_set"`
 }
 
 type ParamsSet struct {
@@ -93,6 +98,7 @@ type Actions []Action
 type PostActions []PostAction
 type Labels []Label
 type Targets []Target
+type PostTargets []PostTarget
 
 // Structs meant for marshalling/un-marshalling purposes
 type tagsCollection struct {
@@ -101,6 +107,10 @@ type tagsCollection struct {
 
 type getTag struct {
 	Tag Tag `json:"tag"`
+}
+
+type postTag struct {
+	PostTag PostTag `json:"tag"`
 }
 
 func (t *Tags) getPath() string {
@@ -128,21 +138,23 @@ func (t *Tags) GetTag(tagId string) (Tag, error) {
 	return tag.Tag, nil
 }
 
-func (t *Tags) PostTag(postTag PostTag) (Tag, error) {
+func (t *Tags) PostTag(p PostTag) (Tag, error) {
 	tag := &getTag{}
+	postTag := postTag{p}
 	if err := t.client.post(t.getPath(), postTag, tag); err != nil {
 		return Tag{}, err
 	}
 	return tag.Tag, nil
 }
 
-func (t *Tags) PutTag(tagId string, postTag PostTag) (Tag, error) {
+func (t *Tags) PutTag(tagId string, p PostTag) (Tag, error) {
 	if tagId == "" {
 		return Tag{}, errors.New("tagId input parameter is mandatory")
 	}
 
 	tagEndPoint := fmt.Sprintf("%s/%s", t.getPath(), tagId)
 	tag := &getTag{}
+	postTag := postTag{p}
 	if err := t.client.put(tagEndPoint, postTag, tag); err != nil {
 		return Tag{}, err
 	}
