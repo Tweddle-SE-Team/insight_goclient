@@ -1,7 +1,7 @@
 # Logentries Go Client
 
 Full fledged Go client for [Logentries](https://logentries.com/). The library supports CRUD operations for the following 
-resources supported via the [Logentries REST Api](https://docs.logentries.com/docs/rest-api).
+resources provided via the [Logentries REST Api](https://docs.logentries.com/docs/rest-api).
 
 - [LogSets](https://docs.logentries.com/docs/logsets)
 - [Logs](https://docs.logentries.com/docs/logs)
@@ -40,6 +40,6 @@ func main() {
 
 ## Authors
 
-Daniel I. Khan Ramiro - Cisco Systems
+Daniel I. Khan Ramiro
 
 See also the list of [contributors](https://github.com/dikhan/logentries_goclient/graphs/contributors) who participated in this project.
