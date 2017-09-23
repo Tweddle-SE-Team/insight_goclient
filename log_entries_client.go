@@ -9,6 +9,7 @@ const LOG_ENTRIES_API = "https://rest.logentries.com"
 
 type LogEntriesClient struct {
 	LogSets LogSets
+	Logs Logs
 	Tags    Tags
 }
 
@@ -16,6 +17,7 @@ func NewLogEntriesClient(apiKey string) LogEntriesClient {
 	c := &client{LOG_ENTRIES_API, apiKey, &HttpClient{&http.Client{}}}
 	return LogEntriesClient{
 		LogSets: NewLogSets(c),
+		Logs: NewLogs(c),
 		Tags:    NewTags(c),
 	}
 }
@@ -62,10 +64,10 @@ func (c *client) delete(path string) error {
 
 func checkResponseStatusCode(res *http.Response, err error, expectedResponseStatusCode int) error {
 	if err != nil {
-		return err
+		return fmt.Errorf("\nReceived unexpected error response: '%s'", err.Error())
 	}
 	if res.StatusCode != expectedResponseStatusCode {
-		return fmt.Errorf("received a non expected response status code %d, expected code was %d. Response: %s", res.StatusCode, expectedResponseStatusCode, res)
+		return fmt.Errorf("\nReceived a non expected response status code %d, expected code was %d. Response: %s", res.StatusCode, expectedResponseStatusCode, res)
 	}
 	return nil
 }
