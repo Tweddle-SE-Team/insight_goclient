@@ -7,19 +7,19 @@ import (
 
 const LOG_ENTRIES_API = "https://rest.logentries.com"
 
-type LogEntriesClient struct {
+type logEntriesClient struct {
 	LogSets LogSets
 	Logs Logs
 	Tags    Tags
 }
 
-func NewLogEntriesClient(apiKey string) (LogEntriesClient, error) {
+func NewLogEntriesClient(apiKey string) (logEntriesClient, error) {
 	if apiKey == "" {
-		return LogEntriesClient{}, fmt.Errorf("apiKey is mandatory to initialise Logentries client")
+		return logEntriesClient{}, fmt.Errorf("apiKey is mandatory to initialise Logentries client")
 	}
 
 	c := &client{LOG_ENTRIES_API, apiKey, &HttpClient{&http.Client{}}}
-	return LogEntriesClient{
+	return logEntriesClient{
 		LogSets: NewLogSets(c),
 		Logs: NewLogs(c),
 		Tags:    NewTags(c),
