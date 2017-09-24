@@ -80,10 +80,10 @@ func TestLogSets_GetLogSetErrorsIfLogSetIdIsEmpty(t *testing.T) {
 
 func TestLogSets_PostLogSet(t *testing.T) {
 
-	postLogSet := PostLogSet{
+	p := PostLogSet{
 		Name:        "MyLogSet2",
 		Description: "some description",
-		LogsInfo: []PostLogInfo{
+		LogsInfo: []PostLogSetInfo{
 			{
 				Id: "logs-info-uuid",
 			},
@@ -93,11 +93,11 @@ func TestLogSets_PostLogSet(t *testing.T) {
 
 	expectedLogSet := LogSet{
 		Id:          "log-set-uuid",
-		Name:        postLogSet.Name,
-		Description: postLogSet.Description,
+		Name:        p.Name,
+		Description: p.Description,
 		LogsInfo: []LogInfo{
 			{
-				Id:   postLogSet.LogsInfo[0].Id,
+				Id:   p.LogsInfo[0].Id,
 				Name: "mylog",
 				Links: []Link{
 					{
@@ -110,10 +110,10 @@ func TestLogSets_PostLogSet(t *testing.T) {
 		UserData: map[string]string{},
 	}
 
-	requestMatcher := testutils.NewRequestMatcher(http.MethodPost, "/management/logsets", postLogSet, http.StatusCreated, &getLogSet{expectedLogSet})
+	requestMatcher := testutils.NewRequestMatcher(http.MethodPost, "/management/logsets", &postLogSet{p}, http.StatusCreated, &getLogSet{expectedLogSet})
 	logSets := getLogSetsClient(requestMatcher)
 
-	returnedLogSet, err := logSets.PostLogSet(postLogSet)
+	returnedLogSet, err := logSets.PostLogSet(p)
 	assert.Nil(t, err)
 	assert.EqualValues(t, expectedLogSet, returnedLogSet)
 
@@ -123,7 +123,7 @@ func TestLogSets_PutLogSet(t *testing.T) {
 
 	logSetId := "log-set-uuid"
 
-	putLogSet := PutLogSet{
+	p := PutLogSet{
 		Name:        "New Name",
 		Description: "updated description",
 		LogsInfo: []LogInfo{
@@ -143,16 +143,16 @@ func TestLogSets_PutLogSet(t *testing.T) {
 
 	expectedLogSet := LogSet{
 		Id:          logSetId,
-		Name:        putLogSet.Name,
-		Description: putLogSet.Description,
+		Name:        p.Name,
+		Description: p.Description,
 		LogsInfo: []LogInfo{
 			{
-				Id:   putLogSet.LogsInfo[0].Id,
-				Name: putLogSet.LogsInfo[0].Name,
+				Id:   p.LogsInfo[0].Id,
+				Name: p.LogsInfo[0].Name,
 				Links: []Link{
 					{
-						Href: putLogSet.LogsInfo[0].Links[0].Href,
-						Rel:  putLogSet.LogsInfo[0].Links[0].Rel,
+						Href: p.LogsInfo[0].Links[0].Href,
+						Rel:  p.LogsInfo[0].Links[0].Rel,
 					},
 				},
 			},
@@ -161,10 +161,10 @@ func TestLogSets_PutLogSet(t *testing.T) {
 	}
 
 	url := fmt.Sprintf("/management/logsets/%s", logSetId)
-	requestMatcher := testutils.NewRequestMatcher(http.MethodPut, url, putLogSet, http.StatusOK, &getLogSet{expectedLogSet})
+	requestMatcher := testutils.NewRequestMatcher(http.MethodPut, url, &putLogSet{p}, http.StatusOK, &getLogSet{expectedLogSet})
 	logSets := getLogSetsClient(requestMatcher)
 
-	returnedLogSet, err := logSets.PutLogSet(logSetId, putLogSet)
+	returnedLogSet, err := logSets.PutLogSet(logSetId, p)
 	assert.Nil(t, err)
 	assert.EqualValues(t, expectedLogSet, returnedLogSet)
 
