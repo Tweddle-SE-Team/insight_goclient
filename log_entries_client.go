@@ -12,8 +12,11 @@ type logEntriesClient struct {
 	LogSets LogSets
 	Logs Logs
 	Tags    Tags
+	Labels Labels
 }
 
+// NewLogEntriesClient creates a logentries client which exposes an interface with CRUD operations for each of the
+// resources provided by logentries rest API
 func NewLogEntriesClient(apiKey string) (logEntriesClient, error) {
 	if apiKey == "" {
 		return logEntriesClient{}, fmt.Errorf("apiKey is mandatory to initialise Logentries client")
@@ -28,6 +31,7 @@ func newLogEntriesClient(apiKey string, httpClient *HttpClient) (logEntriesClien
 		LogSets: NewLogSets(c),
 		Logs: NewLogs(c),
 		Tags:    NewTags(c),
+		Labels: NewLabels(c),
 	}, nil
 }
 
