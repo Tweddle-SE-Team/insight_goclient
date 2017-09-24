@@ -12,17 +12,19 @@ import (
 // - Update an existing Log
 // - Delete a Log
 
+// Logs represents the logs interface by which user can interact with logentries logs API
 type Logs struct {
 	client *client `json:"-"`
 }
 
-// NewLogs creates a new Logs struct that exposes CRUD operations
+// NewLogs creates a new Logs struct that exposes Logs CRUD operations
 func NewLogs(c *client) Logs {
 	return Logs{c}
 }
 
 // Structs meant for clients
 
+// Log represents the entity used to get an existing log from the logentries API
 type Log struct {
 	Id          string       `json:"id"`
 	Name        string       `json:"name"`
@@ -34,11 +36,13 @@ type Log struct {
 	Structures  []string     `json:"structures"`
 }
 
+// LogUserData represents user metadata
 type LogUserData struct {
 	LogEntriesAgentFileName string `json:"le_agent_filename"`
 	LogEntriesAgentFollow   string `json:"le_agent_follow"`
 }
 
+// PostLog represents the entity used to create a new log to the logentries API
 type PostLog struct {
 	Name        string           `json:"name"`
 	LogsetsInfo []PostLogSetInfo `json:"logsets_info"`
@@ -49,6 +53,7 @@ type PostLog struct {
 	Structures  []string         `json:"structures"`
 }
 
+// PutLog represents the entity used to update a log to the logentries API
 type PutLog struct {
 	Name        string           `json:"name"`
 	LogsetsInfo []LogSetInfo `json:"logsets_info"`
@@ -59,6 +64,7 @@ type PutLog struct {
 	Structures  []string         `json:"structures"`
 }
 
+// LogInfo represents information about the log
 type LogInfo struct {
 	Id    string `json:"id"`
 	Name  string `json:"name"`
@@ -67,18 +73,22 @@ type LogInfo struct {
 
 // Structs meant for marshalling/un-marshalling purposes
 
+// logsCollection represents a wrapper struct for marshalling/unmarshalling purposes
 type logsCollection struct {
 	Logs []Log
 }
 
+// getLog represents a wrapper struct for marshalling/unmarshalling purposes
 type getLog struct {
 	Log Log `json:"log"`
 }
 
+// postLog represents a wrapper struct for marshalling/unmarshalling purposes
 type postLog struct {
 	PostLog PostLog `json:"log"`
 }
 
+// putLog represents a wrapper struct for marshalling/unmarshalling purposes
 type putLog struct {
 	PutLog PutLog `json:"log"`
 }
@@ -139,10 +149,12 @@ func (l *Logs) DeleteLog(logId string) error {
 	return nil
 }
 
+// getPath returns the rest end point for logs
 func (l *Logs) getPath() string {
 	return "/management/logs"
 }
 
+// getLogEndPoint returns the rest end point to retrieve an individual log
 func (l *Logs) getLogEndPoint(logId string) string {
 	return fmt.Sprintf("%s/%s", l.getPath(), logId)
 }

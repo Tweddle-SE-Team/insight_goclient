@@ -49,7 +49,7 @@ func TestTags_GetTags(t *testing.T) {
 					Type:            "Alert",
 				},
 			},
-			Labels: Labels{
+			Labels: getLabels{
 				{
 					Id:       "label-uuid",
 					Name:     "Login Failure",
@@ -107,7 +107,7 @@ func TestTags_GetTag(t *testing.T) {
 				Type:            "Alert",
 			},
 		},
-		Labels: Labels{
+		Labels: getLabels{
 			{
 				Id:       "label-uuid",
 				Name:     "Login Failure",
@@ -166,7 +166,7 @@ func TestTags_PostTag(t *testing.T) {
 				Type:            "Alert",
 			},
 		},
-		Labels: Labels{
+		Labels: getLabels{
 			{
 				Id:       "label-uuid",
 				Name:     "Login Failure",
@@ -213,7 +213,7 @@ func TestTags_PostTag(t *testing.T) {
 				Type:    p.Actions[0].Type,
 			},
 		},
-		Labels: Labels{
+		Labels: getLabels{
 			{
 				Id:       p.Labels[0].Id,
 				Name:     p.Labels[0].Name,
@@ -265,7 +265,7 @@ func TestTags_PutTag(t *testing.T) {
 				Type:            "Alert",
 			},
 		},
-		Labels: Labels{
+		Labels: getLabels{
 			{
 				Id:       "label-uuid",
 				Name:     "Test Label",
@@ -312,7 +312,7 @@ func TestTags_PutTag(t *testing.T) {
 				Type:            putTag.Actions[0].Type,
 			},
 		},
-		Labels: Labels{
+		Labels: getLabels{
 			{
 				Id:       putTag.Labels[0].Id,
 				Name:     putTag.Labels[0].Name,

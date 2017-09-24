@@ -12,15 +12,19 @@ import (
 // - Update an existing Log Set
 // - Delete a Log Set
 
+// LogSets represents the logsets interface by which user can interact with logentries logsets API
 type LogSets struct {
 	client *client `json:"-"`
 }
 
+// NewLogSets creates a new LogSets struct that exposes LogSets CRUD operations
 func NewLogSets(c *client) LogSets {
 	return LogSets{c}
 }
 
 // Structs meant for clients
+
+// PostLogSet represents the entity used to create a new logset to the logentries API
 type PostLogSet struct {
 	Name        string            `json:"name"`
 	Description string            `json:"description,omitempty"`
@@ -32,6 +36,7 @@ type PostLogSetInfo struct {
 	Id string `json:"id"`
 }
 
+// PostLogSet represents the entity used to update an existing logset to the logentries API
 type PutLogSet struct {
 	Name        string    `json:"name"`
 	Description string    `json:"description,omitempty"`
@@ -39,6 +44,7 @@ type PutLogSet struct {
 	LogsInfo    []LogInfo `json:"logs_info,omitempty"`
 }
 
+// LogSet represents the entity used to get an existing log from the logentries API
 type LogSet struct {
 	Id          string    `json:"id"`
 	Name        string    `json:"name"`
@@ -47,41 +53,49 @@ type LogSet struct {
 	LogsInfo    []LogInfo `json:"logs_info"`
 }
 
+// UserData represents user metadata
 type UserData struct {
 	LogEntriesDistName string `json:"le_distname"`
 	LogEntriesDistVer  string `json:"le_distver"`
 	LogEntriesNameIntr string `json:"le_nameintr"`
 }
 
+// LogSetInfo represent information about the logset
 type LogSetInfo struct {
 	Id    string `json:"id"`
 	Name  string `json:"name"`
 	Links []Link `json:"links"`
 }
 
+// Link represents link metadata of the logset
 type Link struct {
 	Href string `json:"href"`
 	Rel  string `json:"rel"`
 }
 
 // Structs meant for marshalling/un-marshalling purposes
+
+// logSetCollection represents a wrapper struct for marshalling/unmarshalling purposes
 type logSetCollection struct {
 	LogSets []LogSet `json:"logsets"`
 }
 
+// getLogSet represents a wrapper struct for marshalling/unmarshalling purposes
 type getLogSet struct {
 	LogSet LogSet `json:"logset"`
 }
 
+// postLogSet represents a wrapper struct for marshalling/unmarshalling purposes
 type postLogSet struct {
 	PostLogSet PostLogSet `json:"logset"`
 }
 
+// putLogSet represents a wrapper struct for marshalling/unmarshalling purposes
 type putLogSet struct {
 	PutLogSet PutLogSet `json:"logset"`
 }
 
-// GetLogSets gets details of an existing Log Set
+// GetLogSet gets details of a list of all Log Sets
 func (l *LogSets) GetLogSets() ([]LogSet, error) {
 	logSets := &logSetCollection{}
 	if err := l.client.get(l.getPath(), logSets); err != nil {
@@ -90,7 +104,7 @@ func (l *LogSets) GetLogSets() ([]LogSet, error) {
 	return logSets.LogSets, nil
 }
 
-// GetLogSet gets details of a list of all Log Sets
+// GetLogSets gets details of an existing Log Set
 func (l *LogSets) GetLogSet(logSetId string) (LogSet, error) {
 	if logSetId == "" {
 		return LogSet{}, errors.New("logSetId input parameter is mandatory")
@@ -137,10 +151,12 @@ func (l *LogSets) DeleteLogSet(logSetId string) error {
 	return nil
 }
 
+// getPath returns the rest end point for logsets
 func (l *LogSets) getPath() string {
 	return "/management/logsets"
 }
 
+// getLogSetEndPoint returns the rest end point to retrieve an individual logsets
 func (l *LogSets) getLogSetEndPoint(logSetId string) string {
 	return fmt.Sprintf("%s/%s", l.getPath(), logSetId)
 }
