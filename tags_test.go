@@ -139,7 +139,7 @@ func TestTags_GetTagErrorsIfTagIdIsEmpty(t *testing.T) {
 
 func TestTags_PostTag(t *testing.T) {
 
-	postTag := PostTag{
+	p := PostTag{
 		Name: "Foo Bar Tag",
 		Type: "Alert",
 		Sources: []PostSource{
@@ -180,11 +180,11 @@ func TestTags_PostTag(t *testing.T) {
 
 	expectedTag := Tag{
 		Id:   "new-tag-uuid",
-		Name: postTag.Name,
-		Type: postTag.Type,
+		Name: p.Name,
+		Type: p.Type,
 		Sources: []Source{
 			{
-				Id:              postTag.Sources[0].Id,
+				Id:              p.Sources[0].Id,
 				Name:            "auth.log",
 				RetentionPeriod: "default",
 				StoredDays:      []int{},
@@ -193,43 +193,43 @@ func TestTags_PostTag(t *testing.T) {
 		Actions: []Action{
 			{
 				Id:               "new-action-uuid",
-				MinMatchesCount:  postTag.Actions[0].MinMatchesCount,
-				MinReportCount:   postTag.Actions[0].MinReportCount,
-				MinMatchesPeriod: postTag.Actions[0].MinMatchesPeriod,
-				MinReportPeriod:  postTag.Actions[0].MinReportPeriod,
+				MinMatchesCount:  p.Actions[0].MinMatchesCount,
+				MinReportCount:   p.Actions[0].MinReportCount,
+				MinMatchesPeriod: p.Actions[0].MinMatchesPeriod,
+				MinReportPeriod:  p.Actions[0].MinReportPeriod,
 				Targets: Targets{
 					{
 						Id:   "new-target-uuid",
-						Type: postTag.Actions[0].Targets[0].Type,
+						Type: p.Actions[0].Targets[0].Type,
 						ParamsSet: ParamsSet{
-							Direct: postTag.Actions[0].Targets[0].ParamsSet.Direct,
-							Teams:  postTag.Actions[0].Targets[0].ParamsSet.Teams,
-							Users:  postTag.Actions[0].Targets[0].ParamsSet.Users,
+							Direct: p.Actions[0].Targets[0].ParamsSet.Direct,
+							Teams:  p.Actions[0].Targets[0].ParamsSet.Teams,
+							Users:  p.Actions[0].Targets[0].ParamsSet.Users,
 						},
-						AlertContentSet: postTag.Actions[0].Targets[0].AlertContentSet,
+						AlertContentSet: p.Actions[0].Targets[0].AlertContentSet,
 					},
 				},
-				Enabled:         postTag.Actions[0].Enabled,
-				Type:            postTag.Actions[0].Type,
+				Enabled: p.Actions[0].Enabled,
+				Type:    p.Actions[0].Type,
 			},
 		},
 		Labels: Labels{
 			{
-				Id:       postTag.Labels[0].Id,
-				Name:     postTag.Labels[0].Name,
-				Reserved: postTag.Labels[0].Reserved,
-				Color:    postTag.Labels[0].Color,
-				SN:       postTag.Labels[0].SN,
+				Id:       p.Labels[0].Id,
+				Name:     p.Labels[0].Name,
+				Reserved: p.Labels[0].Reserved,
+				Color:    p.Labels[0].Color,
+				SN:       p.Labels[0].SN,
 			},
 		},
-		Patterns: postTag.Patterns,
+		Patterns: p.Patterns,
 	}
 
-	requestMatcher := testutils.NewRequestMatcher(http.MethodPost, "/management/tags", postTag, http.StatusCreated, &getTag{expectedTag})
+	requestMatcher := testutils.NewRequestMatcher(http.MethodPost, "/management/tags", &postTag{p}, http.StatusCreated, &getTag{expectedTag})
 
 	tags := getTagsClient(requestMatcher)
 
-	returnedTag, err := tags.PostTag(postTag)
+	returnedTag, err := tags.PostTag(p)
 	assert.Nil(t, err)
 	assert.EqualValues(t, expectedTag, returnedTag)
 }
@@ -325,7 +325,7 @@ func TestTags_PutTag(t *testing.T) {
 	}
 
 	url := fmt.Sprintf("/management/tags/%s", tagId)
-	requestMatcher := testutils.NewRequestMatcher(http.MethodPut, url, putTag, http.StatusOK, &getTag{expectedTag})
+	requestMatcher := testutils.NewRequestMatcher(http.MethodPut, url, &postTag{putTag}, http.StatusOK, &getTag{expectedTag})
 
 	tags := getTagsClient(requestMatcher)
 

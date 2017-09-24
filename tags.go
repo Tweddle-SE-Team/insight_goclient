@@ -5,6 +5,12 @@ import (
 	"fmt"
 )
 
+// The Tags resource allows you to interact with Tags in your account. The following operations are supported:
+// - Get details of an existing Tag and Alert
+// - Get details of a list of all Tags and Alerts
+// - Create a new Tag and Alert
+// - Update an existing Tag and Alert
+
 type Tags struct {
 	client *client `json:"-"`
 }
@@ -113,10 +119,7 @@ type postTag struct {
 	PostTag PostTag `json:"tag"`
 }
 
-func (t *Tags) getPath() string {
-	return "management/tags"
-}
-
+// GetTags gets details of an existing Tag and Alert
 func (t *Tags) GetTags() ([]Tag, error) {
 	tags := &tagsCollection{}
 	if err := t.client.get(t.getPath(), tags); err != nil {
@@ -125,19 +128,19 @@ func (t *Tags) GetTags() ([]Tag, error) {
 	return tags.Tags, nil
 }
 
+// GetTag gets details of a list of all Tags and Alerts
 func (t *Tags) GetTag(tagId string) (Tag, error) {
 	if tagId == "" {
 		return Tag{}, errors.New("tagId input parameter is mandatory")
 	}
-
-	tagEndPoint := fmt.Sprintf("%s/%s", t.getPath(), tagId)
 	tag := &getTag{}
-	if err := t.client.get(tagEndPoint, tag); err != nil {
+	if err := t.client.get(t.getTagEndPoint(tagId), tag); err != nil {
 		return Tag{}, err
 	}
 	return tag.Tag, nil
 }
 
+// PostTag creates a new Tag and Alert
 func (t *Tags) PostTag(p PostTag) (Tag, error) {
 	tag := &getTag{}
 	postTag := postTag{p}
@@ -147,16 +150,24 @@ func (t *Tags) PostTag(p PostTag) (Tag, error) {
 	return tag.Tag, nil
 }
 
+// PutTag updates an existing Tag and Alert
 func (t *Tags) PutTag(tagId string, p PostTag) (Tag, error) {
 	if tagId == "" {
 		return Tag{}, errors.New("tagId input parameter is mandatory")
 	}
 
-	tagEndPoint := fmt.Sprintf("%s/%s", t.getPath(), tagId)
 	tag := &getTag{}
 	postTag := postTag{p}
-	if err := t.client.put(tagEndPoint, postTag, tag); err != nil {
+	if err := t.client.put(t.getTagEndPoint(tagId), postTag, tag); err != nil {
 		return Tag{}, err
 	}
 	return tag.Tag, nil
+}
+
+func (t *Tags) getPath() string {
+	return "management/tags"
+}
+
+func (t *Tags) getTagEndPoint(tagId string) string {
+	return fmt.Sprintf("%s/%s", t.getPath(), tagId)
 }
