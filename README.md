@@ -6,6 +6,7 @@ resources provided via the [Logentries REST Api](https://docs.logentries.com/doc
 - [LogSets](https://docs.logentries.com/docs/logsets)
 - [Logs](https://docs.logentries.com/docs/logs)
 - [Tags](https://docs.logentries.com/docs/rest-tags)
+- [Labels](https://docs.logentries.com/docs/labels)
 
 The above resources are available in the client via its seamless easy-to-use interface and in a matter of few lines you
 can have a working client ready to be used with Logentries.
