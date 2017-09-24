@@ -13,13 +13,17 @@ type LogEntriesClient struct {
 	Tags    Tags
 }
 
-func NewLogEntriesClient(apiKey string) LogEntriesClient {
+func NewLogEntriesClient(apiKey string) (LogEntriesClient, error) {
+	if apiKey == "" {
+		return LogEntriesClient{}, fmt.Errorf("apiKey is mandatory to initialise Logentries client")
+	}
+
 	c := &client{LOG_ENTRIES_API, apiKey, &HttpClient{&http.Client{}}}
 	return LogEntriesClient{
 		LogSets: NewLogSets(c),
 		Logs: NewLogs(c),
 		Tags:    NewTags(c),
-	}
+	}, nil
 }
 
 type client struct {
