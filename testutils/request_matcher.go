@@ -7,22 +7,27 @@ import (
 	"net/http"
 )
 
+// An ExpectedRequest represents the expected request that will be matched against the incoming http request
 type ExpectedRequest struct {
 	HttpMethod string
 	Url        string
 	Payload    interface{}
 }
 
+// A Response represents the response to return when the incoming request matches the ExpectedRequest
 type Response struct {
 	HttpStatusCode int
 	Payload        interface{}
 }
 
+// A TestRequestMatcher represents the expected behaviour of the mock server
 type TestRequestMatcher struct {
 	ExpectedRequest ExpectedRequest
 	Response        Response
 }
 
+// NewRequestMatcher constructs a TestRequestMatcher used to match an http.Request with the expected configured request
+// and return the configured response and status code
 func NewRequestMatcher(expectedHttpMethod, expectedPath string, expectedPayload interface{}, responseStatusCode int, response interface{}) TestRequestMatcher {
 	return TestRequestMatcher{
 		ExpectedRequest: ExpectedRequest{
@@ -34,6 +39,8 @@ func NewRequestMatcher(expectedHttpMethod, expectedPath string, expectedPayload 
 	}
 }
 
+// match checks whether the http.Request is equal to the expected one - method, url and body must match; otherwise
+// an error is returned
 func (rm *TestRequestMatcher) match(r *http.Request) error {
 	var body []byte
 	var err error

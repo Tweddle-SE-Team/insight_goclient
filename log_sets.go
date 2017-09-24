@@ -138,7 +138,7 @@ func (l *LogSets) DeleteLogSet(logSetId string) error {
 }
 
 func (l *LogSets) getPath() string {
-	return "management/logsets"
+	return "/management/logsets"
 }
 
 func (l *LogSets) getLogSetEndPoint(logSetId string) string {

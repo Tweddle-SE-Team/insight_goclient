@@ -24,9 +24,13 @@ import (
 	"github.com/dikhan/logentries_goclient"
 )
 
-func main() {
+func main() error {
 	c := logentries_goclient.NewLogEntriesClient("LOGENTRIES_API_KEY")
-	c.LogSets.GetLogSets()
+	logSets, err := c.LogSets.GetLogSets()
+	if err != nil {
+	    return err
+	}
+	fmt.println(logSets)
 }
 ```
 

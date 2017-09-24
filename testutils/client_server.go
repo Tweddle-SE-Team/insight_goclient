@@ -1,3 +1,4 @@
+// Package testutils provides utilities for testing purposes
 package testutils
 
 import (
@@ -8,11 +9,15 @@ import (
 	"net/url"
 )
 
+// TestClientServer represents a mock server configured with a matcher and a working client that is able to
+// send requests to the server
 type TestClientServer struct {
 	RequestMatcher TestRequestMatcher
 }
 
-func (t *TestClientServer) matchRequest(w http.ResponseWriter, r *http.Request) error {
+// serveResponse checks if the incoming request matches the expected request and if so returns
+// the mock response along with the status code configured in RequestMatcher
+func (t *TestClientServer) serveResponse(w http.ResponseWriter, r *http.Request) error {
 	if err := t.RequestMatcher.match(r); err != nil {
 		return err
 	} else {
@@ -28,11 +33,13 @@ func (t *TestClientServer) matchRequest(w http.ResponseWriter, r *http.Request) 
 	}
 }
 
-func (t *TestClientServer) TestClientServer(requestMatcher TestRequestMatcher) (*http.Client, *httptest.Server) {
+// TestClientServer creates a client and a server that the user can then use in unit tests. The server returned
+// will serve a response only if the incoming request matches the configured expected request.
+func (t *TestClientServer) TestClientServer() (*http.Client, *httptest.Server) {
 
 	httpServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		defer r.Body.Close()
-		if err := t.matchRequest(w, r); err != nil {
+		if err := t.serveResponse(w, r); err != nil {
 			fmt.Println("\nAn unexpected error occurred => " + err.Error())
 		}
 	}))

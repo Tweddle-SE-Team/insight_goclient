@@ -140,7 +140,7 @@ func (l *Logs) DeleteLog(logId string) error {
 }
 
 func (l *Logs) getPath() string {
-	return "management/logs"
+	return "/management/logs"
 }
 
 func (l *Logs) getLogEndPoint(logId string) string {

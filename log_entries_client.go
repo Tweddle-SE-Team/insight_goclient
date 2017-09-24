@@ -1,3 +1,4 @@
+// Package logentries_goclient provides a logentries client
 package logentries_goclient
 
 import (
@@ -17,8 +18,12 @@ func NewLogEntriesClient(apiKey string) (logEntriesClient, error) {
 	if apiKey == "" {
 		return logEntriesClient{}, fmt.Errorf("apiKey is mandatory to initialise Logentries client")
 	}
+	httpClient := &HttpClient{&http.Client{}}
+	return newLogEntriesClient(apiKey, httpClient)
+}
 
-	c := &client{LOG_ENTRIES_API, apiKey, &HttpClient{&http.Client{}}}
+func newLogEntriesClient(apiKey string, httpClient *HttpClient) (logEntriesClient, error) {
+	c := &client{LOG_ENTRIES_API, apiKey, httpClient}
 	return logEntriesClient{
 		LogSets: NewLogSets(c),
 		Logs: NewLogs(c),
@@ -38,10 +43,10 @@ func (c *client) requestHeaders() map[string]string {
 	return headers
 }
 
-func (c *client) get(path string, data interface{}) error {
+func (c *client) get(path string, in interface{}) error {
 	url := c.getLogEntriesUrl(path)
 
-	res, err := c.httpClient.Get(url, c.requestHeaders(), data)
+	res, err := c.httpClient.Get(url, c.requestHeaders(), in)
 	return checkResponseStatusCode(res, err, http.StatusOK)
 }
 
@@ -66,6 +71,10 @@ func (c *client) delete(path string) error {
 	return checkResponseStatusCode(res, err, http.StatusNoContent)
 }
 
+func (c *client) getLogEntriesUrl(path string) string {
+	return fmt.Sprintf("%s%s", c.logEntriesUrl, path)
+}
+
 func checkResponseStatusCode(res *http.Response, err error, expectedResponseStatusCode int) error {
 	if err != nil {
 		return fmt.Errorf("\nReceived unexpected error response: '%s'", err.Error())
@@ -74,8 +83,4 @@ func checkResponseStatusCode(res *http.Response, err error, expectedResponseStat
 		return fmt.Errorf("\nReceived a non expected response status code %d, expected code was %d. Response: %s", res.StatusCode, expectedResponseStatusCode, res)
 	}
 	return nil
-}
-
-func (c *client) getLogEntriesUrl(path string) string {
-	return fmt.Sprintf("%s/%s", c.logEntriesUrl, path)
 }

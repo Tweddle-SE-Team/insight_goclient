@@ -165,7 +165,7 @@ func (t *Tags) PutTag(tagId string, p PostTag) (Tag, error) {
 }
 
 func (t *Tags) getPath() string {
-	return "management/tags"
+	return "/management/tags"
 }
 
 func (t *Tags) getTagEndPoint(tagId string) string {
