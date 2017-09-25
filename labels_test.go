@@ -59,5 +59,5 @@ func TestTags_GetLabelErrorsIfTagIdIsEmpty(t *testing.T) {
 
 func getLabelsClient(requestMatcher testutils.TestRequestMatcher) Labels {
 	c := getTestClient(requestMatcher)
-	return NewLabels(c)
+	return newLabels(c)
 }

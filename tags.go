@@ -16,8 +16,8 @@ type Tags struct {
 	client *client `json:"-"`
 }
 
-// NewTags creates a new Tags struct that exposes Tags CRUD operations
-func NewTags(c *client) Tags {
+// newTags creates a new Tags struct that exposes Tags CRUD operations
+func newTags(c *client) Tags {
 	return Tags{c}
 }
 

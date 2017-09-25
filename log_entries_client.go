@@ -28,10 +28,10 @@ func NewLogEntriesClient(apiKey string) (logEntriesClient, error) {
 func newLogEntriesClient(apiKey string, httpClient *HttpClient) (logEntriesClient, error) {
 	c := &client{LOG_ENTRIES_API, apiKey, httpClient}
 	return logEntriesClient{
-		LogSets: NewLogSets(c),
-		Logs: NewLogs(c),
-		Tags:    NewTags(c),
-		Labels: NewLabels(c),
+		LogSets: newLogSets(c),
+		Logs:    newLogs(c),
+		Tags:    newTags(c),
+		Labels:  newLabels(c),
 	}, nil
 }
 

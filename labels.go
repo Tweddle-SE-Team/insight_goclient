@@ -14,8 +14,8 @@ type Labels struct {
 	client *client `json:"-"`
 }
 
-// NewLabels creates a new Labels struct that exposes Labels CRUD operations
-func NewLabels(c *client) Labels {
+// newLabels creates a new Labels struct that exposes Labels CRUD operations
+func newLabels(c *client) Labels {
 	return Labels{c}
 }
 

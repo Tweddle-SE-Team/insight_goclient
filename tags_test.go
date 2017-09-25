@@ -343,5 +343,5 @@ func TestTags_PutTagErrorsIfTagIdIsEmpty(t *testing.T) {
 
 func getTagsClient(requestMatcher testutils.TestRequestMatcher) Tags {
 	c := getTestClient(requestMatcher)
-	return NewTags(c)
+	return newTags(c)
 }

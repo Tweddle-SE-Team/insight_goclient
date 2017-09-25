@@ -215,5 +215,5 @@ func TestLogs_DeleteLogErrorsIfLogSetIdIsEmpty(t *testing.T) {
 
 func getLogsClient(requestMatcher testutils.TestRequestMatcher) Logs {
 	c := getTestClient(requestMatcher)
-	return NewLogs(c)
+	return newLogs(c)
 }

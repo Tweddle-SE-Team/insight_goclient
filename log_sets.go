@@ -17,8 +17,8 @@ type LogSets struct {
 	client *client `json:"-"`
 }
 
-// NewLogSets creates a new LogSets struct that exposes LogSets CRUD operations
-func NewLogSets(c *client) LogSets {
+// newLogSets creates a new LogSets struct that exposes LogSets CRUD operations
+func newLogSets(c *client) LogSets {
 	return LogSets{c}
 }
 
