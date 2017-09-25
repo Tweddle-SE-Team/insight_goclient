@@ -29,46 +29,46 @@ type PostLogSet struct {
 	Name        string            `json:"name"`
 	Description string            `json:"description,omitempty"`
 	UserData    map[string]string `json:"user_data,omitempty"`
-	LogsInfo    []PostLogSetInfo  `json:"logs_info,omitempty"`
+	LogsInfo    []postLogSetInfo  `json:"logs_info,omitempty"`
 }
 
-type PostLogSetInfo struct {
+type postLogSetInfo struct {
 	Id string `json:"id"`
 }
 
 // PostLogSet represents the entity used to update an existing logset to the logentries API
 type PutLogSet struct {
-	Name        string    `json:"name"`
-	Description string    `json:"description,omitempty"`
-	UserData    map[string]string  `json:"user_data,omitempty"`
-	LogsInfo    []LogInfo `json:"logs_info,omitempty"`
+	Name        string            `json:"name"`
+	Description string            `json:"description,omitempty"`
+	UserData    map[string]string `json:"user_data,omitempty"`
+	LogsInfo    []logInfo         `json:"logs_info,omitempty"`
 }
 
 // LogSet represents the entity used to get an existing log from the logentries API
 type LogSet struct {
-	Id          string    `json:"id"`
-	Name        string    `json:"name"`
-	Description string    `json:"description"`
-	UserData    map[string]string  `json:"user_data"`
-	LogsInfo    []LogInfo `json:"logs_info"`
+	Id          string            `json:"id"`
+	Name        string            `json:"name"`
+	Description string            `json:"description"`
+	UserData    map[string]string `json:"user_data"`
+	LogsInfo    []logInfo         `json:"logs_info"`
 }
 
-// UserData represents user metadata
-type UserData struct {
+// userData represents user metadata
+type userData struct {
 	LogEntriesDistName string `json:"le_distname"`
 	LogEntriesDistVer  string `json:"le_distver"`
 	LogEntriesNameIntr string `json:"le_nameintr"`
 }
 
-// LogSetInfo represent information about the logset
-type LogSetInfo struct {
+// logSetInfo represent information about the logset
+type logSetInfo struct {
 	Id    string `json:"id"`
 	Name  string `json:"name"`
-	Links []Link `json:"links"`
+	Links []link `json:"links"`
 }
 
-// Link represents link metadata of the logset
-type Link struct {
+// link represents link metadata of the logset
+type link struct {
 	Href string `json:"href"`
 	Rel  string `json:"rel"`
 }

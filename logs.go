@@ -26,18 +26,18 @@ func NewLogs(c *client) Logs {
 
 // Log represents the entity used to get an existing log from the logentries API
 type Log struct {
-	Id          string       `json:"id"`
-	Name        string       `json:"name"`
-	LogsetsInfo []LogInfo `json:"logsets_info"`
-	UserData    LogUserData  `json:"user_data"`
-	Tokens       []string     `json:"tokens"`
-	SourceType  string       `json:"source_type"`
-	TokenSeed   string       `json:"token_seed"`
-	Structures  []string     `json:"structures"`
+	Id          string      `json:"id"`
+	Name        string      `json:"name"`
+	LogsetsInfo []logInfo   `json:"logsets_info"`
+	UserData    logUserData `json:"user_data"`
+	Tokens      []string    `json:"tokens"`
+	SourceType  string      `json:"source_type"`
+	TokenSeed   string      `json:"token_seed"`
+	Structures  []string    `json:"structures"`
 }
 
-// LogUserData represents user metadata
-type LogUserData struct {
+// logUserData represents user metadata
+type logUserData struct {
 	LogEntriesAgentFileName string `json:"le_agent_filename"`
 	LogEntriesAgentFollow   string `json:"le_agent_follow"`
 }
@@ -45,9 +45,9 @@ type LogUserData struct {
 // PostLog represents the entity used to create a new log to the logentries API
 type PostLog struct {
 	Name        string           `json:"name"`
-	LogsetsInfo []PostLogSetInfo `json:"logsets_info"`
-	UserData    LogUserData      `json:"user_data"`
-	Tokens       []string         `json:"tokens"`
+	LogsetsInfo []postLogSetInfo `json:"logsets_info"`
+	UserData    logUserData      `json:"user_data"`
+	Tokens      []string         `json:"tokens"`
 	SourceType  string           `json:"source_type"`
 	TokenSeed   string           `json:"token_seed"`
 	Structures  []string         `json:"structures"`
@@ -55,20 +55,20 @@ type PostLog struct {
 
 // PutLog represents the entity used to update a log to the logentries API
 type PutLog struct {
-	Name        string           `json:"name"`
-	LogsetsInfo []LogSetInfo `json:"logsets_info"`
-	UserData    LogUserData      `json:"user_data"`
-	Tokens       []string         `json:"tokens"`
-	SourceType  string           `json:"source_type"`
-	TokenSeed   string           `json:"token_seed"`
-	Structures  []string         `json:"structures"`
+	Name        string       `json:"name"`
+	LogsetsInfo []logSetInfo `json:"logsets_info"`
+	UserData    logUserData  `json:"user_data"`
+	Tokens      []string     `json:"tokens"`
+	SourceType  string       `json:"source_type"`
+	TokenSeed   string       `json:"token_seed"`
+	Structures  []string     `json:"structures"`
 }
 
-// LogInfo represents information about the log
-type LogInfo struct {
+// logInfo represents information about the log
+type logInfo struct {
 	Id    string `json:"id"`
 	Name  string `json:"name"`
-	Links []Link `json:"links"`
+	Links []link `json:"links"`
 }
 
 // Structs meant for marshalling/un-marshalling purposes

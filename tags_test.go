@@ -18,7 +18,7 @@ func TestTags_GetTags(t *testing.T) {
 			Id:   "tag-uuid",
 			Name: "Login Failure",
 			Type: "Alert",
-			Sources: []Source{
+			Sources: []source{
 				{
 					Id:              "source-uuid",
 					Name:            "auth.log",
@@ -26,18 +26,18 @@ func TestTags_GetTags(t *testing.T) {
 					StoredDays:      []int{},
 				},
 			},
-			Actions: []Action{
+			Actions: []action{
 				{
 					Id:               "action-uuid",
 					MinMatchesCount:  1,
 					MinReportCount:   1,
 					MinMatchesPeriod: "Day",
 					MinReportPeriod:  "Day",
-					Targets: Targets{
+					Targets: []target{
 						{
 							Id:   "",
 							Type: "",
-							ParamsSet: ParamsSet{
+							ParamsSet: paramsSet{
 								Direct: "user@example.com",
 								Teams:  "some-team",
 								Users:  "user@example.com",
@@ -76,7 +76,7 @@ func TestTags_GetTag(t *testing.T) {
 		Id:   "tag-uuid",
 		Name: "Login Failure",
 		Type: "Alert",
-		Sources: []Source{
+		Sources: []source{
 			{
 				Id:              "source-uuid",
 				Name:            "auth.log",
@@ -84,18 +84,18 @@ func TestTags_GetTag(t *testing.T) {
 				StoredDays:      []int{},
 			},
 		},
-		Actions: []Action{
+		Actions: []action{
 			{
 				Id:               "action-uuid",
 				MinMatchesCount:  1,
 				MinReportCount:   1,
 				MinMatchesPeriod: "Day",
 				MinReportPeriod:  "Day",
-				Targets: Targets{
+				Targets: []target{
 					{
 						Id:   "",
 						Type: "",
-						ParamsSet: ParamsSet{
+						ParamsSet: paramsSet{
 							Direct: "user@example.com",
 							Teams:  "some-team",
 							Users:  "user@example.com",
@@ -142,21 +142,21 @@ func TestTags_PostTag(t *testing.T) {
 	p := PostTag{
 		Name: "Foo Bar Tag",
 		Type: "Alert",
-		Sources: []PostSource{
+		Sources: []postSource{
 			{
 				Id: "source-uuid",
 			},
 		},
-		Actions: []PostAction{
+		Actions: []postAction{
 			{
 				MinMatchesCount:  1,
 				MinReportCount:   1,
 				MinMatchesPeriod: "Day",
 				MinReportPeriod:  "Day",
-				Targets: PostTargets{
+				Targets: []postTarget{
 					{
 						Type: "mailto",
-						ParamsSet: ParamsSet{
+						ParamsSet: paramsSet{
 							Direct: "test@test.com",
 						},
 						AlertContentSet: map[string]string{"le_context": "true"},
@@ -182,7 +182,7 @@ func TestTags_PostTag(t *testing.T) {
 		Id:   "new-tag-uuid",
 		Name: p.Name,
 		Type: p.Type,
-		Sources: []Source{
+		Sources: []source{
 			{
 				Id:              p.Sources[0].Id,
 				Name:            "auth.log",
@@ -190,18 +190,18 @@ func TestTags_PostTag(t *testing.T) {
 				StoredDays:      []int{},
 			},
 		},
-		Actions: []Action{
+		Actions: []action{
 			{
 				Id:               "new-action-uuid",
 				MinMatchesCount:  p.Actions[0].MinMatchesCount,
 				MinReportCount:   p.Actions[0].MinReportCount,
 				MinMatchesPeriod: p.Actions[0].MinMatchesPeriod,
 				MinReportPeriod:  p.Actions[0].MinReportPeriod,
-				Targets: Targets{
+				Targets: []target{
 					{
 						Id:   "new-target-uuid",
 						Type: p.Actions[0].Targets[0].Type,
-						ParamsSet: ParamsSet{
+						ParamsSet: paramsSet{
 							Direct: p.Actions[0].Targets[0].ParamsSet.Direct,
 							Teams:  p.Actions[0].Targets[0].ParamsSet.Teams,
 							Users:  p.Actions[0].Targets[0].ParamsSet.Users,
@@ -241,21 +241,21 @@ func TestTags_PutTag(t *testing.T) {
 	putTag := PostTag{
 		Name: "Foo Bar Tag",
 		Type: "Alert",
-		Sources: []PostSource{
+		Sources: []postSource{
 			{
 				Id: "source-uuid",
 			},
 		},
-		Actions: []PostAction{
+		Actions: []postAction{
 			{
 				MinMatchesCount:  0,
 				MinReportCount:   1,
 				MinMatchesPeriod: "Hour",
 				MinReportPeriod:  "Hour",
-				Targets: PostTargets{
+				Targets: []postTarget{
 					{
 						Type: "mailto",
-						ParamsSet: ParamsSet{
+						ParamsSet: paramsSet{
 							Direct: "test@test.com",
 						},
 						AlertContentSet: map[string]string{"le_context": "true"},
@@ -281,7 +281,7 @@ func TestTags_PutTag(t *testing.T) {
 		Id:   "new-tag-uuid",
 		Name: putTag.Name,
 		Type: putTag.Type,
-		Sources: []Source{
+		Sources: []source{
 			{
 				Id:              putTag.Sources[0].Id,
 				Name:            "auth.log",
@@ -289,18 +289,18 @@ func TestTags_PutTag(t *testing.T) {
 				StoredDays:      []int{},
 			},
 		},
-		Actions: []Action{
+		Actions: []action{
 			{
 				Id:               "new-action-uuid",
 				MinMatchesCount:  putTag.Actions[0].MinMatchesCount,
 				MinReportCount:   putTag.Actions[0].MinReportCount,
 				MinMatchesPeriod: putTag.Actions[0].MinMatchesPeriod,
 				MinReportPeriod:  putTag.Actions[0].MinReportPeriod,
-				Targets: Targets{
+				Targets: []target{
 					{
 						Id:   "new-target-uuid",
 						Type: putTag.Actions[0].Targets[0].Type,
-						ParamsSet: ParamsSet{
+						ParamsSet: paramsSet{
 							Direct: putTag.Actions[0].Targets[0].ParamsSet.Direct,
 							Teams:  putTag.Actions[0].Targets[0].ParamsSet.Teams,
 							Users:  putTag.Actions[0].Targets[0].ParamsSet.Users,

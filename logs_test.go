@@ -16,11 +16,11 @@ func TestLogs_GetLogs(t *testing.T) {
 		{
 			Id:   "log-uuid",
 			Name: "MyLogSet",
-			LogsetsInfo: []LogInfo{
+			LogsetsInfo: []logInfo{
 				{
 					Id:   "log-set-uuid",
 					Name: "MyLogSet",
-					Links: []Link{
+					Links: []link{
 						{
 							Href: "https://rest.logentries.com/management/logsets/log-set-uuid",
 							Rel:  "self",
@@ -32,7 +32,7 @@ func TestLogs_GetLogs(t *testing.T) {
 			SourceType: "AGENT",
 			TokenSeed:  "",
 			Structures: []string{},
-			UserData: LogUserData{
+			UserData: logUserData{
 				LogEntriesAgentFileName: "",
 				LogEntriesAgentFollow:   "",
 			},
@@ -52,11 +52,11 @@ func TestLogs_GetLog(t *testing.T) {
 	expectedLog := Log{
 			Id:   "log-uuid",
 			Name: "MyLogSet",
-			LogsetsInfo: []LogInfo{
+			LogsetsInfo: []logInfo{
 				{
 					Id:   "log-set-uuid",
 					Name: "MyLogSet",
-					Links: []Link{
+					Links: []link{
 						{
 							Href: "https://rest.logentries.com/management/logsets/log-set-uuid",
 							Rel:  "self",
@@ -68,7 +68,7 @@ func TestLogs_GetLog(t *testing.T) {
 			SourceType: "AGENT",
 			TokenSeed:  "",
 			Structures: []string{},
-			UserData: LogUserData{
+			UserData: logUserData{
 				LogEntriesAgentFileName: "",
 				LogEntriesAgentFollow:   "",
 			},
@@ -97,10 +97,10 @@ func TestLogs_PostLog(t *testing.T) {
 			Name:        "My New Awesome Log",
 			Structures: []string{},
 			SourceType: "token",
-			LogsetsInfo: []PostLogSetInfo{
+			LogsetsInfo: []postLogSetInfo{
 				{"log-uuid"},
 			},
-			UserData: LogUserData{
+			UserData: logUserData{
 				LogEntriesAgentFileName:"",
 				LogEntriesAgentFollow:"false",
 			},
@@ -111,10 +111,10 @@ func TestLogs_PostLog(t *testing.T) {
 		Name:       p.Name,
 		Tokens:     []string {"daf42867-a82f-487e-95b7-8d10dba6c4f5"},
 		Structures: []string{},
-		LogsetsInfo: []LogInfo {
+		LogsetsInfo: []logInfo{
 			{Id: p.LogsetsInfo[0].Id},
 		},
-		UserData: LogUserData{
+		UserData: logUserData{
 			LogEntriesAgentFileName: p.UserData.LogEntriesAgentFileName,
 			LogEntriesAgentFollow:   p.UserData.LogEntriesAgentFollow,
 		},
@@ -137,11 +137,11 @@ func TestLogs_PutLog(t *testing.T) {
 		Name:        "My New Awesome Log",
 		Structures: []string{},
 		SourceType: "token",
-		LogsetsInfo: []LogSetInfo{
+		LogsetsInfo: []logSetInfo{
 			{
 				Id:"log-set-uuid",
 				Name: "ibtest",
-				Links: []Link {
+				Links: []link{
 					{
 						Href: "https://rest.logentries.com/management/logsets/log-set-uuid",
 						Rel:"Self",
@@ -149,7 +149,7 @@ func TestLogs_PutLog(t *testing.T) {
 				},
 			},
 		},
-		UserData: LogUserData{
+		UserData: logUserData{
 			LogEntriesAgentFileName:"",
 			LogEntriesAgentFollow:"false",
 		},
@@ -160,11 +160,11 @@ func TestLogs_PutLog(t *testing.T) {
 		Name:       p.Name,
 		Tokens:     []string {"daf42867-a82f-487e-95b7-8d10dba6c4f5"},
 		Structures: []string{},
-		LogsetsInfo: []LogInfo {
+		LogsetsInfo: []logInfo{
 			{
 				Id: p.LogsetsInfo[0].Id,
 				Name: p.LogsetsInfo[0].Name,
-				Links: []Link {
+				Links: []link{
 					{
 						Href: p.LogsetsInfo[0].Links[0].Href,
 						Rel:p.LogsetsInfo[0].Links[0].Rel,
@@ -172,7 +172,7 @@ func TestLogs_PutLog(t *testing.T) {
 				},
 			},
 		},
-		UserData: LogUserData{
+		UserData: logUserData{
 			LogEntriesAgentFileName: p.UserData.LogEntriesAgentFileName,
 			LogEntriesAgentFollow:   p.UserData.LogEntriesAgentFollow,
 		},

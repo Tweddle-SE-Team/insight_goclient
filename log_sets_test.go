@@ -17,11 +17,11 @@ func TestLogSets_GetLogSets(t *testing.T) {
 			Id:          "log-set-uuid",
 			Name:        "MyLogSet",
 			Description: "some description",
-			LogsInfo: []LogInfo{
+			LogsInfo: []logInfo{
 				{
 					Id:   "logs-info-uuid",
 					Name: "MyLog",
-					Links: []Link{
+					Links: []link{
 						{
 							Href: "https://rest.logentries.com/management/logs/logs-info-uuid",
 							Rel:  "Self",
@@ -46,11 +46,11 @@ func TestLogSets_GetLogSet(t *testing.T) {
 		Id:          "log-set-uuid",
 		Name:        "MyLogSet",
 		Description: "some description",
-		LogsInfo: []LogInfo{
+		LogsInfo: []logInfo{
 			{
 				Id:   "logs-info-uuid",
 				Name: "Lambda Log",
-				Links: []Link{
+				Links: []link{
 					{
 						Href: "https://rest.logentries.com/management/logs/logs-info-uuid",
 						Rel:  "Self",
@@ -83,7 +83,7 @@ func TestLogSets_PostLogSet(t *testing.T) {
 	p := PostLogSet{
 		Name:        "MyLogSet2",
 		Description: "some description",
-		LogsInfo: []PostLogSetInfo{
+		LogsInfo: []postLogSetInfo{
 			{
 				Id: "logs-info-uuid",
 			},
@@ -95,11 +95,11 @@ func TestLogSets_PostLogSet(t *testing.T) {
 		Id:          "log-set-uuid",
 		Name:        p.Name,
 		Description: p.Description,
-		LogsInfo: []LogInfo{
+		LogsInfo: []logInfo{
 			{
 				Id:   p.LogsInfo[0].Id,
 				Name: "mylog",
-				Links: []Link{
+				Links: []link{
 					{
 						Href: "https://rest.logentries.com/management/logs/logs-info-uuid",
 						Rel:  "Self",
@@ -126,11 +126,11 @@ func TestLogSets_PutLogSet(t *testing.T) {
 	p := PutLogSet{
 		Name:        "New Name",
 		Description: "updated description",
-		LogsInfo: []LogInfo{
+		LogsInfo: []logInfo{
 			{
 				Id:   "logs-info-uuid",
 				Name: "Lambda Log",
-				Links: []Link{
+				Links: []link{
 					{
 						Href: "https://rest.logentries.com/management/logs/logs-info-uuid",
 						Rel:  "Self",
@@ -145,11 +145,11 @@ func TestLogSets_PutLogSet(t *testing.T) {
 		Id:          logSetId,
 		Name:        p.Name,
 		Description: p.Description,
-		LogsInfo: []LogInfo{
+		LogsInfo: []logInfo{
 			{
 				Id:   p.LogsInfo[0].Id,
 				Name: p.LogsInfo[0].Name,
-				Links: []Link{
+				Links: []link{
 					{
 						Href: p.LogsInfo[0].Links[0].Href,
 						Rel:  p.LogsInfo[0].Links[0].Rel,
