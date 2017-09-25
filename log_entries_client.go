@@ -62,14 +62,14 @@ func (c *client) get(path string, in interface{}) error {
 func (c *client) post(path string, in interface{}, out interface{}) error {
 	url := c.getLogEntriesUrl(path)
 
-	res, err := c.httpClient.Post(url, c.requestHeaders(), in, out)
+	res, err := c.httpClient.PostJson(url, c.requestHeaders(), in, out)
 	return checkResponseStatusCode(res, err, http.StatusCreated)
 }
 
 func (c *client) put(path string, in interface{}, out interface{}) error {
 	url := c.getLogEntriesUrl(path)
 
-	res, err := c.httpClient.Put(url, c.requestHeaders(), in, out)
+	res, err := c.httpClient.PutJson(url, c.requestHeaders(), in, out)
 	return checkResponseStatusCode(res, err, http.StatusOK)
 }
 
