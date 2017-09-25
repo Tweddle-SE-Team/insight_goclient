@@ -1,4 +1,9 @@
-// Package logentries_goclient provides a logentries client
+// Package logentries_goclient provides a logentries client which allows the interaction with logentries rest API
+// via the seamless resource interfaces exposed. Examples include:
+// - LogSets
+// - Logs
+// - Tags
+// - Labels
 package logentries_goclient
 
 import (
