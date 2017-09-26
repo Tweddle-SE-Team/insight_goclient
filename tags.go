@@ -40,13 +40,13 @@ type PostSource struct {
 
 // PostAction represents the entity used to associate actions (e,g: alerts) with the posted PostTag
 type PostAction struct {
-	MinMatchesCount  int         `json:"min_matches_count"`
-	MinReportCount   int         `json:"min_report_count"`
-	MinMatchesPeriod string      `json:"min_matches_period"`
-	MinReportPeriod  string      `json:"min_report_period"`
-	Targets          []postTarget `json:"targets"`
-	Enabled          bool        `json:"enabled"`
-	Type             string      `json:"type"`
+	MinMatchesCount  int          `json:"min_matches_count"`
+	MinReportCount   int          `json:"min_report_count"`
+	MinMatchesPeriod string       `json:"min_matches_period"`
+	MinReportPeriod  string       `json:"min_report_period"`
+	Targets          []PostTarget `json:"targets"`
+	Enabled          bool         `json:"enabled"`
+	Type             string       `json:"type"`
 }
 
 // Tag represents the entity used to get an existing tag from the logentries API
@@ -87,8 +87,8 @@ type target struct {
 	AlertContentSet map[string]string `json:"alert_content_set"`
 }
 
-// postTarget represents the target for the configured alarm (e,g: mailto, pagerduty)
-type postTarget struct {
+// PostTarget represents the target for the configured alarm (e,g: mailto, pagerduty)
+type PostTarget struct {
 	Type            string            `json:"type"`
 	ParamsSet       paramsSet         `json:"params_set"`
 	AlertContentSet map[string]string `json:"alert_content_set"`

@@ -153,7 +153,7 @@ func TestTags_PostTag(t *testing.T) {
 				MinReportCount:   1,
 				MinMatchesPeriod: "Day",
 				MinReportPeriod:  "Day",
-				Targets: []postTarget{
+				Targets: []PostTarget{
 					{
 						Type: "mailto",
 						ParamsSet: paramsSet{
@@ -252,7 +252,7 @@ func TestTags_PutTag(t *testing.T) {
 				MinReportCount:   1,
 				MinMatchesPeriod: "Hour",
 				MinReportPeriod:  "Hour",
-				Targets: []postTarget{
+				Targets: []PostTarget{
 					{
 						Type: "mailto",
 						ParamsSet: paramsSet{
