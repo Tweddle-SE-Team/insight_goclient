@@ -29,10 +29,10 @@ type PostLogSet struct {
 	Name        string            `json:"name"`
 	Description string            `json:"description,omitempty"`
 	UserData    map[string]string `json:"user_data,omitempty"`
-	LogsInfo    []postLogSetInfo  `json:"logs_info,omitempty"`
+	LogsInfo    []PostLogSetInfo  `json:"logs_info,omitempty"`
 }
 
-type postLogSetInfo struct {
+type PostLogSetInfo struct {
 	Id string `json:"id"`
 }
 
@@ -41,7 +41,7 @@ type PutLogSet struct {
 	Name        string            `json:"name"`
 	Description string            `json:"description,omitempty"`
 	UserData    map[string]string `json:"user_data,omitempty"`
-	LogsInfo    []logInfo         `json:"logs_info,omitempty"`
+	LogsInfo    []LogInfo         `json:"logs_info,omitempty"`
 }
 
 // LogSet represents the entity used to get an existing log from the logentries API
@@ -50,7 +50,7 @@ type LogSet struct {
 	Name        string            `json:"name"`
 	Description string            `json:"description"`
 	UserData    map[string]string `json:"user_data"`
-	LogsInfo    []logInfo         `json:"logs_info"`
+	LogsInfo    []LogInfo         `json:"logs_info"`
 }
 
 // userData represents user metadata
@@ -60,8 +60,8 @@ type userData struct {
 	LogEntriesNameIntr string `json:"le_nameintr"`
 }
 
-// logSetInfo represent information about the logset
-type logSetInfo struct {
+// LogSetInfo represent information about the logset
+type LogSetInfo struct {
 	Id    string `json:"id"`
 	Name  string `json:"name"`
 	Links []link `json:"links"`

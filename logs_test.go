@@ -16,7 +16,7 @@ func TestLogs_GetLogs(t *testing.T) {
 		{
 			Id:   "log-uuid",
 			Name: "MyLogSet",
-			LogsetsInfo: []logInfo{
+			LogsetsInfo: []LogInfo{
 				{
 					Id:   "log-set-uuid",
 					Name: "MyLogSet",
@@ -32,7 +32,7 @@ func TestLogs_GetLogs(t *testing.T) {
 			SourceType: "AGENT",
 			TokenSeed:  "",
 			Structures: []string{},
-			UserData: logUserData{
+			UserData: LogUserData{
 				LogEntriesAgentFileName: "",
 				LogEntriesAgentFollow:   "",
 			},
@@ -52,7 +52,7 @@ func TestLogs_GetLog(t *testing.T) {
 	expectedLog := Log{
 			Id:   "log-uuid",
 			Name: "MyLogSet",
-			LogsetsInfo: []logInfo{
+			LogsetsInfo: []LogInfo{
 				{
 					Id:   "log-set-uuid",
 					Name: "MyLogSet",
@@ -68,7 +68,7 @@ func TestLogs_GetLog(t *testing.T) {
 			SourceType: "AGENT",
 			TokenSeed:  "",
 			Structures: []string{},
-			UserData: logUserData{
+			UserData: LogUserData{
 				LogEntriesAgentFileName: "",
 				LogEntriesAgentFollow:   "",
 			},
@@ -97,10 +97,10 @@ func TestLogs_PostLog(t *testing.T) {
 			Name:        "My New Awesome Log",
 			Structures: []string{},
 			SourceType: "token",
-			LogsetsInfo: []postLogSetInfo{
+			LogsetsInfo: []PostLogSetInfo{
 				{"log-uuid"},
 			},
-			UserData: logUserData{
+			UserData: LogUserData{
 				LogEntriesAgentFileName:"",
 				LogEntriesAgentFollow:"false",
 			},
@@ -111,10 +111,10 @@ func TestLogs_PostLog(t *testing.T) {
 		Name:       p.Name,
 		Tokens:     []string {"daf42867-a82f-487e-95b7-8d10dba6c4f5"},
 		Structures: []string{},
-		LogsetsInfo: []logInfo{
+		LogsetsInfo: []LogInfo{
 			{Id: p.LogsetsInfo[0].Id},
 		},
-		UserData: logUserData{
+		UserData: LogUserData{
 			LogEntriesAgentFileName: p.UserData.LogEntriesAgentFileName,
 			LogEntriesAgentFollow:   p.UserData.LogEntriesAgentFollow,
 		},
@@ -137,7 +137,7 @@ func TestLogs_PutLog(t *testing.T) {
 		Name:        "My New Awesome Log",
 		Structures: []string{},
 		SourceType: "token",
-		LogsetsInfo: []logSetInfo{
+		LogsetsInfo: []LogSetInfo{
 			{
 				Id:"log-set-uuid",
 				Name: "ibtest",
@@ -149,7 +149,7 @@ func TestLogs_PutLog(t *testing.T) {
 				},
 			},
 		},
-		UserData: logUserData{
+		UserData: LogUserData{
 			LogEntriesAgentFileName:"",
 			LogEntriesAgentFollow:"false",
 		},
@@ -160,7 +160,7 @@ func TestLogs_PutLog(t *testing.T) {
 		Name:       p.Name,
 		Tokens:     []string {"daf42867-a82f-487e-95b7-8d10dba6c4f5"},
 		Structures: []string{},
-		LogsetsInfo: []logInfo{
+		LogsetsInfo: []LogInfo{
 			{
 				Id: p.LogsetsInfo[0].Id,
 				Name: p.LogsetsInfo[0].Name,
@@ -172,7 +172,7 @@ func TestLogs_PutLog(t *testing.T) {
 				},
 			},
 		},
-		UserData: logUserData{
+		UserData: LogUserData{
 			LogEntriesAgentFileName: p.UserData.LogEntriesAgentFileName,
 			LogEntriesAgentFollow:   p.UserData.LogEntriesAgentFollow,
 		},

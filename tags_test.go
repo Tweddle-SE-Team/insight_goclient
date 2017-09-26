@@ -49,7 +49,7 @@ func TestTags_GetTags(t *testing.T) {
 					Type:            "Alert",
 				},
 			},
-			Labels: getLabels{
+			Labels: GetLabels{
 				{
 					Id:       "label-uuid",
 					Name:     "Login Failure",
@@ -107,7 +107,7 @@ func TestTags_GetTag(t *testing.T) {
 				Type:            "Alert",
 			},
 		},
-		Labels: getLabels{
+		Labels: GetLabels{
 			{
 				Id:       "label-uuid",
 				Name:     "Login Failure",
@@ -142,12 +142,12 @@ func TestTags_PostTag(t *testing.T) {
 	p := PostTag{
 		Name: "Foo Bar Tag",
 		Type: "Alert",
-		Sources: []postSource{
+		Sources: []PostSource{
 			{
 				Id: "source-uuid",
 			},
 		},
-		Actions: []postAction{
+		Actions: []PostAction{
 			{
 				MinMatchesCount:  1,
 				MinReportCount:   1,
@@ -166,7 +166,7 @@ func TestTags_PostTag(t *testing.T) {
 				Type:            "Alert",
 			},
 		},
-		Labels: getLabels{
+		Labels: GetLabels{
 			{
 				Id:       "label-uuid",
 				Name:     "Login Failure",
@@ -213,7 +213,7 @@ func TestTags_PostTag(t *testing.T) {
 				Type:    p.Actions[0].Type,
 			},
 		},
-		Labels: getLabels{
+		Labels: GetLabels{
 			{
 				Id:       p.Labels[0].Id,
 				Name:     p.Labels[0].Name,
@@ -241,12 +241,12 @@ func TestTags_PutTag(t *testing.T) {
 	putTag := PostTag{
 		Name: "Foo Bar Tag",
 		Type: "Alert",
-		Sources: []postSource{
+		Sources: []PostSource{
 			{
 				Id: "source-uuid",
 			},
 		},
-		Actions: []postAction{
+		Actions: []PostAction{
 			{
 				MinMatchesCount:  0,
 				MinReportCount:   1,
@@ -265,7 +265,7 @@ func TestTags_PutTag(t *testing.T) {
 				Type:            "Alert",
 			},
 		},
-		Labels: getLabels{
+		Labels: GetLabels{
 			{
 				Id:       "label-uuid",
 				Name:     "Test Label",
@@ -312,7 +312,7 @@ func TestTags_PutTag(t *testing.T) {
 				Type:            putTag.Actions[0].Type,
 			},
 		},
-		Labels: getLabels{
+		Labels: GetLabels{
 			{
 				Id:       putTag.Labels[0].Id,
 				Name:     putTag.Labels[0].Name,

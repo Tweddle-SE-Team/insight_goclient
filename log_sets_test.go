@@ -17,7 +17,7 @@ func TestLogSets_GetLogSets(t *testing.T) {
 			Id:          "log-set-uuid",
 			Name:        "MyLogSet",
 			Description: "some description",
-			LogsInfo: []logInfo{
+			LogsInfo: []LogInfo{
 				{
 					Id:   "logs-info-uuid",
 					Name: "MyLog",
@@ -46,7 +46,7 @@ func TestLogSets_GetLogSet(t *testing.T) {
 		Id:          "log-set-uuid",
 		Name:        "MyLogSet",
 		Description: "some description",
-		LogsInfo: []logInfo{
+		LogsInfo: []LogInfo{
 			{
 				Id:   "logs-info-uuid",
 				Name: "Lambda Log",
@@ -83,7 +83,7 @@ func TestLogSets_PostLogSet(t *testing.T) {
 	p := PostLogSet{
 		Name:        "MyLogSet2",
 		Description: "some description",
-		LogsInfo: []postLogSetInfo{
+		LogsInfo: []PostLogSetInfo{
 			{
 				Id: "logs-info-uuid",
 			},
@@ -95,7 +95,7 @@ func TestLogSets_PostLogSet(t *testing.T) {
 		Id:          "log-set-uuid",
 		Name:        p.Name,
 		Description: p.Description,
-		LogsInfo: []logInfo{
+		LogsInfo: []LogInfo{
 			{
 				Id:   p.LogsInfo[0].Id,
 				Name: "mylog",
@@ -126,7 +126,7 @@ func TestLogSets_PutLogSet(t *testing.T) {
 	p := PutLogSet{
 		Name:        "New Name",
 		Description: "updated description",
-		LogsInfo: []logInfo{
+		LogsInfo: []LogInfo{
 			{
 				Id:   "logs-info-uuid",
 				Name: "Lambda Log",
@@ -145,7 +145,7 @@ func TestLogSets_PutLogSet(t *testing.T) {
 		Id:          logSetId,
 		Name:        p.Name,
 		Description: p.Description,
-		LogsInfo: []logInfo{
+		LogsInfo: []LogInfo{
 			{
 				Id:   p.LogsInfo[0].Id,
 				Name: p.LogsInfo[0].Name,

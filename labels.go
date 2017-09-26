@@ -30,7 +30,7 @@ type Label struct {
 	Reserved bool   `json:"reserved"`
 }
 
-type getLabels []Label
+type GetLabels []Label
 
 // Structs meant for marshalling/un-marshalling purposes
 

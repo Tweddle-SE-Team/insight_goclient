@@ -25,21 +25,21 @@ func newTags(c *client) Tags {
 
 // PostTag represents the entity used to post new tags to logentries API
 type PostTag struct {
-	Type     string      `json:"type"`
-	Name     string      `json:"name"`
-	Sources  []postSource `json:"sources"`
-	Actions  []postAction `json:"actions"`
-	Patterns []string    `json:"patterns"`
-	Labels   getLabels   `json:"labels"`
+	Type     string       `json:"type"`
+	Name     string       `json:"name"`
+	Sources  []PostSource `json:"sources"`
+	Actions  []PostAction `json:"actions"`
+	Patterns []string     `json:"patterns"`
+	Labels   GetLabels    `json:"labels"`
 }
 
-// postSource represents the source log that the PostTag will be associated with
-type postSource struct {
+// PostSource represents the source log that the PostTag will be associated with
+type PostSource struct {
 	Id string `json:"id"`
 }
 
-// postAction represents the entity used to associate actions (e,g: alerts) with the posted PostTag
-type postAction struct {
+// PostAction represents the entity used to associate actions (e,g: alerts) with the posted PostTag
+type PostAction struct {
 	MinMatchesCount  int         `json:"min_matches_count"`
 	MinReportCount   int         `json:"min_report_count"`
 	MinMatchesPeriod string      `json:"min_matches_period"`
@@ -54,10 +54,10 @@ type Tag struct {
 	Id       string    `json:"id"`
 	Type     string    `json:"type"`
 	Name     string    `json:"name"`
-	Sources  []source   `json:"sources"`
-	Actions  []action   `json:"actions"`
+	Sources  []source  `json:"sources"`
+	Actions  []action  `json:"actions"`
 	Patterns []string  `json:"patterns"`
-	Labels   getLabels `json:"labels"`
+	Labels   GetLabels `json:"labels"`
 }
 // source represents the source log associated with the Tag
 type source struct {
