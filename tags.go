@@ -83,22 +83,15 @@ type action struct {
 type target struct {
 	Id              string            `json:"id"`
 	Type            string            `json:"type"`
-	ParamsSet       paramsSet         `json:"params_set"`
+	ParamsSet       map[string]string         `json:"params_set"`
 	AlertContentSet map[string]string `json:"alert_content_set"`
 }
 
 // PostTarget represents the target for the configured alarm (e,g: mailto, pagerduty)
 type PostTarget struct {
 	Type            string            `json:"type"`
-	ParamsSet       paramsSet         `json:"params_set"`
+	ParamsSet       map[string]string         `json:"params_set"`
 	AlertContentSet map[string]string `json:"alert_content_set"`
-}
-
-// paramsSet represents a set of parameters used to configure the target
-type paramsSet struct {
-	Direct string `json:"direct"`
-	Teams  string `json:"teams"`
-	Users  string `json:"users"`
 }
 
 // Structs meant for marshalling/un-marshalling purposes

@@ -37,10 +37,10 @@ func TestTags_GetTags(t *testing.T) {
 						{
 							Id:   "",
 							Type: "",
-							ParamsSet: paramsSet{
-								Direct: "user@example.com",
-								Teams:  "some-team",
-								Users:  "user@example.com",
+							ParamsSet: map[string]string{
+								"direct": "user@example.com",
+								"teams":  "some-team",
+								"users":  "user@example.com",
 							},
 							AlertContentSet: map[string]string{},
 						},
@@ -95,10 +95,10 @@ func TestTags_GetTag(t *testing.T) {
 					{
 						Id:   "",
 						Type: "",
-						ParamsSet: paramsSet{
-							Direct: "user@example.com",
-							Teams:  "some-team",
-							Users:  "user@example.com",
+						ParamsSet: map[string]string{
+							"direct": "user@example.com",
+							"teams":  "some-team",
+							"users":  "user@example.com",
 						},
 						AlertContentSet: map[string]string{},
 					},
@@ -156,8 +156,8 @@ func TestTags_PostTag(t *testing.T) {
 				Targets: []PostTarget{
 					{
 						Type: "mailto",
-						ParamsSet: paramsSet{
-							Direct: "test@test.com",
+						ParamsSet: map[string]string{
+							"direct": "test@test.com",
 						},
 						AlertContentSet: map[string]string{"le_context": "true"},
 					},
@@ -201,10 +201,10 @@ func TestTags_PostTag(t *testing.T) {
 					{
 						Id:   "new-target-uuid",
 						Type: p.Actions[0].Targets[0].Type,
-						ParamsSet: paramsSet{
-							Direct: p.Actions[0].Targets[0].ParamsSet.Direct,
-							Teams:  p.Actions[0].Targets[0].ParamsSet.Teams,
-							Users:  p.Actions[0].Targets[0].ParamsSet.Users,
+						ParamsSet: map[string]string{
+							"direct": p.Actions[0].Targets[0].ParamsSet["direct"],
+							"teams":  p.Actions[0].Targets[0].ParamsSet["teams"],
+							"users":  p.Actions[0].Targets[0].ParamsSet["users"],
 						},
 						AlertContentSet: p.Actions[0].Targets[0].AlertContentSet,
 					},
@@ -255,8 +255,8 @@ func TestTags_PutTag(t *testing.T) {
 				Targets: []PostTarget{
 					{
 						Type: "mailto",
-						ParamsSet: paramsSet{
-							Direct: "test@test.com",
+						ParamsSet: map[string]string{
+							"Direct": "test@test.com",
 						},
 						AlertContentSet: map[string]string{"le_context": "true"},
 					},
@@ -300,10 +300,10 @@ func TestTags_PutTag(t *testing.T) {
 					{
 						Id:   "new-target-uuid",
 						Type: putTag.Actions[0].Targets[0].Type,
-						ParamsSet: paramsSet{
-							Direct: putTag.Actions[0].Targets[0].ParamsSet.Direct,
-							Teams:  putTag.Actions[0].Targets[0].ParamsSet.Teams,
-							Users:  putTag.Actions[0].Targets[0].ParamsSet.Users,
+						ParamsSet: map[string]string{
+							"direct": putTag.Actions[0].Targets[0].ParamsSet["direct"],
+							"teams":  putTag.Actions[0].Targets[0].ParamsSet["teams"],
+							"users":  putTag.Actions[0].Targets[0].ParamsSet["users"],
 						},
 						AlertContentSet: putTag.Actions[0].Targets[0].AlertContentSet,
 					},
