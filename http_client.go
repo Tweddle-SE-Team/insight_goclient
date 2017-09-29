@@ -169,7 +169,6 @@ func (httpClient *HttpClient) prepareRequest(method, url string, headers map[str
 	var err error
 	if in != nil {
 		body, err = json.Marshal(in)
-		fmt.Println(string(body))
 		if err != nil {
 			return nil, err
 		}

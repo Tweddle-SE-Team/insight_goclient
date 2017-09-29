@@ -40,10 +40,10 @@ type PostSource struct {
 
 // PostAction represents the entity used to associate actions (e,g: alerts) with the posted PostTag
 type PostAction struct {
-	MinMatchesCount  int          `json:"min_matches_count"`
-	MinReportCount   int          `json:"min_report_count"`
-	MinMatchesPeriod string       `json:"min_matches_period"`
-	MinReportPeriod  string       `json:"min_report_period"`
+	MinMatchesCount  int          `json:"min_matches_count" mapstructure:"min_matches_count"`
+	MinReportCount   int          `json:"min_report_count" mapstructure:"min_report_count"`
+	MinMatchesPeriod string       `json:"min_matches_period" mapstructure:"min_matches_period"`
+	MinReportPeriod  string       `json:"min_report_period" mapstructure:"min_report_period"`
 	Targets          []PostTarget `json:"targets"`
 	Enabled          bool         `json:"enabled"`
 	Type             string       `json:"type"`
@@ -90,8 +90,8 @@ type target struct {
 // PostTarget represents the target for the configured alarm (e,g: mailto, pagerduty)
 type PostTarget struct {
 	Type            string            `json:"type"`
-	ParamsSet       map[string]string         `json:"params_set"`
-	AlertContentSet map[string]string `json:"alert_content_set"`
+	ParamsSet       map[string]string         `json:"params_set" mapstructure:"params_set"`
+	AlertContentSet map[string]string `json:"alert_content_set" mapstructure:"alert_content_set"`
 }
 
 // Structs meant for marshalling/un-marshalling purposes
@@ -154,6 +154,18 @@ func (t *Tags) PutTag(tagId string, p PostTag) (Tag, error) {
 		return Tag{}, err
 	}
 	return tag.Tag, nil
+}
+
+// DeleteTag deletes a specific Tag from an account.
+func (t *Tags) DeleteTag(tagId string) error {
+	if tagId == "" {
+		return errors.New("tagId input parameter is mandatory")
+	}
+	var err error
+	if err = t.client.delete(t.getTagEndPoint(tagId)); err != nil {
+		return err
+	}
+	return nil
 }
 
 // getPath returns the rest end point for tags
