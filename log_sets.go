@@ -29,7 +29,7 @@ type PostLogSet struct {
 	Name        string            `json:"name"`
 	Description string            `json:"description,omitempty"`
 	UserData    map[string]string `json:"user_data,omitempty"`
-	LogsInfo    []PostLogSetInfo  `json:"logs_info,omitempty"`
+	LogsInfo    []PostLogInfo     `json:"logs_info,omitempty"`
 }
 
 type PostLogSetInfo struct {

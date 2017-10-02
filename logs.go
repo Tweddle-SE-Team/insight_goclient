@@ -44,13 +44,17 @@ type LogUserData struct {
 
 // PostLog represents the entity used to create a new log to the logentries API
 type PostLog struct {
-	Name        string           `json:"name"`
+	Name        string        `json:"name"`
 	LogsetsInfo []PostLogSetInfo `json:"logsets_info"`
-	UserData    LogUserData      `json:"user_data"`
-	Tokens      []string         `json:"tokens"`
-	SourceType  string           `json:"source_type"`
-	TokenSeed   string           `json:"token_seed"`
-	Structures  []string         `json:"structures"`
+	UserData    LogUserData   `json:"user_data"`
+	Tokens      []string      `json:"tokens"`
+	SourceType  string        `json:"source_type"`
+	TokenSeed   string        `json:"token_seed"`
+	Structures  []string      `json:"structures"`
+}
+
+type PostLogInfo struct {
+	Id string `json:"id"`
 }
 
 // PutLog represents the entity used to update a log to the logentries API

@@ -98,7 +98,7 @@ func TestLogs_PostLog(t *testing.T) {
 			Structures: []string{},
 			SourceType: "token",
 			LogsetsInfo: []PostLogSetInfo{
-				{"log-uuid"},
+				{"log-set-uuid"},
 			},
 			UserData: LogUserData{
 				LogEntriesAgentFileName:"",

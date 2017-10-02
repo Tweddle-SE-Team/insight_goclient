@@ -83,7 +83,7 @@ func TestLogSets_PostLogSet(t *testing.T) {
 	p := PostLogSet{
 		Name:        "MyLogSet2",
 		Description: "some description",
-		LogsInfo: []PostLogSetInfo{
+		LogsInfo: []PostLogInfo{
 			{
 				Id: "logs-info-uuid",
 			},
