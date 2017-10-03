@@ -28,7 +28,7 @@ func newLogs(c *client) Logs {
 type Log struct {
 	Id          string      `json:"id"`
 	Name        string      `json:"name"`
-	LogsetsInfo []LogInfo   `json:"logsets_info"`
+	LogsetsInfo []LogSetInfo   `json:"logsets_info"`
 	UserData    LogUserData `json:"user_data"`
 	Tokens      []string    `json:"tokens"`
 	SourceType  string      `json:"source_type"`

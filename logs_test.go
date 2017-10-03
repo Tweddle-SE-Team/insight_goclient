@@ -16,7 +16,7 @@ func TestLogs_GetLogs(t *testing.T) {
 		{
 			Id:   "log-uuid",
 			Name: "MyLogSet",
-			LogsetsInfo: []LogInfo{
+			LogsetsInfo: []LogSetInfo{
 				{
 					Id:   "log-set-uuid",
 					Name: "MyLogSet",
@@ -52,7 +52,7 @@ func TestLogs_GetLog(t *testing.T) {
 	expectedLog := Log{
 			Id:   "log-uuid",
 			Name: "MyLogSet",
-			LogsetsInfo: []LogInfo{
+			LogsetsInfo: []LogSetInfo{
 				{
 					Id:   "log-set-uuid",
 					Name: "MyLogSet",
@@ -111,7 +111,7 @@ func TestLogs_PostLog(t *testing.T) {
 		Name:       p.Name,
 		Tokens:     []string {"daf42867-a82f-487e-95b7-8d10dba6c4f5"},
 		Structures: []string{},
-		LogsetsInfo: []LogInfo{
+		LogsetsInfo: []LogSetInfo{
 			{Id: p.LogsetsInfo[0].Id},
 		},
 		UserData: LogUserData{
@@ -160,7 +160,7 @@ func TestLogs_PutLog(t *testing.T) {
 		Name:       p.Name,
 		Tokens:     []string {"daf42867-a82f-487e-95b7-8d10dba6c4f5"},
 		Structures: []string{},
-		LogsetsInfo: []LogInfo{
+		LogsetsInfo: []LogSetInfo{
 			{
 				Id: p.LogsetsInfo[0].Id,
 				Name: p.LogsetsInfo[0].Name,
