@@ -79,14 +79,14 @@ func TestLogs_GetLog(t *testing.T) {
 
 	log := getLogsClient(requestMatcher)
 
-	returnedLog, err := log.GetLog(expectedLog.Id)
+	returnedLog, _, err := log.GetLog(expectedLog.Id)
 	assert.Nil(t, err)
 	assert.EqualValues(t, expectedLog, returnedLog)
 }
 
 func TestLogs_GetLogErrorsIfLogSetIdIsEmpty(t *testing.T) {
 	log := Logs{nil}
-	_, err := log.GetLog("")
+	_, _, err := log.GetLog("")
 	assert.NotNil(t, err)
 	assert.Error(t, err, "logId input parameter is mandatory")
 }

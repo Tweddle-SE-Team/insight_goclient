@@ -107,15 +107,16 @@ func (l *Logs) GetLogs() ([]Log, error) {
 }
 
 // GetLog gets a specific Log from an account
-func (l *Logs) GetLog(logId string) (Log, error) {
+func (l *Logs) GetLog(logId string) (Log, LogInfo, error) {
 	if logId == "" {
-		return Log{}, errors.New("logId input parameter is mandatory")
+		return Log{}, LogInfo{}, errors.New("logId input parameter is mandatory")
 	}
 	log := &getLog{}
 	if err := l.client.get(l.getLogEndPoint(logId), log); err != nil {
-		return Log{}, err
+		return Log{}, LogInfo{}, err
 	}
-	return log.Log, nil
+	logInfo := log.Log.logInfo(l)
+	return log.Log, logInfo, nil
 }
 
 // PostLog adds a log to a given account.
@@ -151,6 +152,19 @@ func (l *Logs) DeleteLog(logId string) error {
 		return err
 	}
 	return nil
+}
+
+func (l *Log) logInfo(c *Logs) LogInfo {
+	return LogInfo{
+		Id: l.Id,
+		Name: l.Name,
+		Links:[]link{
+			{
+				Href: fmt.Sprintf("%s%s", c.client.logEntriesUrl, c.getLogEndPoint(l.Id)),
+				Rel: "Self",
+			},
+		},
+	}
 }
 
 // getPath returns the rest end point for logs

@@ -65,7 +65,7 @@ func TestLogSets_GetLogSet(t *testing.T) {
 
 	logSets := getLogSetsClient(requestMatcher)
 
-	returnedLogSet, err := logSets.GetLogSet(expectedLogSet.Id)
+	returnedLogSet, _, err := logSets.GetLogSet(expectedLogSet.Id)
 	assert.Nil(t, err)
 	assert.EqualValues(t, expectedLogSet, returnedLogSet)
 
@@ -73,7 +73,7 @@ func TestLogSets_GetLogSet(t *testing.T) {
 
 func TestLogSets_GetLogSetErrorsIfLogSetIdIsEmpty(t *testing.T) {
 	logSets := LogSets{nil}
-	_, err := logSets.GetLogSet("")
+	_, _, err := logSets.GetLogSet("")
 	assert.NotNil(t, err)
 	assert.Error(t, err, "logSetId input parameter is mandatory")
 }
