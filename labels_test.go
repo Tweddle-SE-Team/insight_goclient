@@ -1,12 +1,12 @@
 package logentries_goclient
 
 import (
-	"testing"
-	"github.com/dikhan/logentries_goclient/testutils"
-	"github.com/stretchr/testify/assert"
-	"reflect"
 	"fmt"
+	"github.com/dikhan/http_goclient/testutils"
+	"github.com/stretchr/testify/assert"
 	"net/http"
+	"reflect"
+	"testing"
 )
 
 func TestLabels_GetLabels(t *testing.T) {
@@ -32,11 +32,11 @@ func TestLabels_GetLabels(t *testing.T) {
 func TestTags_GetLabel(t *testing.T) {
 
 	expectedLabel := Label{
-			Id:       "label-uuid",
-			Name:     "Login Failure",
-			Reserved: false,
-			Color:    "007afb",
-			SN:       1056,
+		Id:       "label-uuid",
+		Name:     "Login Failure",
+		Reserved: false,
+		Color:    "007afb",
+		SN:       1056,
 	}
 
 	url := fmt.Sprintf("/management/labels/%s", expectedLabel.Id)

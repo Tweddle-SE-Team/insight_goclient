@@ -7,7 +7,7 @@ import (
 
 	"fmt"
 
-	"github.com/dikhan/logentries_goclient/testutils"
+	"github.com/dikhan/http_goclient/testutils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -45,8 +45,8 @@ func TestTags_GetTags(t *testing.T) {
 							AlertContentSet: map[string]string{},
 						},
 					},
-					Enabled:         true,
-					Type:            "Alert",
+					Enabled: true,
+					Type:    "Alert",
 				},
 			},
 			Labels: GetLabels{
@@ -103,8 +103,8 @@ func TestTags_GetTag(t *testing.T) {
 						AlertContentSet: map[string]string{},
 					},
 				},
-				Enabled:         true,
-				Type:            "Alert",
+				Enabled: true,
+				Type:    "Alert",
 			},
 		},
 		Labels: GetLabels{
@@ -162,8 +162,8 @@ func TestTags_PostTag(t *testing.T) {
 						AlertContentSet: map[string]string{"le_context": "true"},
 					},
 				},
-				Enabled:         true,
-				Type:            "Alert",
+				Enabled: true,
+				Type:    "Alert",
 			},
 		},
 		Labels: GetLabels{
@@ -261,8 +261,8 @@ func TestTags_PutTag(t *testing.T) {
 						AlertContentSet: map[string]string{"le_context": "true"},
 					},
 				},
-				Enabled:         true,
-				Type:            "Alert",
+				Enabled: true,
+				Type:    "Alert",
 			},
 		},
 		Labels: GetLabels{
@@ -308,8 +308,8 @@ func TestTags_PutTag(t *testing.T) {
 						AlertContentSet: putTag.Actions[0].Targets[0].AlertContentSet,
 					},
 				},
-				Enabled:         putTag.Actions[0].Enabled,
-				Type:            putTag.Actions[0].Type,
+				Enabled: putTag.Actions[0].Enabled,
+				Type:    putTag.Actions[0].Type,
 			},
 		},
 		Labels: GetLabels{

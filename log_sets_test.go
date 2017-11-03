@@ -6,7 +6,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/dikhan/logentries_goclient/testutils"
+	"github.com/dikhan/http_goclient/testutils"
 	"github.com/stretchr/testify/assert"
 )
 

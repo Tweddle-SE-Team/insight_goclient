@@ -8,6 +8,7 @@ package logentries_goclient
 
 import (
 	"fmt"
+	httpGoClient "github.com/dikhan/http_goclient"
 	"net/http"
 )
 
@@ -15,9 +16,9 @@ const LOG_ENTRIES_API = "https://rest.logentries.com"
 
 type LogEntriesClient struct {
 	LogSets LogSets
-	Logs Logs
+	Logs    Logs
 	Tags    Tags
-	Labels Labels
+	Labels  Labels
 }
 
 // NewLogEntriesClient creates a logentries client which exposes an interface with CRUD operations for each of the
@@ -26,11 +27,11 @@ func NewLogEntriesClient(apiKey string) (LogEntriesClient, error) {
 	if apiKey == "" {
 		return LogEntriesClient{}, fmt.Errorf("apiKey is mandatory to initialise Logentries client")
 	}
-	httpClient := &HttpClient{&http.Client{}}
-	return newLogEntriesClient(apiKey, httpClient)
+	client := &httpGoClient.HttpClient{&http.Client{}}
+	return newLogEntriesClient(apiKey, client)
 }
 
-func newLogEntriesClient(apiKey string, httpClient *HttpClient) (LogEntriesClient, error) {
+func newLogEntriesClient(apiKey string, httpClient *httpGoClient.HttpClient) (LogEntriesClient, error) {
 	c := &client{LOG_ENTRIES_API, apiKey, httpClient}
 	return LogEntriesClient{
 		LogSets: newLogSets(c),
@@ -43,7 +44,7 @@ func newLogEntriesClient(apiKey string, httpClient *HttpClient) (LogEntriesClien
 type client struct {
 	logEntriesUrl string
 	api_key       string
-	httpClient    *HttpClient
+	httpClient    *httpGoClient.HttpClient
 }
 
 func (c *client) requestHeaders() map[string]string {

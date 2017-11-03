@@ -1,19 +1,20 @@
 package logentries_goclient
 
 import (
-	"github.com/dikhan/logentries_goclient/testutils"
-	"testing"
+	"fmt"
+	httpGoClient "github.com/dikhan/http_goclient"
+	"github.com/dikhan/http_goclient/testutils"
 	"github.com/stretchr/testify/assert"
 	"net/http"
-	"fmt"
+	"testing"
 )
 
 func getTestClient(requestMatcher testutils.TestRequestMatcher) *client {
-	testClientServer := testutils.TestClientServer {
+	testClientServer := testutils.TestClientServer{
 		RequestMatcher: requestMatcher,
 	}
 	httpClient, httpServer := testClientServer.TestClientServer()
-	c := &client{logEntriesUrl: httpServer.URL, api_key: "apikey", httpClient: &HttpClient{httpClient} }
+	c := &client{logEntriesUrl: httpServer.URL, api_key: "apikey", httpClient: &httpGoClient.HttpClient{httpClient}}
 	return c
 }
 
@@ -36,7 +37,7 @@ type mockObject struct {
 }
 
 func TestLogentriesClient_ClientGet(t *testing.T) {
-	mockResponse := &mockObject{Data:"some data..."}
+	mockResponse := &mockObject{Data: "some data..."}
 	requestMatcher := testutils.NewRequestMatcher(http.MethodGet, "/api/testing", nil, http.StatusOK, mockResponse)
 
 	c := getTestClient(requestMatcher)
@@ -56,8 +57,8 @@ func TestLogentriesClient_ClientGetResponseNotStatusOk(t *testing.T) {
 }
 
 func TestLogentriesClient_ClientPost(t *testing.T) {
-	mockRequestPayload := &mockObject{Data:"some req data..."}
-	mockResponse := &mockObject{Data:"some data..."}
+	mockRequestPayload := &mockObject{Data: "some req data..."}
+	mockResponse := &mockObject{Data: "some data..."}
 	requestMatcher := testutils.NewRequestMatcher(http.MethodPost, "/api/testing", mockRequestPayload, http.StatusCreated, mockResponse)
 
 	c := getTestClient(requestMatcher)
@@ -79,8 +80,8 @@ func TestLogentriesClient_ClientPostResponseNotStatusCreated(t *testing.T) {
 }
 
 func TestLogentriesClient_ClientPut(t *testing.T) {
-	mockRequestPayload := &mockObject{Data:"some req data..."}
-	mockResponse := &mockObject{Data:"some data..."}
+	mockRequestPayload := &mockObject{Data: "some req data..."}
+	mockResponse := &mockObject{Data: "some data..."}
 	requestMatcher := testutils.NewRequestMatcher(http.MethodPut, "/api/testing", mockRequestPayload, http.StatusOK, mockResponse)
 
 	c := getTestClient(requestMatcher)
