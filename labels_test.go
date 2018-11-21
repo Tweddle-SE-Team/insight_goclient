@@ -67,9 +67,9 @@ func TestLabels_DeleteLabel(t *testing.T) {
 
 	url := fmt.Sprintf("/management/labels/%s", labelId)
 	requestMatcher := testutils.NewRequestMatcher(http.MethodDelete, url, nil, http.StatusNoContent, nil)
-	log := getLabelsClient(requestMatcher)
+	label := getLabelsClient(requestMatcher)
 
-	err := log.DeleteLabel(labelId)
+	err := label.DeleteLabel(labelId)
 	assert.Nil(t, err)
 }
 

@@ -75,6 +75,13 @@ func (c *client) put(path string, in interface{}, out interface{}) error {
 	return checkResponseStatusCode(res, err, http.StatusOK)
 }
 
+func (c *client) deleteWithStatus(path string, customStatus int) error {
+	url := c.getLogEntriesUrl(path)
+
+	res, err := c.httpClient.Delete(url, c.requestHeaders())
+	return checkResponseStatusCode(res, err, customStatus)
+}
+
 func (c *client) delete(path string) error {
 	url := c.getLogEntriesUrl(path)
 

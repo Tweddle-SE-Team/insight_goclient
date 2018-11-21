@@ -81,7 +81,7 @@ func (l *Labels) DeleteLabel(labelId string) error {
 		return errors.New("labelId input parameter is mandatory")
 	}
 	var err error
-	if err = l.client.delete(l.getLabelEndPoint(labelId)); err != nil {
+	if err = l.client.deleteWithStatus(l.getLabelEndPoint(labelId), 200); err != nil {
 		return err
 	}
 	return nil
