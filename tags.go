@@ -59,6 +59,7 @@ type Tag struct {
 	Patterns []string  `json:"patterns"`
 	Labels   GetLabels `json:"labels"`
 }
+
 // source represents the source log associated with the Tag
 type source struct {
 	Id              string `json:"id"`
@@ -69,28 +70,28 @@ type source struct {
 
 // action represents the action (e,g: alerts) associated with the given Tag
 type action struct {
-	Id               string  `json:"id"`
-	MinMatchesCount  int     `json:"min_matches_count"`
-	MinReportCount   int     `json:"min_report_count"`
-	MinMatchesPeriod string  `json:"min_matches_period"`
-	MinReportPeriod  string  `json:"min_report_period"`
+	Id               string   `json:"id"`
+	MinMatchesCount  int      `json:"min_matches_count"`
+	MinReportCount   int      `json:"min_report_count"`
+	MinMatchesPeriod string   `json:"min_matches_period"`
+	MinReportPeriod  string   `json:"min_report_period"`
 	Targets          []target `json:"targets"`
-	Enabled          bool    `json:"enabled"`
-	Type             string  `json:"type"`
+	Enabled          bool     `json:"enabled"`
+	Type             string   `json:"type"`
 }
 
 // target represents the target for the configured alarm (e,g: mailto, pagerduty)
 type target struct {
 	Id              string            `json:"id"`
 	Type            string            `json:"type"`
-	ParamsSet       map[string]string         `json:"params_set"`
+	ParamsSet       map[string]string `json:"params_set"`
 	AlertContentSet map[string]string `json:"alert_content_set"`
 }
 
 // PostTarget represents the target for the configured alarm (e,g: mailto, pagerduty)
 type PostTarget struct {
 	Type            string            `json:"type"`
-	ParamsSet       map[string]string         `json:"params_set" mapstructure:"params_set"`
+	ParamsSet       map[string]string `json:"params_set" mapstructure:"params_set"`
 	AlertContentSet map[string]string `json:"alert_content_set" mapstructure:"alert_content_set"`
 }
 

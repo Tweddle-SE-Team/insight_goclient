@@ -5,9 +5,9 @@ import (
 	"reflect"
 	"testing"
 
+	"fmt"
 	"github.com/dikhan/http_goclient/testutils"
 	"github.com/stretchr/testify/assert"
-	"fmt"
 )
 
 func TestLogs_GetLogs(t *testing.T) {
@@ -28,7 +28,7 @@ func TestLogs_GetLogs(t *testing.T) {
 					},
 				},
 			},
-			Tokens:      []string{},
+			Tokens:     []string{},
 			SourceType: "AGENT",
 			TokenSeed:  "",
 			Structures: []string{},
@@ -50,28 +50,28 @@ func TestLogs_GetLogs(t *testing.T) {
 func TestLogs_GetLog(t *testing.T) {
 
 	expectedLog := Log{
-			Id:   "log-uuid",
-			Name: "MyLogSet",
-			LogsetsInfo: []LogSetInfo{
-				{
-					Id:   "log-set-uuid",
-					Name: "MyLogSet",
-					Links: []link{
-						{
-							Href: "https://rest.logentries.com/management/logsets/log-set-uuid",
-							Rel:  "self",
-						},
+		Id:   "log-uuid",
+		Name: "MyLogSet",
+		LogsetsInfo: []LogSetInfo{
+			{
+				Id:   "log-set-uuid",
+				Name: "MyLogSet",
+				Links: []link{
+					{
+						Href: "https://rest.logentries.com/management/logsets/log-set-uuid",
+						Rel:  "self",
 					},
 				},
 			},
-			Tokens:      []string{},
-			SourceType: "AGENT",
-			TokenSeed:  "",
-			Structures: []string{},
-			UserData: LogUserData{
-				LogEntriesAgentFileName: "",
-				LogEntriesAgentFollow:   "",
-			},
+		},
+		Tokens:     []string{},
+		SourceType: "AGENT",
+		TokenSeed:  "",
+		Structures: []string{},
+		UserData: LogUserData{
+			LogEntriesAgentFileName: "",
+			LogEntriesAgentFollow:   "",
+		},
 	}
 
 	url := fmt.Sprintf("/management/logs/%s", expectedLog.Id)
@@ -94,22 +94,22 @@ func TestLogs_GetLogErrorsIfLogSetIdIsEmpty(t *testing.T) {
 func TestLogs_PostLog(t *testing.T) {
 
 	p := PostLog{
-			Name:        "My New Awesome Log",
-			Structures: []string{},
-			SourceType: "token",
-			LogsetsInfo: []PostLogSetInfo{
-				{"log-set-uuid"},
-			},
-			UserData: LogUserData{
-				LogEntriesAgentFileName:"",
-				LogEntriesAgentFollow:"false",
-			},
-		}
+		Name:       "My New Awesome Log",
+		Structures: []string{},
+		SourceType: "token",
+		LogsetsInfo: []PostLogSetInfo{
+			{"log-set-uuid"},
+		},
+		UserData: LogUserData{
+			LogEntriesAgentFileName: "",
+			LogEntriesAgentFollow:   "false",
+		},
+	}
 
 	expectedLog := Log{
 		Id:         "log-set-uuid",
 		Name:       p.Name,
-		Tokens:     []string {"daf42867-a82f-487e-95b7-8d10dba6c4f5"},
+		Tokens:     []string{"daf42867-a82f-487e-95b7-8d10dba6c4f5"},
 		Structures: []string{},
 		LogsetsInfo: []LogSetInfo{
 			{Id: p.LogsetsInfo[0].Id},
@@ -134,40 +134,40 @@ func TestLogs_PutLog(t *testing.T) {
 	logId := "log-set-uuid"
 
 	p := PutLog{
-		Name:        "My New Awesome Log",
+		Name:       "My New Awesome Log",
 		Structures: []string{},
 		SourceType: "token",
 		LogsetsInfo: []LogSetInfo{
 			{
-				Id:"log-set-uuid",
+				Id:   "log-set-uuid",
 				Name: "ibtest",
 				Links: []link{
 					{
 						Href: "https://rest.logentries.com/management/logsets/log-set-uuid",
-						Rel:"Self",
+						Rel:  "Self",
 					},
 				},
 			},
 		},
 		UserData: LogUserData{
-			LogEntriesAgentFileName:"",
-			LogEntriesAgentFollow:"false",
+			LogEntriesAgentFileName: "",
+			LogEntriesAgentFollow:   "false",
 		},
 	}
 
 	expectedLog := Log{
 		Id:         logId,
 		Name:       p.Name,
-		Tokens:     []string {"daf42867-a82f-487e-95b7-8d10dba6c4f5"},
+		Tokens:     []string{"daf42867-a82f-487e-95b7-8d10dba6c4f5"},
 		Structures: []string{},
 		LogsetsInfo: []LogSetInfo{
 			{
-				Id: p.LogsetsInfo[0].Id,
+				Id:   p.LogsetsInfo[0].Id,
 				Name: p.LogsetsInfo[0].Name,
 				Links: []link{
 					{
 						Href: p.LogsetsInfo[0].Links[0].Href,
-						Rel:p.LogsetsInfo[0].Links[0].Rel,
+						Rel:  p.LogsetsInfo[0].Links[0].Rel,
 					},
 				},
 			},

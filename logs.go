@@ -26,14 +26,14 @@ func newLogs(c *client) Logs {
 
 // Log represents the entity used to get an existing log from the logentries API
 type Log struct {
-	Id          string      `json:"id"`
-	Name        string      `json:"name"`
-	LogsetsInfo []LogSetInfo   `json:"logsets_info"`
-	UserData    LogUserData `json:"user_data"`
-	Tokens      []string    `json:"tokens"`
-	SourceType  string      `json:"source_type"`
-	TokenSeed   string      `json:"token_seed"`
-	Structures  []string    `json:"structures"`
+	Id          string       `json:"id"`
+	Name        string       `json:"name"`
+	LogsetsInfo []LogSetInfo `json:"logsets_info"`
+	UserData    LogUserData  `json:"user_data"`
+	Tokens      []string     `json:"tokens"`
+	SourceType  string       `json:"source_type"`
+	TokenSeed   string       `json:"token_seed"`
+	Structures  []string     `json:"structures"`
 }
 
 // LogUserData represents user metadata
@@ -44,13 +44,13 @@ type LogUserData struct {
 
 // PostLog represents the entity used to create a new log to the logentries API
 type PostLog struct {
-	Name        string        `json:"name"`
+	Name        string           `json:"name"`
 	LogsetsInfo []PostLogSetInfo `json:"logsets_info"`
-	UserData    LogUserData   `json:"user_data"`
-	Tokens      []string      `json:"tokens"`
-	SourceType  string        `json:"source_type"`
-	TokenSeed   string        `json:"token_seed"`
-	Structures  []string      `json:"structures"`
+	UserData    LogUserData      `json:"user_data"`
+	Tokens      []string         `json:"tokens"`
+	SourceType  string           `json:"source_type"`
+	TokenSeed   string           `json:"token_seed"`
+	Structures  []string         `json:"structures"`
 }
 
 type PostLogInfo struct {
@@ -156,12 +156,12 @@ func (l *Logs) DeleteLog(logId string) error {
 
 func (l *Log) logInfo(c *Logs) LogInfo {
 	return LogInfo{
-		Id: l.Id,
+		Id:   l.Id,
 		Name: l.Name,
-		Links:[]link{
+		Links: []link{
 			{
 				Href: fmt.Sprintf("%s%s", c.client.logEntriesUrl, c.getLogEndPoint(l.Id)),
-				Rel: "Self",
+				Rel:  "Self",
 			},
 		},
 	}

@@ -9,6 +9,7 @@ package logentries_goclient
 import (
 	"fmt"
 	httpGoClient "github.com/dikhan/http_goclient"
+	"io/ioutil"
 	"net/http"
 )
 
@@ -89,8 +90,15 @@ func checkResponseStatusCode(res *http.Response, err error, expectedResponseStat
 	if err != nil {
 		return fmt.Errorf("\nReceived unexpected error response: '%s'", err.Error())
 	}
+	defer res.Body.Close()
+	var bodyBytes []byte
+	bodyBytes, err = ioutil.ReadAll(res.Body)
+	if err != nil {
+		return fmt.Errorf("\nReceived unexpected error response: '%s'", err.Error())
+	}
+	bodyString := string(bodyBytes)
 	if res.StatusCode != expectedResponseStatusCode {
-		return fmt.Errorf("\nReceived a non expected response status code %d, expected code was %d. Response: %s", res.StatusCode, expectedResponseStatusCode, res)
+		return fmt.Errorf("\nReceived a non expected response status code %d, expected code was %d. Response: %s", res.StatusCode, expectedResponseStatusCode, bodyString)
 	}
 	return nil
 }

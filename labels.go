@@ -30,6 +30,12 @@ type Label struct {
 	Reserved bool   `json:"reserved"`
 }
 
+// Label represents the entity used to get an existing label from the logentries API
+type PostLabel struct {
+	Name  string `json:"name"`
+	Color string `json:"color"`
+}
+
 type GetLabels []Label
 
 // Structs meant for marshalling/un-marshalling purposes
@@ -42,6 +48,10 @@ type labelsCollection struct {
 // getLabel represents a wrapper struct for marshalling/unmarshalling purposes
 type getLabel struct {
 	Label Label `json:"label"`
+}
+
+type postLabel struct {
+	Label PostLabel `json:"label"`
 }
 
 // GetLabels gets details of a list of all Labels
@@ -63,6 +73,29 @@ func (l *Labels) GetLabel(labelId string) (Label, error) {
 		return Label{}, err
 	}
 	return label.Label, nil
+}
+
+// DeleteLabel delete existing label
+func (l *Labels) DeleteLabel(labelId string) error {
+	if labelId == "" {
+		return errors.New("labelId input parameter is mandatory")
+	}
+	var err error
+	if err = l.client.delete(l.getLabelEndPoint(labelId)); err != nil {
+		return err
+	}
+	return nil
+}
+
+// PostLabel create a new label
+func (l *Labels) PostLabel(p PostLabel) (Label, error) {
+	getlabel := &getLabel{}
+	postlabel := &postLabel{p}
+
+	if err := l.client.post(l.getPath(), postlabel, getlabel); err != nil {
+		return Label{}, err
+	}
+	return getlabel.Label, nil
 }
 
 // getPath returns the rest end point for labels

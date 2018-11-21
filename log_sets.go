@@ -107,14 +107,14 @@ func (l *LogSets) GetLogSets() ([]LogSet, error) {
 // GetLogSets gets details of an existing Log Set
 func (l *LogSets) GetLogSet(logSetId string) (LogSet, LogSetInfo, error) {
 	if logSetId == "" {
-		return LogSet{}, LogSetInfo{},errors.New("logSetId input parameter is mandatory")
+		return LogSet{}, LogSetInfo{}, errors.New("logSetId input parameter is mandatory")
 	}
 	logSet := &getLogSet{}
 	if err := l.client.get(l.getLogSetEndPoint(logSetId), logSet); err != nil {
 		return LogSet{}, LogSetInfo{}, err
 	}
 	logSetInfo := logSet.LogSet.logSetInfo(l)
-	return logSet.LogSet,logSetInfo, nil
+	return logSet.LogSet, logSetInfo, nil
 }
 
 // PostLogSet creates a new Log Set
@@ -154,12 +154,12 @@ func (l *LogSets) DeleteLogSet(logSetId string) error {
 
 func (l *LogSet) logSetInfo(c *LogSets) LogSetInfo {
 	return LogSetInfo{
-		Id: l.Id,
+		Id:   l.Id,
 		Name: l.Name,
-		Links:[]link{
+		Links: []link{
 			{
 				Href: fmt.Sprintf("%s%s", c.client.logEntriesUrl, c.getLogSetEndPoint(l.Id)),
-				Rel: "Self",
+				Rel:  "Self",
 			},
 		},
 	}

@@ -61,3 +61,38 @@ func getLabelsClient(requestMatcher testutils.TestRequestMatcher) Labels {
 	c := getTestClient(requestMatcher)
 	return newLabels(c)
 }
+
+func TestLabels_DeleteLabel(t *testing.T) {
+	labelId := "log-set-uuid"
+
+	url := fmt.Sprintf("/management/labels/%s", labelId)
+	requestMatcher := testutils.NewRequestMatcher(http.MethodDelete, url, nil, http.StatusNoContent, nil)
+	log := getLabelsClient(requestMatcher)
+
+	err := log.DeleteLabel(labelId)
+	assert.Nil(t, err)
+}
+
+func TestLabels_PostLabel(t *testing.T) {
+
+	p := PostLabel{
+		Name:  "My Label",
+		Color: "ff0000",
+	}
+
+	expectedLabel := Label{
+		Id:       "label-uuid",
+		Name:     p.Name,
+		Color:    p.Color,
+		Reserved: false,
+		SN:       1021,
+	}
+
+	requestMatcher := testutils.NewRequestMatcher(http.MethodPost, "/management/labels", &postLabel{p}, http.StatusCreated, &getLabel{expectedLabel})
+	log := getLabelsClient(requestMatcher)
+
+	returnedLabel, err := log.PostLabel(p)
+	assert.Nil(t, err)
+	assert.EqualValues(t, expectedLabel, returnedLabel)
+
+}
