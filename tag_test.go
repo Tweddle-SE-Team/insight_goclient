@@ -1,14 +1,11 @@
-package logentries_goclient
+package insight_goclient
 
 import (
+	"fmt"
+	"github.com/stretchr/testify/assert"
 	"net/http"
 	"reflect"
 	"testing"
-
-	"fmt"
-
-	"github.com/dikhan/http_goclient/testutils"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestTags_GetTags(t *testing.T) {

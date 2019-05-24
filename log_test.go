@@ -1,13 +1,11 @@
-package logentries_goclient
+package insight_goclient
 
 import (
+	"fmt"
+	"github.com/stretchr/testify/assert"
 	"net/http"
 	"reflect"
 	"testing"
-
-	"fmt"
-	"github.com/dikhan/http_goclient/testutils"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestLogs_GetLogs(t *testing.T) {
@@ -15,14 +13,14 @@ func TestLogs_GetLogs(t *testing.T) {
 	expectedLogs := []Log{
 		{
 			Id:   "log-uuid",
-			Name: "MyLogSet",
-			LogsetsInfo: []LogSetInfo{
+			Name: "MyLogset",
+			LogsetsInfo: []LogsetInfo{
 				{
 					Id:   "log-set-uuid",
-					Name: "MyLogSet",
+					Name: "MyLogset",
 					Links: []link{
 						{
-							Href: "https://rest.logentries.com/management/logsets/log-set-uuid",
+							Href: "https://eu.rest.logs.insight.rapid7.com/management/logsets/log-set-uuid",
 							Rel:  "self",
 						},
 					},
@@ -51,14 +49,14 @@ func TestLogs_GetLog(t *testing.T) {
 
 	expectedLog := Log{
 		Id:   "log-uuid",
-		Name: "MyLogSet",
-		LogsetsInfo: []LogSetInfo{
+		Name: "MyLogset",
+		LogsetsInfo: []LogsetInfo{
 			{
 				Id:   "log-set-uuid",
-				Name: "MyLogSet",
+				Name: "MyLogset",
 				Links: []link{
 					{
-						Href: "https://rest.logentries.com/management/logsets/log-set-uuid",
+						Href: "https://eu.rest.logs.insight.rapid7.com/management/logsets/log-set-uuid",
 						Rel:  "self",
 					},
 				},
@@ -84,7 +82,7 @@ func TestLogs_GetLog(t *testing.T) {
 	assert.EqualValues(t, expectedLog, returnedLog)
 }
 
-func TestLogs_GetLogErrorsIfLogSetIdIsEmpty(t *testing.T) {
+func TestLogs_GetLogErrorsIfLogsetIdIsEmpty(t *testing.T) {
 	log := Logs{nil}
 	_, _, err := log.GetLog("")
 	assert.NotNil(t, err)
@@ -97,7 +95,7 @@ func TestLogs_PostLog(t *testing.T) {
 		Name:       "My New Awesome Log",
 		Structures: []string{},
 		SourceType: "token",
-		LogsetsInfo: []PostLogSetInfo{
+		LogsetsInfo: []PostLogsetInfo{
 			{"log-set-uuid"},
 		},
 		UserData: LogUserData{
@@ -111,7 +109,7 @@ func TestLogs_PostLog(t *testing.T) {
 		Name:       p.Name,
 		Tokens:     []string{"daf42867-a82f-487e-95b7-8d10dba6c4f5"},
 		Structures: []string{},
-		LogsetsInfo: []LogSetInfo{
+		LogsetsInfo: []LogsetInfo{
 			{Id: p.LogsetsInfo[0].Id},
 		},
 		UserData: LogUserData{
@@ -137,13 +135,13 @@ func TestLogs_PutLog(t *testing.T) {
 		Name:       "My New Awesome Log",
 		Structures: []string{},
 		SourceType: "token",
-		LogsetsInfo: []LogSetInfo{
+		LogsetsInfo: []LogsetInfo{
 			{
 				Id:   "log-set-uuid",
 				Name: "ibtest",
 				Links: []link{
 					{
-						Href: "https://rest.logentries.com/management/logsets/log-set-uuid",
+						Href: "https://eu.rest.logs.insight.rapid7.com/management/logsets/log-set-uuid",
 						Rel:  "Self",
 					},
 				},
@@ -160,7 +158,7 @@ func TestLogs_PutLog(t *testing.T) {
 		Name:       p.Name,
 		Tokens:     []string{"daf42867-a82f-487e-95b7-8d10dba6c4f5"},
 		Structures: []string{},
-		LogsetsInfo: []LogSetInfo{
+		LogsetsInfo: []LogsetInfo{
 			{
 				Id:   p.LogsetsInfo[0].Id,
 				Name: p.LogsetsInfo[0].Name,
@@ -188,7 +186,7 @@ func TestLogs_PutLog(t *testing.T) {
 
 }
 
-func TestLogs_PutLogErrorsIfLogSetIdIsEmpty(t *testing.T) {
+func TestLogs_PutLogErrorsIfLogsetIdIsEmpty(t *testing.T) {
 	log := Logs{nil}
 	_, err := log.PutLog("", PutLog{})
 	assert.NotNil(t, err)
@@ -206,7 +204,7 @@ func TestLogs_DeleteLog(t *testing.T) {
 	assert.Nil(t, err)
 }
 
-func TestLogs_DeleteLogErrorsIfLogSetIdIsEmpty(t *testing.T) {
+func TestLogs_DeleteLogErrorsIfLogsetIdIsEmpty(t *testing.T) {
 	log := Logs{nil}
 	err := log.DeleteLog("")
 	assert.NotNil(t, err)

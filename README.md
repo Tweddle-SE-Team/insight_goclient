@@ -1,37 +1,37 @@
-# Logentries Go Client
+# Insight Go Client
 
-Full fledged Go client for [Logentries](https://logentries.com/). The library supports CRUD operations for the following 
-resources provided via the [Logentries REST Api](https://docs.logentries.com/docs/rest-api).
+Full fledged Go client for [Insight](https://insight.rapid7.com). The library supports CRUD operations for the following
+resources provided via the [Insight REST Api](https://insightops.help.rapid7.com/docs/rest-api-overview).
 
-- [LogSets](https://docs.logentries.com/docs/logsets)
-- [Logs](https://docs.logentries.com/docs/logs)
-- [Tags](https://docs.logentries.com/docs/rest-tags)
-- [Labels](https://docs.logentries.com/docs/labels)
+- [LogSets](https://insightops.help.rapid7.com/docs/logsets)
+- [Logs](https://insightops.help.rapid7.com/docs/logs)
+- [Tags](https://insightops.help.rapid7.com/docs/api-tags)
+- [Labels](https://insightops.help.rapid7.com/docs/labels)
 
 The above resources are available in the client via its seamless easy-to-use interface and in a matter of few lines you
-can have a working client ready to be used with Logentries.
+can have a working client ready to be used with Insight.
 
 # How to use the client?
 
-Logentries Go Client is really easy to use. The client exposes multiple resources available in Logentries and
+Insight Go Client is really easy to use. The client exposes multiple resources available in Insight and
 each of them offer create, read, update and delete (CRUD) operations.
 
-Here is an example on how you can create a logentries client and query all the logsets under the account tight
+Here is an example on how you can create a insight client and query all the logsets under the account tight
 to the API key which the client was configured with:
 
 ```
 
 import (
-	"github.com/dikhan/logentries_goclient"
+	"github.com/dikhan/insight_goclient"
 )
 
 func main() error {
-	c := logentries_goclient.NewLogEntriesClient("LOGENTRIES_API_KEY")
-	logSets, err := c.LogSets.GetLogSets()
+	c := insight_goclient.NewInsightClient("INSIGHT_API_KEY", "eu")
+	logsets, err := c.GetLogsets()
 	if err != nil {
 	    return err
 	}
-	fmt.println(logSets)
+	fmt.println(logsets)
 }
 ```
 
@@ -47,4 +47,4 @@ func main() error {
 
 Daniel I. Khan Ramiro
 
-See also the list of [contributors](https://github.com/dikhan/logentries_goclient/graphs/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/dikhan/insight_goclient/graphs/contributors) who participated in this project.
