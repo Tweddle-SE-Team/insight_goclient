@@ -41,7 +41,7 @@ type Logs []Log
 // GetLogs lists all Logs for an account
 func (client *InsightClient) GetLogs() (*Logs, error) {
 	var logs Logs
-	if err := client.get(client.getLogEndpoint(""), &logs); err != nil {
+	if err := client.get(LOGS_PATH, &logs); err != nil {
 		return nil, err
 	}
 	return &logs, nil
@@ -50,7 +50,11 @@ func (client *InsightClient) GetLogs() (*Logs, error) {
 // GetLog gets a specific Log from an account
 func (client *InsightClient) GetLog(logId string) (*Log, error) {
 	var log Log
-	if err := client.get(client.getLogEndpoint(logId), &log); err != nil {
+	endpoint, err := client.getLogEndpoint(logId)
+	if err != nil {
+		return nil, err
+	}
+	if err := client.get(endpoint, &log); err != nil {
 		return nil, err
 	}
 	return &log, nil
@@ -58,7 +62,7 @@ func (client *InsightClient) GetLog(logId string) (*Log, error) {
 
 // PostTag creates a new Log
 func (client *InsightClient) PostLog(body Log) (*Log, error) {
-	resp, err := client.post(client.getLogEndpoint(""), body)
+	resp, err := client.post(LOGS_PATH, body)
 	if err != nil {
 		return nil, err
 	}
@@ -72,7 +76,11 @@ func (client *InsightClient) PostLog(body Log) (*Log, error) {
 
 // PutTag updates an existing Log
 func (client *InsightClient) PutLog(body Log) (*Log, error) {
-	resp, err := client.put(client.getLogEndpoint(body.Id), body)
+	endpoint, err := client.getLogEndpoint(body.Id)
+	if err != nil {
+		return nil, err
+	}
+	resp, err := client.put(endpoint, body)
 	if err != nil {
 		return nil, err
 	}
@@ -86,13 +94,17 @@ func (client *InsightClient) PutLog(body Log) (*Log, error) {
 
 // DeleteTag deletes a specific Log from an account.
 func (client *InsightClient) DeleteLog(logId string) error {
-	return client.delete(client.getLogEndpoint(logId))
+	endpoint, err := client.getLogEndpoint(logId)
+	if err != nil {
+		return err
+	}
+	return client.delete(endpoint)
 }
 
-func (client *InsightClient) getLogEndpoint(logId string) string {
+func (client *InsightClient) getLogEndpoint(logId string) (string, error) {
 	if logId == "" {
-		return LOGS_PATH
+		return "", fmt.Errorf("logId input parameter is mandatory")
 	} else {
-		return fmt.Sprintf("%s/%s", LOGS_PATH, logId)
+		return fmt.Sprintf("%s/%s", LOGS_PATH, logId), nil
 	}
 }

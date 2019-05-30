@@ -42,7 +42,7 @@ type Logsets []Logset
 // GetLogset gets details of a list of all Log Sets
 func (client *InsightClient) GetLogsets() (*Logsets, error) {
 	var logsets Logsets
-	if err := client.get(client.getLogsetEndpoint(""), &logsets); err != nil {
+	if err := client.get(LOGSETS_PATH, &logsets); err != nil {
 		return nil, err
 	}
 	return &logsets, nil
@@ -51,7 +51,11 @@ func (client *InsightClient) GetLogsets() (*Logsets, error) {
 // GetLogsets gets details of an existing Log Set
 func (client *InsightClient) GetLogset(logsetId string) (*Logset, error) {
 	var logset Logset
-	if err := client.get(client.getLogsetEndpoint(logsetId), &logset); err != nil {
+	endpoint, err := client.getLogsetEndpoint(logsetId)
+	if err != nil {
+		return nil, err
+	}
+	if err := client.get(endpoint, &logset); err != nil {
 		return nil, err
 	}
 	return &logset, nil
@@ -59,7 +63,7 @@ func (client *InsightClient) GetLogset(logsetId string) (*Logset, error) {
 
 // PostLogset creates a new LogSet
 func (client *InsightClient) PostLogset(body Logset) (*Logset, error) {
-	resp, err := client.post(client.getLogEndpoint(""), body)
+	resp, err := client.post(LOGSETS_PATH, body)
 	if err != nil {
 		return nil, err
 	}
@@ -73,7 +77,11 @@ func (client *InsightClient) PostLogset(body Logset) (*Logset, error) {
 
 // PutTag updates an existing Logset
 func (client *InsightClient) PutLogset(body Logset) (*Logset, error) {
-	resp, err := client.put(client.getLogsetEndpoint(body.Id), body)
+	endpoint, err := client.getLogsetEndpoint(body.Id)
+	if err != nil {
+		return nil, err
+	}
+	resp, err := client.put(endpoint, body)
 	if err != nil {
 		return nil, err
 	}
@@ -87,14 +95,18 @@ func (client *InsightClient) PutLogset(body Logset) (*Logset, error) {
 
 // DeleteTag deletes a specific Logset from an account.
 func (client *InsightClient) DeleteLogset(logsetId string) error {
-	return client.delete(client.getLogsetEndpoint(logsetId))
+	endpoint, err := client.getLogsetEndpoint(logsetId)
+	if err != nil {
+		return err
+	}
+	return client.delete(endpoint)
 }
 
 // getLogEndpoint returns the rest end point to retrieve an individual log
-func (client *InsightClient) getLogsetEndpoint(logsetId string) string {
+func (client *InsightClient) getLogsetEndpoint(logsetId string) (string, error) {
 	if logsetId == "" {
-		return LOGSETS_PATH
+		return "", fmt.Errorf("logsetId input parameter is mandatory")
 	} else {
-		return fmt.Sprintf("%s/%s", LOGSETS_PATH, logsetId)
+		return fmt.Sprintf("%s/%s", LOGSETS_PATH, logsetId), nil
 	}
 }

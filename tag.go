@@ -59,7 +59,7 @@ type Tags []Tag
 // GetTags gets details of an existing Tag and Alert
 func (client *InsightClient) GetTags() (*Tags, error) {
 	var tags Tags
-	if err := client.get(client.getTagEndpoint(""), &tags); err != nil {
+	if err := client.get(TAGS_PATH, &tags); err != nil {
 		return nil, err
 	}
 	return &tags, nil
@@ -68,7 +68,11 @@ func (client *InsightClient) GetTags() (*Tags, error) {
 // GetTag gets details of a list of all Tags and Alerts
 func (client *InsightClient) GetTag(tagId string) (*Tag, error) {
 	var tag Tag
-	if err := client.get(client.getTagEndpoint(tagId), &tag); err != nil {
+	endpoint, err := client.getTagEndpoint(tagId)
+	if err != nil {
+		return nil, err
+	}
+	if err := client.get(endpoint, &tag); err != nil {
 		return nil, err
 	}
 	return &tag, nil
@@ -76,7 +80,7 @@ func (client *InsightClient) GetTag(tagId string) (*Tag, error) {
 
 // PostTag creates a new Tag and Alert
 func (client *InsightClient) PostTag(body Tag) (*Tag, error) {
-	resp, err := client.post(client.getTagEndpoint(""), body)
+	resp, err := client.post(TAGS_PATH, body)
 	if err != nil {
 		return nil, err
 	}
@@ -90,7 +94,11 @@ func (client *InsightClient) PostTag(body Tag) (*Tag, error) {
 
 // PutTag updates an existing Tag and Alert
 func (client *InsightClient) PutTag(body Tag) (*Tag, error) {
-	resp, err := client.put(client.getTagEndpoint(body.Id), body)
+	endpoint, err := client.getTagEndpoint(body.Id)
+	if err != nil {
+		return nil, err
+	}
+	resp, err := client.put(endpoint, body)
 	if err != nil {
 		return nil, err
 	}
@@ -104,14 +112,18 @@ func (client *InsightClient) PutTag(body Tag) (*Tag, error) {
 
 // DeleteTag deletes a specific Tag from an account.
 func (client *InsightClient) DeleteTag(tagId string) error {
-	return client.delete(client.getTagEndpoint(tagId))
+	endpoint, err := client.getTagEndpoint(tagId)
+	if err != nil {
+		return err
+	}
+	return client.delete(endpoint)
 }
 
 // getTagEndPoint returns the rest end point to retrieve an individual tag
-func (client *InsightClient) getTagEndpoint(tagId string) string {
+func (client *InsightClient) getTagEndpoint(tagId string) (string, error) {
 	if tagId == "" {
-		return TAGS_PATH
+		return "", fmt.Errorf("tagId input parameter is mandatory")
 	} else {
-		return fmt.Sprintf("%s/%s", TAGS_PATH, tagId)
+		return fmt.Sprintf("%s/%s", TAGS_PATH, tagId), nil
 	}
 }

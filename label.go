@@ -27,7 +27,7 @@ type Labels []Label
 // GetLabels gets details of a list of all Labels
 func (client *InsightClient) GetLabels() (*Labels, error) {
 	var labels Labels
-	if err := client.get(client.getLabelEndpoint(""), &labels); err != nil {
+	if err := client.get(LABELS_PATH, &labels); err != nil {
 		return nil, err
 	}
 	return &labels, nil
@@ -36,15 +36,37 @@ func (client *InsightClient) GetLabels() (*Labels, error) {
 // GetLabel gets a specific Label from an account
 func (client *InsightClient) GetLabel(labelId string) (*Label, error) {
 	var label Label
-	if err := client.get(client.getLabelEndpoint(labelId), &label); err != nil {
+	endpoint, err := client.getLabelEndpoint(labelId)
+	if err != nil {
+		return nil, err
+	}
+	if err := client.get(endpoint, &label); err != nil {
 		return nil, err
 	}
 	return &label, nil
 }
 
+// GetLabel gets a specific Label from an account by name
+func (client *InsightClient) GetLabelsByName(name, color string) (*Labels, error) {
+	var result Labels
+	labels, err := client.GetLabels()
+	if err != nil {
+		return nil, err
+	}
+	for _, label := range *labels {
+		if label.Name == name {
+			if color != "" && label.Color != color {
+				continue
+			}
+			result = append(result, label)
+		}
+	}
+	return &result, nil
+}
+
 // PostTag creates a new Label
 func (client *InsightClient) PostLabel(body Label) (*Label, error) {
-	resp, err := client.post(client.getLabelEndpoint(""), body)
+	resp, err := client.post(LABELS_PATH, body)
 	if err != nil {
 		return nil, err
 	}
@@ -58,7 +80,11 @@ func (client *InsightClient) PostLabel(body Label) (*Label, error) {
 
 // PutTag updates an existing Label
 func (client *InsightClient) PutLabel(body Label) (*Label, error) {
-	resp, err := client.put(client.getLabelEndpoint(body.Id), body)
+	endpoint, err := client.getLabelEndpoint(body.Id)
+	if err != nil {
+		return nil, err
+	}
+	resp, err := client.put(endpoint, body)
 	if err != nil {
 		return nil, err
 	}
@@ -72,13 +98,17 @@ func (client *InsightClient) PutLabel(body Label) (*Label, error) {
 
 // DeleteTag deletes a specific Label from an account.
 func (client *InsightClient) DeleteLabel(labelId string) error {
-	return client.delete(client.getLabelEndpoint(labelId))
+	endpoint, err := client.getLabelEndpoint(labelId)
+	if err != nil {
+		return err
+	}
+	return client.delete(endpoint)
 }
 
-func (client *InsightClient) getLabelEndpoint(labelId string) string {
+func (client *InsightClient) getLabelEndpoint(labelId string) (string, error) {
 	if labelId == "" {
-		return LABELS_PATH
+		return "", fmt.Errorf("labelId input parameter is mandatory")
 	} else {
-		return fmt.Sprintf("%s/%s", LABELS_PATH, labelId)
+		return fmt.Sprintf("%s/%s", LABELS_PATH, labelId), nil
 	}
 }
