@@ -35,7 +35,7 @@ func NewInsightClient(apiKey, region string) (*InsightClient, error) {
 	return &InsightClient{fmt.Sprintf(INSIGHT_API, region), apiKey, client}, nil
 }
 
-func (client *InsightClient) sendRequest(request *http.Request) ([]byte, error) {
+func (client *InsightClient) sendRequest(request *http.Request, expectedResponseCode int) ([]byte, error) {
 	if request.Body != nil {
 		requestBody, err := request.GetBody()
 		if err != nil {
@@ -54,6 +54,10 @@ func (client *InsightClient) sendRequest(request *http.Request) ([]byte, error) 
 	if err != nil {
 		return nil, err
 	}
+	bodyString := string(body)
+	if response.StatusCode != expectedResponseCode {
+		return nil, fmt.Errorf("Received a non expected response status code %d, expected code was %d. Response: %s", response.StatusCode, expectedResponseCode, bodyString)
+	}
 	return body, nil
 }
 
@@ -63,7 +67,7 @@ func (client *InsightClient) get(path string, resource interface{}) error {
 	if err != nil {
 		return err
 	}
-	body, err := client.sendRequest(request)
+	body, err := client.sendRequest(request, http.StatusOK)
 	if err != nil {
 		return err
 	}
@@ -80,7 +84,7 @@ func (client *InsightClient) post(path string, requestBody interface{}) ([]byte,
 	if err != nil {
 		return nil, err
 	}
-	return client.sendRequest(request)
+	return client.sendRequest(request, http.StatusCreated)
 }
 
 func (client *InsightClient) put(path string, requestBody interface{}) ([]byte, error) {
@@ -93,7 +97,7 @@ func (client *InsightClient) put(path string, requestBody interface{}) ([]byte, 
 	if err != nil {
 		return nil, err
 	}
-	return client.sendRequest(request)
+	return client.sendRequest(request, http.StatusOK)
 }
 
 func (client *InsightClient) delete(path string) error {
@@ -102,7 +106,7 @@ func (client *InsightClient) delete(path string) error {
 	if err != nil {
 		return err
 	}
-	_, err = client.sendRequest(request)
+	_, err = client.sendRequest(request, http.StatusNoContent)
 	if err != nil {
 		return err
 	}

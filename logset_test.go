@@ -19,7 +19,7 @@ func TestLogsets_GetLogsets(t *testing.T) {
 				{
 					Id:   "logs-info-uuid",
 					Name: "MyLog",
-					Links: []link{
+					Links: []Link{
 						{
 							Href: "https://eu.rest.logs.insight.rapid7.com/management/logs/logs-info-uuid",
 							Rel:  "Self",
@@ -30,7 +30,7 @@ func TestLogsets_GetLogsets(t *testing.T) {
 		},
 	}
 
-	requestMatcher := testutils.NewRequestMatcher(http.MethodGet, "/management/logsets", nil, http.StatusOK, &logSetCollection{expectedLogsets})
+	requestMatcher := NewRequestMatcher(http.MethodGet, "/management/logsets", nil, http.StatusOK, &logSetCollection{expectedLogsets})
 	logSets := getLogsetsClient(requestMatcher)
 
 	returnedLogsets, err := logSets.GetLogsets()
@@ -59,7 +59,7 @@ func TestLogsets_GetLogset(t *testing.T) {
 	}
 
 	url := fmt.Sprintf("/management/logsets/%s", expectedLogset.Id)
-	requestMatcher := testutils.NewRequestMatcher(http.MethodGet, url, nil, http.StatusOK, &getLogset{expectedLogset})
+	requestMatcher := NewRequestMatcher(http.MethodGet, url, nil, http.StatusOK, &getLogset{expectedLogset})
 
 	logSets := getLogsetsClient(requestMatcher)
 
@@ -108,7 +108,7 @@ func TestLogsets_PostLogset(t *testing.T) {
 		UserData: map[string]string{},
 	}
 
-	requestMatcher := testutils.NewRequestMatcher(http.MethodPost, "/management/logsets", &postLogset{p}, http.StatusCreated, &getLogset{expectedLogset})
+	requestMatcher := NewRequestMatcher(http.MethodPost, "/management/logsets", &postLogset{p}, http.StatusCreated, &getLogset{expectedLogset})
 	logSets := getLogsetsClient(requestMatcher)
 
 	returnedLogset, err := logSets.PostLogset(p)
@@ -159,7 +159,7 @@ func TestLogsets_PutLogset(t *testing.T) {
 	}
 
 	url := fmt.Sprintf("/management/logsets/%s", logSetId)
-	requestMatcher := testutils.NewRequestMatcher(http.MethodPut, url, &putLogset{p}, http.StatusOK, &getLogset{expectedLogset})
+	requestMatcher := NewRequestMatcher(http.MethodPut, url, &putLogset{p}, http.StatusOK, &getLogset{expectedLogset})
 	logSets := getLogsetsClient(requestMatcher)
 
 	returnedLogset, err := logSets.PutLogset(logSetId, p)
@@ -179,7 +179,7 @@ func TestLogsets_DeleteLogset(t *testing.T) {
 	logSetId := "log-set-uuid"
 
 	url := fmt.Sprintf("/management/logsets/%s", logSetId)
-	requestMatcher := testutils.NewRequestMatcher(http.MethodDelete, url, nil, http.StatusNoContent, nil)
+	requestMatcher := NewRequestMatcher(http.MethodDelete, url, nil, http.StatusNoContent, nil)
 	logSets := getLogsetsClient(requestMatcher)
 
 	err := logSets.DeleteLogset(logSetId)
@@ -193,7 +193,7 @@ func TestLogsets_DeleteLogsetSetErrorsIfLogsetIdIsEmpty(t *testing.T) {
 	assert.Error(t, err, "logSetId input parameter is mandatory")
 }
 
-func getLogsetsClient(requestMatcher testutils.TestRequestMatcher) Logsets {
+func getLogsetsClient(requestMatcher TestRequestMatcher) Logsets {
 	c := getTestClient(requestMatcher)
 	return newLogsets(c)
 }

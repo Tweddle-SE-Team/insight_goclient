@@ -20,10 +20,9 @@ func TestLabels_GetLabels(t *testing.T) {
 		},
 	}
 
-	requestMatcher := testutils.NewRequestMatcher(http.MethodGet, "/management/labels", nil, http.StatusOK, &labelsCollection{expectedLabels})
-	labels := getLabelsClient(requestMatcher)
-
-	returnedLabels, err := labels.GetLabels()
+	requestMatcher := NewRequestMatcher(http.MethodGet, "/management/labels", nil, http.StatusOK, expectedLabels)
+	client := getTestClient(requestMatcher)
+	returnedLabels, err := client.GetLabels()
 	assert.Nil(t, err)
 	assert.True(t, reflect.DeepEqual(expectedLabels, returnedLabels))
 }
@@ -39,42 +38,36 @@ func TestTags_GetLabel(t *testing.T) {
 	}
 
 	url := fmt.Sprintf("/management/labels/%s", expectedLabel.Id)
-	requestMatcher := testutils.NewRequestMatcher(http.MethodGet, url, nil, http.StatusOK, &getLabel{expectedLabel})
-
-	labels := getLabelsClient(requestMatcher)
-
-	returnedLabel, err := labels.GetLabel(expectedLabel.Id)
+	requestMatcher := NewRequestMatcher(http.MethodGet, url, nil, http.StatusOK, expectedLabel)
+	client := getTestClient(requestMatcher)
+	returnedLabel, err := client.GetLabel(expectedLabel.Id)
 	assert.Nil(t, err)
 	assert.EqualValues(t, expectedLabel, returnedLabel)
 
 }
 
 func TestTags_GetLabelErrorsIfTagIdIsEmpty(t *testing.T) {
-	labels := Labels{nil}
-	_, err := labels.GetLabel("")
+	requestMatcher := NewRequestMatcher(http.MethodGet, "/management/labels/", nil, http.StatusOK, Label{})
+	client := getTestClient(requestMatcher)
+	_, err := client.GetLabel("")
 	assert.NotNil(t, err)
 	assert.Error(t, err, "labelId input parameter is mandatory")
-}
-
-func getLabelsClient(requestMatcher testutils.TestRequestMatcher) Labels {
-	c := getTestClient(requestMatcher)
-	return newLabels(c)
 }
 
 func TestLabels_DeleteLabel(t *testing.T) {
 	labelId := "log-set-uuid"
 
 	url := fmt.Sprintf("/management/labels/%s", labelId)
-	requestMatcher := testutils.NewRequestMatcher(http.MethodDelete, url, nil, http.StatusNoContent, nil)
-	label := getLabelsClient(requestMatcher)
+	requestMatcher := NewRequestMatcher(http.MethodDelete, url, nil, http.StatusNoContent, nil)
+	client := getTestClient(requestMatcher)
 
-	err := label.DeleteLabel(labelId)
+	err := client.DeleteLabel(labelId)
 	assert.Nil(t, err)
 }
 
 func TestLabels_PostLabel(t *testing.T) {
 
-	p := PostLabel{
+	p := Label{
 		Name:  "My Label",
 		Color: "ff0000",
 	}
@@ -87,10 +80,10 @@ func TestLabels_PostLabel(t *testing.T) {
 		SN:       1021,
 	}
 
-	requestMatcher := testutils.NewRequestMatcher(http.MethodPost, "/management/labels", &postLabel{p}, http.StatusCreated, &getLabel{expectedLabel})
-	log := getLabelsClient(requestMatcher)
+	requestMatcher := NewRequestMatcher(http.MethodPost, "/management/labels", p, http.StatusCreated, expectedLabel)
+	client := getTestClient(requestMatcher)
 
-	returnedLabel, err := log.PostLabel(p)
+	returnedLabel, err := client.PostLabel(p)
 	assert.Nil(t, err)
 	assert.EqualValues(t, expectedLabel, returnedLabel)
 

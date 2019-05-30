@@ -59,7 +59,7 @@ func TestTags_GetTags(t *testing.T) {
 		},
 	}
 
-	requestMatcher := testutils.NewRequestMatcher(http.MethodGet, "/management/tags", nil, http.StatusOK, &tagsCollection{expectedTags})
+	requestMatcher := NewRequestMatcher(http.MethodGet, "/management/tags", nil, http.StatusOK, &tagsCollection{expectedTags})
 	tags := getTagsClient(requestMatcher)
 
 	returnedTags, err := tags.GetTags()
@@ -117,7 +117,7 @@ func TestTags_GetTag(t *testing.T) {
 	}
 
 	url := fmt.Sprintf("/management/tags/%s", expectedTag.Id)
-	requestMatcher := testutils.NewRequestMatcher(http.MethodGet, url, nil, http.StatusOK, &getTag{expectedTag})
+	requestMatcher := NewRequestMatcher(http.MethodGet, url, nil, http.StatusOK, &getTag{expectedTag})
 
 	tags := getTagsClient(requestMatcher)
 
@@ -222,7 +222,7 @@ func TestTags_PostTag(t *testing.T) {
 		Patterns: p.Patterns,
 	}
 
-	requestMatcher := testutils.NewRequestMatcher(http.MethodPost, "/management/tags", &postTag{p}, http.StatusCreated, &getTag{expectedTag})
+	requestMatcher := NewRequestMatcher(http.MethodPost, "/management/tags", &postTag{p}, http.StatusCreated, &getTag{expectedTag})
 
 	tags := getTagsClient(requestMatcher)
 
@@ -322,7 +322,7 @@ func TestTags_PutTag(t *testing.T) {
 	}
 
 	url := fmt.Sprintf("/management/tags/%s", tagId)
-	requestMatcher := testutils.NewRequestMatcher(http.MethodPut, url, &postTag{putTag}, http.StatusOK, &getTag{expectedTag})
+	requestMatcher := NewRequestMatcher(http.MethodPut, url, &postTag{putTag}, http.StatusOK, &getTag{expectedTag})
 
 	tags := getTagsClient(requestMatcher)
 
@@ -342,7 +342,7 @@ func TestTags_DeleteTag(t *testing.T) {
 	tagId := "tag-uuid"
 
 	url := fmt.Sprintf("/management/tags/%s", tagId)
-	requestMatcher := testutils.NewRequestMatcher(http.MethodDelete, url, nil, http.StatusNoContent, nil)
+	requestMatcher := NewRequestMatcher(http.MethodDelete, url, nil, http.StatusNoContent, nil)
 	log := getTagsClient(requestMatcher)
 
 	err := log.DeleteTag(tagId)
@@ -356,7 +356,7 @@ func TestTags_DeleteTagErrorsIfTagIdIsEmpty(t *testing.T) {
 	assert.Error(t, err, "tagId input parameter is mandatory")
 }
 
-func getTagsClient(requestMatcher testutils.TestRequestMatcher) Tags {
+func getTagsClient(requestMatcher TestRequestMatcher) Tags {
 	c := getTestClient(requestMatcher)
 	return newTags(c)
 }

@@ -14,11 +14,11 @@ func TestLogs_GetLogs(t *testing.T) {
 		{
 			Id:   "log-uuid",
 			Name: "MyLogset",
-			LogsetsInfo: []LogsetInfo{
+			LogsetsInfo: []Info{
 				{
 					Id:   "log-set-uuid",
 					Name: "MyLogset",
-					Links: []link{
+					Links: []Link{
 						{
 							Href: "https://eu.rest.logs.insight.rapid7.com/management/logsets/log-set-uuid",
 							Rel:  "self",
@@ -37,8 +37,8 @@ func TestLogs_GetLogs(t *testing.T) {
 		},
 	}
 
-	requestMatcher := testutils.NewRequestMatcher(http.MethodGet, "/management/logs", nil, http.StatusOK, &logsCollection{expectedLogs})
-	logs := getLogsClient(requestMatcher)
+	requestMatcher := NewRequestMatcher(http.MethodGet, "/management/logs", nil, http.StatusOK, expectedLogs)
+	logs := getTestClient(requestMatcher)
 
 	returnedLogs, err := logs.GetLogs()
 	assert.Nil(t, err)
@@ -50,11 +50,11 @@ func TestLogs_GetLog(t *testing.T) {
 	expectedLog := Log{
 		Id:   "log-uuid",
 		Name: "MyLogset",
-		LogsetsInfo: []LogsetInfo{
+		LogsetsInfo: []Info{
 			{
 				Id:   "log-set-uuid",
 				Name: "MyLogset",
-				Links: []link{
+				Links: []Link{
 					{
 						Href: "https://eu.rest.logs.insight.rapid7.com/management/logsets/log-set-uuid",
 						Rel:  "self",
@@ -73,9 +73,9 @@ func TestLogs_GetLog(t *testing.T) {
 	}
 
 	url := fmt.Sprintf("/management/logs/%s", expectedLog.Id)
-	requestMatcher := testutils.NewRequestMatcher(http.MethodGet, url, nil, http.StatusOK, &getLog{expectedLog})
+	requestMatcher := NewRequestMatcher(http.MethodGet, url, nil, http.StatusOK, expectedLog)
 
-	log := getLogsClient(requestMatcher)
+	log := getTestClient(requestMatcher)
 
 	returnedLog, _, err := log.GetLog(expectedLog.Id)
 	assert.Nil(t, err)
@@ -91,11 +91,11 @@ func TestLogs_GetLogErrorsIfLogsetIdIsEmpty(t *testing.T) {
 
 func TestLogs_PostLog(t *testing.T) {
 
-	p := PostLog{
+	p := Log{
 		Name:       "My New Awesome Log",
 		Structures: []string{},
 		SourceType: "token",
-		LogsetsInfo: []PostLogsetInfo{
+		LogsetsInfo: []Info{
 			{"log-set-uuid"},
 		},
 		UserData: LogUserData{
@@ -109,7 +109,7 @@ func TestLogs_PostLog(t *testing.T) {
 		Name:       p.Name,
 		Tokens:     []string{"daf42867-a82f-487e-95b7-8d10dba6c4f5"},
 		Structures: []string{},
-		LogsetsInfo: []LogsetInfo{
+		LogsetsInfo: []Info{
 			{Id: p.LogsetsInfo[0].Id},
 		},
 		UserData: LogUserData{
@@ -118,10 +118,10 @@ func TestLogs_PostLog(t *testing.T) {
 		},
 	}
 
-	requestMatcher := testutils.NewRequestMatcher(http.MethodPost, "/management/logs", &postLog{p}, http.StatusCreated, &getLog{expectedLog})
-	log := getLogsClient(requestMatcher)
+	requestMatcher := NewRequestMatcher(http.MethodPost, "/management/logs", p, http.StatusCreated, expectedLog)
+	client := getTestClient(requestMatcher)
 
-	returnedLog, err := log.PostLog(p)
+	returnedLog, err := client.PostLog(p)
 	assert.Nil(t, err)
 	assert.EqualValues(t, expectedLog, returnedLog)
 
@@ -131,15 +131,15 @@ func TestLogs_PutLog(t *testing.T) {
 
 	logId := "log-set-uuid"
 
-	p := PutLog{
+	p := Log{
 		Name:       "My New Awesome Log",
 		Structures: []string{},
 		SourceType: "token",
-		LogsetsInfo: []LogsetInfo{
+		LogsetsInfo: []Info{
 			{
 				Id:   "log-set-uuid",
 				Name: "ibtest",
-				Links: []link{
+				Links: []Link{
 					{
 						Href: "https://eu.rest.logs.insight.rapid7.com/management/logsets/log-set-uuid",
 						Rel:  "Self",
@@ -158,11 +158,11 @@ func TestLogs_PutLog(t *testing.T) {
 		Name:       p.Name,
 		Tokens:     []string{"daf42867-a82f-487e-95b7-8d10dba6c4f5"},
 		Structures: []string{},
-		LogsetsInfo: []LogsetInfo{
+		LogsetsInfo: []Info{
 			{
 				Id:   p.LogsetsInfo[0].Id,
 				Name: p.LogsetsInfo[0].Name,
-				Links: []link{
+				Links: []Link{
 					{
 						Href: p.LogsetsInfo[0].Links[0].Href,
 						Rel:  p.LogsetsInfo[0].Links[0].Rel,
@@ -177,10 +177,10 @@ func TestLogs_PutLog(t *testing.T) {
 	}
 
 	url := fmt.Sprintf("/management/logs/%s", logId)
-	requestMatcher := testutils.NewRequestMatcher(http.MethodPut, url, &putLog{p}, http.StatusOK, &getLog{expectedLog})
-	log := getLogsClient(requestMatcher)
+	requestMatcher := NewRequestMatcher(http.MethodPut, url, p, http.StatusOK, expectedLog)
+	client := getTestClient(requestMatcher)
 
-	returnedLog, err := log.PutLog(logId, p)
+	returnedLog, err := client.PutLog(logId, p)
 	assert.Nil(t, err)
 	assert.EqualValues(t, expectedLog, returnedLog)
 
@@ -197,7 +197,7 @@ func TestLogs_DeleteLog(t *testing.T) {
 	logId := "log-set-uuid"
 
 	url := fmt.Sprintf("/management/logs/%s", logId)
-	requestMatcher := testutils.NewRequestMatcher(http.MethodDelete, url, nil, http.StatusNoContent, nil)
+	requestMatcher := NewRequestMatcher(http.MethodDelete, url, nil, http.StatusNoContent, nil)
 	log := getLogsClient(requestMatcher)
 
 	err := log.DeleteLog(logId)
@@ -209,9 +209,4 @@ func TestLogs_DeleteLogErrorsIfLogsetIdIsEmpty(t *testing.T) {
 	err := log.DeleteLog("")
 	assert.NotNil(t, err)
 	assert.Error(t, err, "logId input parameter is mandatory")
-}
-
-func getLogsClient(requestMatcher testutils.TestRequestMatcher) Logs {
-	c := getTestClient(requestMatcher)
-	return newLogs(c)
 }
