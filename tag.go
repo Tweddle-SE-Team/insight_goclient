@@ -34,26 +34,6 @@ type Source struct {
 	StoredDays      []int  `json:"stored_days"`
 }
 
-// action represents the action (e,g: alerts) associated with the given Tag
-type Action struct {
-	Id               string   `json:"id,omitempty"`
-	MinMatchesCount  int      `json:"min_matches_count"`
-	MinReportCount   int      `json:"min_report_count"`
-	MinMatchesPeriod string   `json:"min_matches_period"`
-	MinReportPeriod  string   `json:"min_report_period"`
-	Targets          []Target `json:"targets"`
-	Enabled          bool     `json:"enabled"`
-	Type             string   `json:"type"`
-}
-
-// target represents the target for the configured alarm (e,g: mailto, pagerduty)
-type Target struct {
-	Id              string            `json:"id,omitempty"`
-	Type            string            `json:"type"`
-	ParamsSet       map[string]string `json:"params_set"`
-	AlertContentSet map[string]string `json:"alert_content_set"`
-}
-
 type Tags []Tag
 
 // GetTags gets details of an existing Tag and Alert
