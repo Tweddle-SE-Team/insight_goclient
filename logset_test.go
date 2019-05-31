@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/stretchr/testify/assert"
 	"net/http"
-	"reflect"
 	"testing"
 )
 
@@ -32,10 +31,9 @@ func TestLogsets_GetLogsets(t *testing.T) {
 
 	requestMatcher := NewRequestMatcher(http.MethodGet, "/management/logsets", nil, http.StatusOK, expectedLogsets)
 	client := getTestClient(requestMatcher)
-
 	returnedLogsets, err := client.GetLogsets()
 	assert.Nil(t, err)
-	assert.True(t, reflect.DeepEqual(expectedLogsets, returnedLogsets))
+	assert.EqualValues(t, &expectedLogsets, returnedLogsets)
 }
 
 func TestLogsets_GetLogset(t *testing.T) {
@@ -63,8 +61,7 @@ func TestLogsets_GetLogset(t *testing.T) {
 	client := getTestClient(requestMatcher)
 	returnedLogset, err := client.GetLogset(expectedLogset.Id)
 	assert.Nil(t, err)
-	assert.EqualValues(t, expectedLogset, returnedLogset)
-
+	assert.EqualValues(t, &expectedLogset, returnedLogset)
 }
 
 func TestLogsets_GetLogsetErrorsIfLogsetIdIsEmpty(t *testing.T) {
@@ -109,11 +106,9 @@ func TestLogsets_PostLogset(t *testing.T) {
 
 	requestMatcher := NewRequestMatcher(http.MethodPost, "/management/logsets", p, http.StatusCreated, expectedLogset)
 	client := getTestClient(requestMatcher)
-
 	returnedLogset, err := client.PostLogset(p)
 	assert.Nil(t, err)
-	assert.EqualValues(t, expectedLogset, returnedLogset)
-
+	assert.EqualValues(t, &expectedLogset, returnedLogset)
 }
 
 func TestLogsets_PutLogset(t *testing.T) {
@@ -163,8 +158,7 @@ func TestLogsets_PutLogset(t *testing.T) {
 	client := getTestClient(requestMatcher)
 	returnedLogset, err := client.PutLogset(p)
 	assert.Nil(t, err)
-	assert.EqualValues(t, expectedLogset, returnedLogset)
-
+	assert.EqualValues(t, &expectedLogset, returnedLogset)
 }
 
 func TestLogsets_PutLogsetSetErrorsIfLogsetIdIsEmpty(t *testing.T) {
@@ -177,11 +171,9 @@ func TestLogsets_PutLogsetSetErrorsIfLogsetIdIsEmpty(t *testing.T) {
 
 func TestLogsets_DeleteLogset(t *testing.T) {
 	logSetId := "log-set-uuid"
-
 	url := fmt.Sprintf("/management/logsets/%s", logSetId)
 	requestMatcher := NewRequestMatcher(http.MethodDelete, url, nil, http.StatusNoContent, nil)
 	client := getTestClient(requestMatcher)
-
 	err := client.DeleteLogset(logSetId)
 	assert.Nil(t, err)
 }

@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/stretchr/testify/assert"
 	"net/http"
-	"reflect"
 	"testing"
 )
 
@@ -24,7 +23,7 @@ func TestLabels_GetLabels(t *testing.T) {
 	client := getTestClient(requestMatcher)
 	returnedLabels, err := client.GetLabels()
 	assert.Nil(t, err)
-	assert.True(t, reflect.DeepEqual(expectedLabels, returnedLabels))
+	assert.EqualValues(t, &expectedLabels, returnedLabels)
 }
 
 func TestTags_GetLabel(t *testing.T) {
@@ -42,8 +41,7 @@ func TestTags_GetLabel(t *testing.T) {
 	client := getTestClient(requestMatcher)
 	returnedLabel, err := client.GetLabel(expectedLabel.Id)
 	assert.Nil(t, err)
-	assert.EqualValues(t, expectedLabel, returnedLabel)
-
+	assert.EqualValues(t, &expectedLabel, returnedLabel)
 }
 
 func TestTags_GetLabelErrorsIfTagIdIsEmpty(t *testing.T) {
@@ -56,11 +54,9 @@ func TestTags_GetLabelErrorsIfTagIdIsEmpty(t *testing.T) {
 
 func TestLabels_DeleteLabel(t *testing.T) {
 	labelId := "log-set-uuid"
-
 	url := fmt.Sprintf("/management/labels/%s", labelId)
 	requestMatcher := NewRequestMatcher(http.MethodDelete, url, nil, http.StatusNoContent, nil)
 	client := getTestClient(requestMatcher)
-
 	err := client.DeleteLabel(labelId)
 	assert.Nil(t, err)
 }
@@ -82,9 +78,7 @@ func TestLabels_PostLabel(t *testing.T) {
 
 	requestMatcher := NewRequestMatcher(http.MethodPost, "/management/labels", p, http.StatusCreated, expectedLabel)
 	client := getTestClient(requestMatcher)
-
 	returnedLabel, err := client.PostLabel(p)
 	assert.Nil(t, err)
-	assert.EqualValues(t, expectedLabel, returnedLabel)
-
+	assert.EqualValues(t, &expectedLabel, returnedLabel)
 }

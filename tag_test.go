@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/stretchr/testify/assert"
 	"net/http"
-	"reflect"
 	"testing"
 )
 
@@ -61,10 +60,9 @@ func TestTags_GetTags(t *testing.T) {
 
 	requestMatcher := NewRequestMatcher(http.MethodGet, "/management/tags", nil, http.StatusOK, expectedTags)
 	client := getTestClient(requestMatcher)
-
 	returnedTags, err := client.GetTags()
 	assert.Nil(t, err)
-	assert.True(t, reflect.DeepEqual(expectedTags, returnedTags))
+	assert.EqualValues(t, &expectedTags, returnedTags)
 }
 
 func TestTags_GetTag(t *testing.T) {
@@ -118,13 +116,10 @@ func TestTags_GetTag(t *testing.T) {
 
 	url := fmt.Sprintf("/management/tags/%s", expectedTag.Id)
 	requestMatcher := NewRequestMatcher(http.MethodGet, url, nil, http.StatusOK, expectedTag)
-
 	client := getTestClient(requestMatcher)
-
 	returnedTag, err := client.GetTag(expectedTag.Id)
 	assert.Nil(t, err)
-	assert.EqualValues(t, expectedTag, returnedTag)
-
+	assert.EqualValues(t, &expectedTag, returnedTag)
 }
 
 func TestTags_GetTagErrorsIfTagIdIsEmpty(t *testing.T) {
@@ -224,12 +219,10 @@ func TestTags_PostTag(t *testing.T) {
 	}
 
 	requestMatcher := NewRequestMatcher(http.MethodPost, "/management/tags", p, http.StatusCreated, expectedTag)
-
 	client := getTestClient(requestMatcher)
-
 	returnedTag, err := client.PostTag(p)
 	assert.Nil(t, err)
-	assert.EqualValues(t, expectedTag, returnedTag)
+	assert.EqualValues(t, &expectedTag, returnedTag)
 }
 
 func TestTags_PutTag(t *testing.T) {
@@ -325,12 +318,10 @@ func TestTags_PutTag(t *testing.T) {
 
 	url := fmt.Sprintf("/management/tags/%s", tagId)
 	requestMatcher := NewRequestMatcher(http.MethodPut, url, putTag, http.StatusOK, expectedTag)
-
 	client := getTestClient(requestMatcher)
-
 	returnedTag, err := client.PutTag(putTag)
 	assert.Nil(t, err)
-	assert.EqualValues(t, expectedTag, returnedTag)
+	assert.EqualValues(t, &expectedTag, returnedTag)
 }
 
 func TestTags_PutTagErrorsIfTagIdIsEmpty(t *testing.T) {
@@ -343,11 +334,9 @@ func TestTags_PutTagErrorsIfTagIdIsEmpty(t *testing.T) {
 
 func TestTags_DeleteTag(t *testing.T) {
 	tagId := "tag-uuid"
-
 	url := fmt.Sprintf("/management/tags/%s", tagId)
 	requestMatcher := NewRequestMatcher(http.MethodDelete, url, nil, http.StatusNoContent, nil)
 	client := getTestClient(requestMatcher)
-
 	err := client.DeleteTag(tagId)
 	assert.Nil(t, err)
 }

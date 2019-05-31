@@ -38,7 +38,6 @@ type mockObject struct {
 func TestInsightClient_ClientGet(t *testing.T) {
 	mockResponse := &mockObject{Data: "some data..."}
 	requestMatcher := NewRequestMatcher(http.MethodGet, "/api/testing", nil, http.StatusOK, mockResponse)
-
 	c := getTestClient(requestMatcher)
 	expectedResponse := &mockObject{}
 	err := c.get("/api/testing", expectedResponse)
@@ -63,7 +62,7 @@ func TestInsightClient_ClientPost(t *testing.T) {
 	c := getTestClient(requestMatcher)
 	expectedResponse := &mockObject{}
 	body, err := c.post("/api/testing", mockRequestPayload)
-	err = json.Unmarshal(body, &mockResponse)
+	err = json.Unmarshal(body, &expectedResponse)
 	assert.Nil(t, err)
 	assert.Equal(t, expectedResponse.Data, mockResponse.Data)
 }
@@ -86,7 +85,7 @@ func TestInsightClient_ClientPut(t *testing.T) {
 	c := getTestClient(requestMatcher)
 	expectedResponse := &mockObject{}
 	body, err := c.put("/api/testing", mockRequestPayload)
-	err = json.Unmarshal(body, &mockResponse)
+	err = json.Unmarshal(body, &expectedResponse)
 	assert.Nil(t, err)
 	assert.Equal(t, expectedResponse.Data, mockResponse.Data)
 }

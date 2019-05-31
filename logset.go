@@ -23,7 +23,7 @@ type Logset struct {
 	Name        string            `json:"name"`
 	Description string            `json:"description,omitempty"`
 	LogsInfo    []Info            `json:"logs_info,omitempty"`
-	UserData    map[string]string `json:"user_data,omitempty"`
+	UserData    map[string]string `json:"user_data"`
 }
 
 // LogsetInfo represent information about the logset

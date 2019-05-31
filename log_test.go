@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/stretchr/testify/assert"
 	"net/http"
-	"reflect"
 	"testing"
 )
 
@@ -39,10 +38,9 @@ func TestLogs_GetLogs(t *testing.T) {
 
 	requestMatcher := NewRequestMatcher(http.MethodGet, "/management/logs", nil, http.StatusOK, expectedLogs)
 	logs := getTestClient(requestMatcher)
-
 	returnedLogs, err := logs.GetLogs()
 	assert.Nil(t, err)
-	assert.True(t, reflect.DeepEqual(expectedLogs, returnedLogs))
+	assert.EqualValues(t, &expectedLogs, returnedLogs)
 }
 
 func TestLogs_GetLog(t *testing.T) {
@@ -74,12 +72,10 @@ func TestLogs_GetLog(t *testing.T) {
 
 	url := fmt.Sprintf("/management/logs/%s", expectedLog.Id)
 	requestMatcher := NewRequestMatcher(http.MethodGet, url, nil, http.StatusOK, expectedLog)
-
-	log := getTestClient(requestMatcher)
-
-	returnedLog, err := log.GetLog(expectedLog.Id)
+	client := getTestClient(requestMatcher)
+	returnedLog, err := client.GetLog(expectedLog.Id)
 	assert.Nil(t, err)
-	assert.EqualValues(t, expectedLog, returnedLog)
+	assert.EqualValues(t, &expectedLog, returnedLog)
 }
 
 func TestLogs_GetLogErrorsIfLogsetIdIsEmpty(t *testing.T) {
@@ -121,10 +117,9 @@ func TestLogs_PostLog(t *testing.T) {
 
 	requestMatcher := NewRequestMatcher(http.MethodPost, "/management/logs", p, http.StatusCreated, expectedLog)
 	client := getTestClient(requestMatcher)
-
 	returnedLog, err := client.PostLog(p)
 	assert.Nil(t, err)
-	assert.EqualValues(t, expectedLog, returnedLog)
+	assert.EqualValues(t, &expectedLog, returnedLog)
 
 }
 
@@ -133,6 +128,7 @@ func TestLogs_PutLog(t *testing.T) {
 	logId := "log-set-uuid"
 
 	p := &Log{
+		Id:         logId,
 		Name:       "My New Awesome Log",
 		Structures: []string{},
 		SourceType: "token",
@@ -180,11 +176,9 @@ func TestLogs_PutLog(t *testing.T) {
 	url := fmt.Sprintf("/management/logs/%s", logId)
 	requestMatcher := NewRequestMatcher(http.MethodPut, url, p, http.StatusOK, expectedLog)
 	client := getTestClient(requestMatcher)
-
-	p, err := client.PutLog(Log{Id: logId})
+	p, err := client.PutLog(*p)
 	assert.Nil(t, err)
-	assert.EqualValues(t, expectedLog, p)
-
+	assert.EqualValues(t, &expectedLog, p)
 }
 
 func TestLogs_PutLogErrorsIfLogsetIdIsEmpty(t *testing.T) {
@@ -197,11 +191,9 @@ func TestLogs_PutLogErrorsIfLogsetIdIsEmpty(t *testing.T) {
 
 func TestLogs_DeleteLog(t *testing.T) {
 	logId := "log-set-uuid"
-
 	url := fmt.Sprintf("/management/logs/%s", logId)
 	requestMatcher := NewRequestMatcher(http.MethodDelete, url, nil, http.StatusNoContent, nil)
 	log := getTestClient(requestMatcher)
-
 	err := log.DeleteLog(logId)
 	assert.Nil(t, err)
 }

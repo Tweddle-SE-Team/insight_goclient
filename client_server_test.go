@@ -18,7 +18,8 @@ type TestClientServer struct {
 // serveResponse checks if the incoming request matches the expected request and if so returns
 // the mock response along with the status code configured in RequestMatcher
 func (t *TestClientServer) serveResponse(w http.ResponseWriter, r *http.Request) error {
-	if err := t.RequestMatcher.match(r); err != nil {
+	err := t.RequestMatcher.match(r)
+	if err != nil {
 		return err
 	} else {
 		var resp []byte
@@ -27,7 +28,7 @@ func (t *TestClientServer) serveResponse(w http.ResponseWriter, r *http.Request)
 			resp = t.RequestMatcher.Response.Payload.([]byte)
 			contentType = "application/octet-stream"
 		} else {
-			resp, err := json.Marshal(t.RequestMatcher.Response.Payload)
+			resp, err = json.Marshal(t.RequestMatcher.Response.Payload)
 			if err != nil {
 				return fmt.Errorf("error thrown while marshalling the mock repsonse [%s] - Error: %s", resp, err)
 			}
