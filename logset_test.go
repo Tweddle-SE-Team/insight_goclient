@@ -106,9 +106,9 @@ func TestLogsets_PostLogset(t *testing.T) {
 
 	requestMatcher := NewRequestMatcher(http.MethodPost, "/management/logsets", p, http.StatusCreated, expectedLogset)
 	client := getTestClient(requestMatcher)
-	returnedLogset, err := client.PostLogset(p)
+	err := client.PostLogset(&p)
 	assert.Nil(t, err)
-	assert.EqualValues(t, &expectedLogset, returnedLogset)
+	assert.EqualValues(t, expectedLogset, p)
 }
 
 func TestLogsets_PutLogset(t *testing.T) {
@@ -156,15 +156,15 @@ func TestLogsets_PutLogset(t *testing.T) {
 	url := fmt.Sprintf("/management/logsets/%s", logsetId)
 	requestMatcher := NewRequestMatcher(http.MethodPut, url, p, http.StatusOK, expectedLogset)
 	client := getTestClient(requestMatcher)
-	returnedLogset, err := client.PutLogset(p)
+	err := client.PutLogset(&p)
 	assert.Nil(t, err)
-	assert.EqualValues(t, &expectedLogset, returnedLogset)
+	assert.EqualValues(t, expectedLogset, p)
 }
 
 func TestLogsets_PutLogsetSetErrorsIfLogsetIdIsEmpty(t *testing.T) {
 	requestMatcher := NewRequestMatcher(http.MethodGet, "/management/logsets/", nil, http.StatusOK, Logset{})
 	client := getTestClient(requestMatcher)
-	_, err := client.PutLogset(Logset{})
+	err := client.PutLogset(&Logset{})
 	assert.NotNil(t, err)
 	assert.Error(t, err, "logsetId input parameter is mandatory")
 }

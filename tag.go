@@ -73,21 +73,20 @@ func (client *InsightClient) PostTag(body Tag) (*Tag, error) {
 }
 
 // PutTag updates an existing Tag and Alert
-func (client *InsightClient) PutTag(body Tag) (*Tag, error) {
-	endpoint, err := client.getTagEndpoint(body.Id)
+func (client *InsightClient) PutTag(tag *Tag) error {
+	endpoint, err := client.getTagEndpoint(tag.Id)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	resp, err := client.put(endpoint, body)
+	resp, err := client.put(endpoint, tag)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	var tag Tag
 	err = json.Unmarshal(resp, &tag)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return &tag, nil
+	return nil
 }
 
 // DeleteTag deletes a specific Tag from an account.

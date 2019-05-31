@@ -78,7 +78,7 @@ func TestLabels_PostLabel(t *testing.T) {
 
 	requestMatcher := NewRequestMatcher(http.MethodPost, "/management/labels", p, http.StatusCreated, expectedLabel)
 	client := getTestClient(requestMatcher)
-	returnedLabel, err := client.PostLabel(p)
+	err := client.PostLabel(&p)
 	assert.Nil(t, err)
-	assert.EqualValues(t, &expectedLabel, returnedLabel)
+	assert.EqualValues(t, expectedLabel, p)
 }

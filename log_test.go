@@ -117,9 +117,9 @@ func TestLogs_PostLog(t *testing.T) {
 
 	requestMatcher := NewRequestMatcher(http.MethodPost, "/management/logs", p, http.StatusCreated, expectedLog)
 	client := getTestClient(requestMatcher)
-	returnedLog, err := client.PostLog(p)
+	err := client.PostLog(&p)
 	assert.Nil(t, err)
-	assert.EqualValues(t, &expectedLog, returnedLog)
+	assert.EqualValues(t, expectedLog, p)
 
 }
 
@@ -176,7 +176,7 @@ func TestLogs_PutLog(t *testing.T) {
 	url := fmt.Sprintf("/management/logs/%s", logId)
 	requestMatcher := NewRequestMatcher(http.MethodPut, url, p, http.StatusOK, expectedLog)
 	client := getTestClient(requestMatcher)
-	p, err := client.PutLog(*p)
+	err := client.PutLog(p)
 	assert.Nil(t, err)
 	assert.EqualValues(t, &expectedLog, p)
 }
@@ -184,7 +184,7 @@ func TestLogs_PutLog(t *testing.T) {
 func TestLogs_PutLogErrorsIfLogsetIdIsEmpty(t *testing.T) {
 	requestMatcher := NewRequestMatcher(http.MethodGet, "/management/logs/", nil, http.StatusOK, Log{})
 	client := getTestClient(requestMatcher)
-	_, err := client.PutLog(Log{})
+	err := client.PutLog(&Log{})
 	assert.NotNil(t, err)
 	assert.Error(t, err, "logId input parameter is mandatory")
 }

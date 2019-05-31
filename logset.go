@@ -63,35 +63,33 @@ func (client *InsightClient) GetLogset(logsetId string) (*Logset, error) {
 }
 
 // PostLogset creates a new LogSet
-func (client *InsightClient) PostLogset(body Logset) (*Logset, error) {
-	resp, err := client.post(LOGSETS_PATH, body)
+func (client *InsightClient) PostLogset(logset *Logset) error {
+	resp, err := client.post(LOGSETS_PATH, logset)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	var logset Logset
 	err = json.Unmarshal(resp, &logset)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return &logset, nil
+	return nil
 }
 
 // PutTag updates an existing Logset
-func (client *InsightClient) PutLogset(body Logset) (*Logset, error) {
-	endpoint, err := client.getLogsetEndpoint(body.Id)
+func (client *InsightClient) PutLogset(logset *Logset) error {
+	endpoint, err := client.getLogsetEndpoint(logset.Id)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	resp, err := client.put(endpoint, body)
+	resp, err := client.put(endpoint, logset)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	var logset Logset
 	err = json.Unmarshal(resp, &logset)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return &logset, nil
+	return nil
 }
 
 // DeleteTag deletes a specific Logset from an account.

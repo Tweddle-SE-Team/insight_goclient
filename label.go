@@ -65,17 +65,16 @@ func (client *InsightClient) GetLabelsByName(name, color string) (*Labels, error
 }
 
 // PostTag creates a new Label
-func (client *InsightClient) PostLabel(body Label) (*Label, error) {
-	resp, err := client.post(LABELS_PATH, body)
+func (client *InsightClient) PostLabel(label *Label) error {
+	resp, err := client.post(LABELS_PATH, label)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	var label Label
 	err = json.Unmarshal(resp, &label)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return &label, nil
+	return nil
 }
 
 // PutTag updates an existing Label

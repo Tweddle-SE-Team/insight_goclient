@@ -21,6 +21,8 @@ type Action struct {
 	MinMatchesPeriod string   `json:"min_matches_period"`
 	MinReportPeriod  string   `json:"min_report_period"`
 	Targets          []Target `json:"targets"`
+	Enabled          bool     `json:"enabled"`
+	Type             string   `json:"type"`
 }
 
 type Actions []Action
@@ -48,35 +50,33 @@ func (client *InsightClient) GetAction(actionId string) (*Action, error) {
 }
 
 // PostTag creates a new Action
-func (client *InsightClient) PostAction(body Action) (*Action, error) {
-	resp, err := client.post(ACTIONS_PATH, body)
+func (client *InsightClient) PostAction(action *Action) error {
+	resp, err := client.post(ACTIONS_PATH, action)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	var action Action
 	err = json.Unmarshal(resp, &action)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return &action, nil
+	return nil
 }
 
 // PutTag updates an existing Action
-func (client *InsightClient) PutAction(body Action) (*Action, error) {
-	endpoint, err := client.getActionEndpoint(body.Id)
+func (client *InsightClient) PutAction(action *Action) error {
+	endpoint, err := client.getActionEndpoint(action.Id)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	resp, err := client.put(endpoint, body)
+	resp, err := client.put(endpoint, action)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	var action Action
 	err = json.Unmarshal(resp, &action)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return &action, nil
+	return nil
 }
 
 // DeleteTag deletes a specific Action from an account.

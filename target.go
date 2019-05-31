@@ -25,8 +25,11 @@ type Target struct {
 }
 
 type TargetParameterSet struct {
-	Url        string `json:"url"`
-	ServiceKey string `json:"service_key"`
+	Url        string `json:"url,omitempty"`
+	ServiceKey string `json:"service_key,omitempty"`
+	Direct     string `json:"direct,omitempty"`
+	Teams      string `json:"teams,omitempty"`
+	Users      string `json:"users,omitempty"`
 }
 
 type TargetAlertContentSet struct {

@@ -33,12 +33,12 @@ func TestTags_GetTags(t *testing.T) {
 						{
 							Id:   "",
 							Type: "",
-							ParamsSet: map[string]string{
-								"direct": "user@example.com",
-								"teams":  "some-team",
-								"users":  "user@example.com",
+							ParameterSet: TargetParameterSet{
+								Direct: "user@example.com",
+								Teams:  "some-team",
+								Users:  "user@example.com",
 							},
-							AlertContentSet: map[string]string{},
+							AlertContentSet: TargetAlertContentSet{},
 						},
 					},
 					Enabled: true,
@@ -90,12 +90,12 @@ func TestTags_GetTag(t *testing.T) {
 					{
 						Id:   "",
 						Type: "",
-						ParamsSet: map[string]string{
-							"direct": "user@example.com",
-							"teams":  "some-team",
-							"users":  "user@example.com",
+						ParameterSet: TargetParameterSet{
+							Direct: "user@example.com",
+							Teams:  "some-team",
+							Users:  "user@example.com",
 						},
-						AlertContentSet: map[string]string{},
+						AlertContentSet: TargetAlertContentSet{},
 					},
 				},
 				Enabled: true,
@@ -149,10 +149,12 @@ func TestTags_PostTag(t *testing.T) {
 				Targets: []Target{
 					{
 						Type: "mailto",
-						ParamsSet: map[string]string{
-							"direct": "test@test.com",
+						ParameterSet: TargetParameterSet{
+							Direct: "test@test.com",
 						},
-						AlertContentSet: map[string]string{"le_context": "true"},
+						AlertContentSet: TargetAlertContentSet{
+							Context: "true",
+						},
 					},
 				},
 				Enabled: true,
@@ -194,10 +196,10 @@ func TestTags_PostTag(t *testing.T) {
 					{
 						Id:   "new-target-uuid",
 						Type: p.Actions[0].Targets[0].Type,
-						ParamsSet: map[string]string{
-							"direct": p.Actions[0].Targets[0].ParamsSet["direct"],
-							"teams":  p.Actions[0].Targets[0].ParamsSet["teams"],
-							"users":  p.Actions[0].Targets[0].ParamsSet["users"],
+						ParameterSet: TargetParameterSet{
+							Direct: p.Actions[0].Targets[0].ParameterSet.Direct,
+							Teams:  p.Actions[0].Targets[0].ParameterSet.Teams,
+							Users:  p.Actions[0].Targets[0].ParameterSet.Users,
 						},
 						AlertContentSet: p.Actions[0].Targets[0].AlertContentSet,
 					},
@@ -247,10 +249,12 @@ func TestTags_PutTag(t *testing.T) {
 				Targets: []Target{
 					{
 						Type: "mailto",
-						ParamsSet: map[string]string{
-							"Direct": "test@test.com",
+						ParameterSet: TargetParameterSet{
+							Direct: "test@test.com",
 						},
-						AlertContentSet: map[string]string{"le_context": "true"},
+						AlertContentSet: TargetAlertContentSet{
+							Context: "true",
+						},
 					},
 				},
 				Enabled: true,
@@ -292,10 +296,10 @@ func TestTags_PutTag(t *testing.T) {
 					{
 						Id:   "new-target-uuid",
 						Type: putTag.Actions[0].Targets[0].Type,
-						ParamsSet: map[string]string{
-							"direct": putTag.Actions[0].Targets[0].ParamsSet["direct"],
-							"teams":  putTag.Actions[0].Targets[0].ParamsSet["teams"],
-							"users":  putTag.Actions[0].Targets[0].ParamsSet["users"],
+						ParameterSet: TargetParameterSet{
+							Direct: putTag.Actions[0].Targets[0].ParameterSet.Direct,
+							Teams:  putTag.Actions[0].Targets[0].ParameterSet.Teams,
+							Users:  putTag.Actions[0].Targets[0].ParameterSet.Users,
 						},
 						AlertContentSet: putTag.Actions[0].Targets[0].AlertContentSet,
 					},
@@ -319,15 +323,15 @@ func TestTags_PutTag(t *testing.T) {
 	url := fmt.Sprintf("/management/tags/%s", tagId)
 	requestMatcher := NewRequestMatcher(http.MethodPut, url, putTag, http.StatusOK, expectedTag)
 	client := getTestClient(requestMatcher)
-	returnedTag, err := client.PutTag(putTag)
+	err := client.PutTag(&putTag)
 	assert.Nil(t, err)
-	assert.EqualValues(t, &expectedTag, returnedTag)
+	assert.EqualValues(t, expectedTag, putTag)
 }
 
 func TestTags_PutTagErrorsIfTagIdIsEmpty(t *testing.T) {
 	requestMatcher := NewRequestMatcher(http.MethodGet, "/management/tags/", nil, http.StatusOK, Tag{})
 	client := getTestClient(requestMatcher)
-	_, err := client.PutTag(Tag{})
+	err := client.PutTag(&Tag{})
 	assert.NotNil(t, err)
 	assert.Error(t, err, "tagId input parameter is mandatory")
 }

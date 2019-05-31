@@ -61,35 +61,33 @@ func (client *InsightClient) GetLog(logId string) (*Log, error) {
 }
 
 // PostTag creates a new Log
-func (client *InsightClient) PostLog(body Log) (*Log, error) {
-	resp, err := client.post(LOGS_PATH, body)
+func (client *InsightClient) PostLog(log *Log) error {
+	resp, err := client.post(LOGS_PATH, log)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	var log Log
 	err = json.Unmarshal(resp, &log)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return &log, nil
+	return nil
 }
 
 // PutTag updates an existing Log
-func (client *InsightClient) PutLog(body Log) (*Log, error) {
-	endpoint, err := client.getLogEndpoint(body.Id)
+func (client *InsightClient) PutLog(log *Log) error {
+	endpoint, err := client.getLogEndpoint(log.Id)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	resp, err := client.put(endpoint, body)
+	resp, err := client.put(endpoint, log)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	var log Log
 	err = json.Unmarshal(resp, &log)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return &log, nil
+	return nil
 }
 
 // DeleteTag deletes a specific Log from an account.
