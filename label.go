@@ -78,21 +78,20 @@ func (client *InsightClient) PostLabel(label *Label) error {
 }
 
 // PutTag updates an existing Label
-func (client *InsightClient) PutLabel(body Label) (*Label, error) {
-	endpoint, err := client.getLabelEndpoint(body.Id)
+func (client *InsightClient) PutLabel(label *Label) error {
+	endpoint, err := client.getLabelEndpoint(label.Id)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	resp, err := client.put(endpoint, body)
+	resp, err := client.put(endpoint, label)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	var label Label
 	err = json.Unmarshal(resp, &label)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return &label, nil
+	return nil
 }
 
 // DeleteTag deletes a specific Label from an account.
