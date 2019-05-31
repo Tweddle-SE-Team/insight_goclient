@@ -19,10 +19,11 @@ const (
 
 // PostLogset represents the entity used to create a new logset to the insight API
 type Logset struct {
-	Id          string `json:"id,omitempty"`
-	Name        string `json:"name"`
-	Description string `json:"description,omitempty"`
-	LogsInfo    []Info `json:"logs_info,omitempty"`
+	Id          string            `json:"id,omitempty"`
+	Name        string            `json:"name"`
+	Description string            `json:"description,omitempty"`
+	LogsInfo    []Info            `json:"logs_info,omitempty"`
+	UserData    map[string]string `json:"user_data,omitempty"`
 }
 
 // LogsetInfo represent information about the logset

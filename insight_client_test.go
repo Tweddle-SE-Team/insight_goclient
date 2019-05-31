@@ -18,7 +18,7 @@ func getTestClient(requestMatcher TestRequestMatcher) *InsightClient {
 }
 
 func TestInsightClient_NewInsightClient(t *testing.T) {
-	c, err := NewInsightClient("apiKey", "eu")
+	_, err := NewInsightClient("apiKey", "eu")
 	assert.Nil(t, err)
 }
 

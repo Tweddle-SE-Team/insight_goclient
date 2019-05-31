@@ -77,14 +77,15 @@ func TestLogs_GetLog(t *testing.T) {
 
 	log := getTestClient(requestMatcher)
 
-	returnedLog, _, err := log.GetLog(expectedLog.Id)
+	returnedLog, err := log.GetLog(expectedLog.Id)
 	assert.Nil(t, err)
 	assert.EqualValues(t, expectedLog, returnedLog)
 }
 
 func TestLogs_GetLogErrorsIfLogsetIdIsEmpty(t *testing.T) {
-	log := Logs{nil}
-	_, _, err := log.GetLog("")
+	requestMatcher := NewRequestMatcher(http.MethodGet, "/management/logs/", nil, http.StatusOK, Log{})
+	client := getTestClient(requestMatcher)
+	_, err := client.GetLog("")
 	assert.NotNil(t, err)
 	assert.Error(t, err, "logId input parameter is mandatory")
 }
@@ -96,7 +97,7 @@ func TestLogs_PostLog(t *testing.T) {
 		Structures: []string{},
 		SourceType: "token",
 		LogsetsInfo: []Info{
-			{"log-set-uuid"},
+			{Id: "log-set-uuid"},
 		},
 		UserData: LogUserData{
 			LogEntriesAgentFileName: "",
@@ -131,7 +132,7 @@ func TestLogs_PutLog(t *testing.T) {
 
 	logId := "log-set-uuid"
 
-	p := Log{
+	p := &Log{
 		Name:       "My New Awesome Log",
 		Structures: []string{},
 		SourceType: "token",
@@ -180,15 +181,16 @@ func TestLogs_PutLog(t *testing.T) {
 	requestMatcher := NewRequestMatcher(http.MethodPut, url, p, http.StatusOK, expectedLog)
 	client := getTestClient(requestMatcher)
 
-	returnedLog, err := client.PutLog(logId, p)
+	p, err := client.PutLog(Log{Id: logId})
 	assert.Nil(t, err)
-	assert.EqualValues(t, expectedLog, returnedLog)
+	assert.EqualValues(t, expectedLog, p)
 
 }
 
 func TestLogs_PutLogErrorsIfLogsetIdIsEmpty(t *testing.T) {
-	log := Logs{nil}
-	_, err := log.PutLog("", PutLog{})
+	requestMatcher := NewRequestMatcher(http.MethodGet, "/management/logs/", nil, http.StatusOK, Log{})
+	client := getTestClient(requestMatcher)
+	_, err := client.PutLog(Log{})
 	assert.NotNil(t, err)
 	assert.Error(t, err, "logId input parameter is mandatory")
 }
@@ -198,15 +200,16 @@ func TestLogs_DeleteLog(t *testing.T) {
 
 	url := fmt.Sprintf("/management/logs/%s", logId)
 	requestMatcher := NewRequestMatcher(http.MethodDelete, url, nil, http.StatusNoContent, nil)
-	log := getLogsClient(requestMatcher)
+	log := getTestClient(requestMatcher)
 
 	err := log.DeleteLog(logId)
 	assert.Nil(t, err)
 }
 
 func TestLogs_DeleteLogErrorsIfLogsetIdIsEmpty(t *testing.T) {
-	log := Logs{nil}
-	err := log.DeleteLog("")
+	requestMatcher := NewRequestMatcher(http.MethodGet, "/management/logs/", nil, http.StatusOK, Log{})
+	client := getTestClient(requestMatcher)
+	err := client.DeleteLog("")
 	assert.NotNil(t, err)
 	assert.Error(t, err, "logId input parameter is mandatory")
 }

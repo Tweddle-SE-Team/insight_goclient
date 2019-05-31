@@ -15,7 +15,7 @@ func TestTags_GetTags(t *testing.T) {
 			Id:   "tag-uuid",
 			Name: "Login Failure",
 			Type: "Alert",
-			Sources: []source{
+			Sources: []Source{
 				{
 					Id:              "source-uuid",
 					Name:            "auth.log",
@@ -23,14 +23,14 @@ func TestTags_GetTags(t *testing.T) {
 					StoredDays:      []int{},
 				},
 			},
-			Actions: []action{
+			Actions: []Action{
 				{
 					Id:               "action-uuid",
 					MinMatchesCount:  1,
 					MinReportCount:   1,
 					MinMatchesPeriod: "Day",
 					MinReportPeriod:  "Day",
-					Targets: []target{
+					Targets: []Target{
 						{
 							Id:   "",
 							Type: "",
@@ -46,7 +46,7 @@ func TestTags_GetTags(t *testing.T) {
 					Type:    "Alert",
 				},
 			},
-			Labels: GetLabels{
+			Labels: Labels{
 				{
 					Id:       "label-uuid",
 					Name:     "Login Failure",
@@ -59,10 +59,10 @@ func TestTags_GetTags(t *testing.T) {
 		},
 	}
 
-	requestMatcher := NewRequestMatcher(http.MethodGet, "/management/tags", nil, http.StatusOK, &tagsCollection{expectedTags})
-	tags := getTagsClient(requestMatcher)
+	requestMatcher := NewRequestMatcher(http.MethodGet, "/management/tags", nil, http.StatusOK, expectedTags)
+	client := getTestClient(requestMatcher)
 
-	returnedTags, err := tags.GetTags()
+	returnedTags, err := client.GetTags()
 	assert.Nil(t, err)
 	assert.True(t, reflect.DeepEqual(expectedTags, returnedTags))
 }
@@ -73,7 +73,7 @@ func TestTags_GetTag(t *testing.T) {
 		Id:   "tag-uuid",
 		Name: "Login Failure",
 		Type: "Alert",
-		Sources: []source{
+		Sources: []Source{
 			{
 				Id:              "source-uuid",
 				Name:            "auth.log",
@@ -81,14 +81,14 @@ func TestTags_GetTag(t *testing.T) {
 				StoredDays:      []int{},
 			},
 		},
-		Actions: []action{
+		Actions: []Action{
 			{
 				Id:               "action-uuid",
 				MinMatchesCount:  1,
 				MinReportCount:   1,
 				MinMatchesPeriod: "Day",
 				MinReportPeriod:  "Day",
-				Targets: []target{
+				Targets: []Target{
 					{
 						Id:   "",
 						Type: "",
@@ -104,7 +104,7 @@ func TestTags_GetTag(t *testing.T) {
 				Type:    "Alert",
 			},
 		},
-		Labels: GetLabels{
+		Labels: Labels{
 			{
 				Id:       "label-uuid",
 				Name:     "Login Failure",
@@ -117,40 +117,41 @@ func TestTags_GetTag(t *testing.T) {
 	}
 
 	url := fmt.Sprintf("/management/tags/%s", expectedTag.Id)
-	requestMatcher := NewRequestMatcher(http.MethodGet, url, nil, http.StatusOK, &getTag{expectedTag})
+	requestMatcher := NewRequestMatcher(http.MethodGet, url, nil, http.StatusOK, expectedTag)
 
-	tags := getTagsClient(requestMatcher)
+	client := getTestClient(requestMatcher)
 
-	returnedTag, err := tags.GetTag(expectedTag.Id)
+	returnedTag, err := client.GetTag(expectedTag.Id)
 	assert.Nil(t, err)
 	assert.EqualValues(t, expectedTag, returnedTag)
 
 }
 
 func TestTags_GetTagErrorsIfTagIdIsEmpty(t *testing.T) {
-	tags := Tags{nil}
-	_, err := tags.GetTag("")
+	requestMatcher := NewRequestMatcher(http.MethodGet, "/management/tags/", nil, http.StatusOK, Tag{})
+	client := getTestClient(requestMatcher)
+	_, err := client.GetTag("")
 	assert.NotNil(t, err)
 	assert.Error(t, err, "tagId input parameter is mandatory")
 }
 
 func TestTags_PostTag(t *testing.T) {
 
-	p := PostTag{
+	p := Tag{
 		Name: "Foo Bar Tag",
 		Type: "Alert",
-		Sources: []PostSource{
+		Sources: []Source{
 			{
 				Id: "source-uuid",
 			},
 		},
-		Actions: []PostAction{
+		Actions: []Action{
 			{
 				MinMatchesCount:  1,
 				MinReportCount:   1,
 				MinMatchesPeriod: "Day",
 				MinReportPeriod:  "Day",
-				Targets: []PostTarget{
+				Targets: []Target{
 					{
 						Type: "mailto",
 						ParamsSet: map[string]string{
@@ -163,7 +164,7 @@ func TestTags_PostTag(t *testing.T) {
 				Type:    "Alert",
 			},
 		},
-		Labels: GetLabels{
+		Labels: Labels{
 			{
 				Id:       "label-uuid",
 				Name:     "Login Failure",
@@ -179,7 +180,7 @@ func TestTags_PostTag(t *testing.T) {
 		Id:   "new-tag-uuid",
 		Name: p.Name,
 		Type: p.Type,
-		Sources: []source{
+		Sources: []Source{
 			{
 				Id:              p.Sources[0].Id,
 				Name:            "auth.log",
@@ -187,14 +188,14 @@ func TestTags_PostTag(t *testing.T) {
 				StoredDays:      []int{},
 			},
 		},
-		Actions: []action{
+		Actions: []Action{
 			{
 				Id:               "new-action-uuid",
 				MinMatchesCount:  p.Actions[0].MinMatchesCount,
 				MinReportCount:   p.Actions[0].MinReportCount,
 				MinMatchesPeriod: p.Actions[0].MinMatchesPeriod,
 				MinReportPeriod:  p.Actions[0].MinReportPeriod,
-				Targets: []target{
+				Targets: []Target{
 					{
 						Id:   "new-target-uuid",
 						Type: p.Actions[0].Targets[0].Type,
@@ -210,7 +211,7 @@ func TestTags_PostTag(t *testing.T) {
 				Type:    p.Actions[0].Type,
 			},
 		},
-		Labels: GetLabels{
+		Labels: Labels{
 			{
 				Id:       p.Labels[0].Id,
 				Name:     p.Labels[0].Name,
@@ -222,11 +223,11 @@ func TestTags_PostTag(t *testing.T) {
 		Patterns: p.Patterns,
 	}
 
-	requestMatcher := NewRequestMatcher(http.MethodPost, "/management/tags", &postTag{p}, http.StatusCreated, &getTag{expectedTag})
+	requestMatcher := NewRequestMatcher(http.MethodPost, "/management/tags", p, http.StatusCreated, expectedTag)
 
-	tags := getTagsClient(requestMatcher)
+	client := getTestClient(requestMatcher)
 
-	returnedTag, err := tags.PostTag(p)
+	returnedTag, err := client.PostTag(p)
 	assert.Nil(t, err)
 	assert.EqualValues(t, expectedTag, returnedTag)
 }
@@ -235,21 +236,22 @@ func TestTags_PutTag(t *testing.T) {
 
 	tagId := "tagId"
 
-	putTag := PostTag{
+	putTag := Tag{
+		Id:   tagId,
 		Name: "Foo Bar Tag",
 		Type: "Alert",
-		Sources: []PostSource{
+		Sources: []Source{
 			{
 				Id: "source-uuid",
 			},
 		},
-		Actions: []PostAction{
+		Actions: []Action{
 			{
 				MinMatchesCount:  0,
 				MinReportCount:   1,
 				MinMatchesPeriod: "Hour",
 				MinReportPeriod:  "Hour",
-				Targets: []PostTarget{
+				Targets: []Target{
 					{
 						Type: "mailto",
 						ParamsSet: map[string]string{
@@ -262,7 +264,7 @@ func TestTags_PutTag(t *testing.T) {
 				Type:    "Alert",
 			},
 		},
-		Labels: GetLabels{
+		Labels: Labels{
 			{
 				Id:       "label-uuid",
 				Name:     "Test Label",
@@ -278,7 +280,7 @@ func TestTags_PutTag(t *testing.T) {
 		Id:   "new-tag-uuid",
 		Name: putTag.Name,
 		Type: putTag.Type,
-		Sources: []source{
+		Sources: []Source{
 			{
 				Id:              putTag.Sources[0].Id,
 				Name:            "auth.log",
@@ -286,14 +288,14 @@ func TestTags_PutTag(t *testing.T) {
 				StoredDays:      []int{},
 			},
 		},
-		Actions: []action{
+		Actions: []Action{
 			{
 				Id:               "new-action-uuid",
 				MinMatchesCount:  putTag.Actions[0].MinMatchesCount,
 				MinReportCount:   putTag.Actions[0].MinReportCount,
 				MinMatchesPeriod: putTag.Actions[0].MinMatchesPeriod,
 				MinReportPeriod:  putTag.Actions[0].MinReportPeriod,
-				Targets: []target{
+				Targets: []Target{
 					{
 						Id:   "new-target-uuid",
 						Type: putTag.Actions[0].Targets[0].Type,
@@ -309,7 +311,7 @@ func TestTags_PutTag(t *testing.T) {
 				Type:    putTag.Actions[0].Type,
 			},
 		},
-		Labels: GetLabels{
+		Labels: Labels{
 			{
 				Id:       putTag.Labels[0].Id,
 				Name:     putTag.Labels[0].Name,
@@ -322,18 +324,19 @@ func TestTags_PutTag(t *testing.T) {
 	}
 
 	url := fmt.Sprintf("/management/tags/%s", tagId)
-	requestMatcher := NewRequestMatcher(http.MethodPut, url, &postTag{putTag}, http.StatusOK, &getTag{expectedTag})
+	requestMatcher := NewRequestMatcher(http.MethodPut, url, putTag, http.StatusOK, expectedTag)
 
-	tags := getTagsClient(requestMatcher)
+	client := getTestClient(requestMatcher)
 
-	returnedTag, err := tags.PutTag(tagId, putTag)
+	returnedTag, err := client.PutTag(putTag)
 	assert.Nil(t, err)
 	assert.EqualValues(t, expectedTag, returnedTag)
 }
 
 func TestTags_PutTagErrorsIfTagIdIsEmpty(t *testing.T) {
-	tags := Tags{nil}
-	_, err := tags.PutTag("", PostTag{})
+	requestMatcher := NewRequestMatcher(http.MethodGet, "/management/tags/", nil, http.StatusOK, Tag{})
+	client := getTestClient(requestMatcher)
+	_, err := client.PutTag(Tag{})
 	assert.NotNil(t, err)
 	assert.Error(t, err, "tagId input parameter is mandatory")
 }
@@ -343,20 +346,16 @@ func TestTags_DeleteTag(t *testing.T) {
 
 	url := fmt.Sprintf("/management/tags/%s", tagId)
 	requestMatcher := NewRequestMatcher(http.MethodDelete, url, nil, http.StatusNoContent, nil)
-	log := getTagsClient(requestMatcher)
+	client := getTestClient(requestMatcher)
 
-	err := log.DeleteTag(tagId)
+	err := client.DeleteTag(tagId)
 	assert.Nil(t, err)
 }
 
 func TestTags_DeleteTagErrorsIfTagIdIsEmpty(t *testing.T) {
-	tags := Tags{nil}
-	err := tags.DeleteTag("")
+	requestMatcher := NewRequestMatcher(http.MethodGet, "/management/tags/", nil, http.StatusOK, Tag{})
+	client := getTestClient(requestMatcher)
+	err := client.DeleteTag("")
 	assert.NotNil(t, err)
 	assert.Error(t, err, "tagId input parameter is mandatory")
-}
-
-func getTagsClient(requestMatcher TestRequestMatcher) Tags {
-	c := getTestClient(requestMatcher)
-	return newTags(c)
 }
