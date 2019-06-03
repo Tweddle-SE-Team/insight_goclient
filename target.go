@@ -18,9 +18,9 @@ type Target struct {
 	Id              string                 `json:"id,omitempty"`
 	Type            string                 `json:"type"`
 	Name            string                 `json:"name"`
-	Description     string                 `json:"description"`
+	Description     string                 `json:"description,omitempty"`
 	ParameterSet    *TargetParameterSet    `json:"params_set"`
-	UserData        map[string]string      `json:"user_data"`
+	UserData        map[string]string      `json:"user_data,omitempty"`
 	AlertContentSet *TargetAlertContentSet `json:"alert_content_set"`
 }
 
@@ -33,8 +33,8 @@ type TargetParameterSet struct {
 }
 
 type TargetAlertContentSet struct {
-	LogLink string `json:"le_log_link"`
-	Context string `json:"le_context"`
+	LogLink StringBool `json:"le_log_link"`
+	Context StringBool `json:"le_context"`
 }
 
 type Targets struct {

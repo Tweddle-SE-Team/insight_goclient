@@ -29,7 +29,7 @@ type Logset struct {
 // LogsetInfo represent information about the logset
 type Info struct {
 	Id    string  `json:"id,omitempty"`
-	Name  string  `json:"name"`
+	Name  string  `json:"name,omitempty"`
 	Links []*Link `json:"links,omitempty"`
 }
 
