@@ -9,20 +9,12 @@ type StringBool bool
 
 func (c StringBool) MarshalJSON() ([]byte, error) {
 	var buf bytes.Buffer
-	if c == false {
-		buf.WriteString(`""`)
-	} else {
-		buf.WriteString(strconv.Quote(strconv.FormatBool(bool(c))))
-	}
+	buf.WriteString(strconv.Quote(strconv.FormatBool(bool(c))))
 	return buf.Bytes(), nil
 }
 
 func (c *StringBool) UnmarshalJSON(in []byte) error {
 	value := string(in)
-	if value == `""` {
-		*c = false
-		return nil
-	}
 	unquoted, err := strconv.Unquote(value)
 	if err != nil {
 		return err

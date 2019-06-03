@@ -16,20 +16,20 @@ const (
 // Target represents the entity used to get an existing target from the insight API
 type Target struct {
 	Id              string                 `json:"id,omitempty"`
-	Type            string                 `json:"type"`
-	Name            string                 `json:"name"`
-	Description     string                 `json:"description,omitempty"`
-	ParameterSet    *TargetParameterSet    `json:"params_set"`
+	Type            string                 `json:"type,omitempty"`
+	Name            string                 `json:"name,omitempty"`
+	ParameterSet    *TargetParameterSet    `json:"params_set,omitempty"`
 	UserData        map[string]string      `json:"user_data,omitempty"`
-	AlertContentSet *TargetAlertContentSet `json:"alert_content_set"`
+	AlertContentSet *TargetAlertContentSet `json:"alert_content_set,omitempty"`
 }
 
 type TargetParameterSet struct {
-	Url        string `json:"url,omitempty"`
-	ServiceKey string `json:"service_key,omitempty"`
-	Direct     string `json:"direct,omitempty"`
-	Teams      string `json:"teams,omitempty"`
-	Users      string `json:"users,omitempty"`
+	Url         string `json:"url,omitempty"`
+	ServiceKey  string `json:"service_key,omitempty"`
+	Direct      string `json:"direct,omitempty"`
+	Teams       string `json:"teams,omitempty"`
+	Users       string `json:"users,omitempty"`
+	Description string `json:"description"`
 }
 
 type TargetAlertContentSet struct {
@@ -84,6 +84,9 @@ func (client *InsightClient) GetTargetsByName(name string) ([]*Target, error) {
 
 // PostTag creates a new Target
 func (client *InsightClient) PostTarget(target *Target) error {
+	if target.UserData == nil {
+		target.UserData = make(map[string]string)
+	}
 	targetRequest := TargetRequest{target}
 	resp, err := client.post(TARGETS_PATH, targetRequest)
 	if err != nil {
@@ -98,6 +101,9 @@ func (client *InsightClient) PostTarget(target *Target) error {
 
 // PutTag updates an existing Target
 func (client *InsightClient) PutTarget(target *Target) error {
+	if target.UserData == nil {
+		target.UserData = make(map[string]string)
+	}
 	targetRequest := TargetRequest{target}
 	endpoint, err := client.getTargetEndpoint(target.Id)
 	if err != nil {
