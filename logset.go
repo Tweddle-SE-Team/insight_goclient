@@ -22,32 +22,32 @@ type Logset struct {
 	Id          string            `json:"id,omitempty"`
 	Name        string            `json:"name"`
 	Description string            `json:"description,omitempty"`
-	LogsInfo    []Info            `json:"logs_info,omitempty"`
+	LogsInfo    []*Info           `json:"logs_info,omitempty"`
 	UserData    map[string]string `json:"user_data,omitempty"`
 }
 
 // LogsetInfo represent information about the logset
 type Info struct {
-	Id    string `json:"id"`
-	Name  string `json:"name"`
-	Links []Link `json:"links"`
+	Id    string  `json:"id,omitempty"`
+	Name  string  `json:"name"`
+	Links []*Link `json:"links,omitempty"`
 }
 
 type Link struct {
-	Rel  string `json:"rel"`
-	Href string `json:"href"`
+	Rel  string `json:"rel,omitempty"`
+	Href string `json:"href,omitempty"`
 }
 
 type Logsets struct {
-	Logsets []Logset `json:"logsets"`
+	Logsets []*Logset `json:"logsets"`
 }
 
 type LogsetRequest struct {
-	Logset Logset `json:"logset"`
+	Logset *Logset `json:"logset"`
 }
 
 // GetLogset gets details of a list of all Log Sets
-func (client *InsightClient) GetLogsets() ([]Logset, error) {
+func (client *InsightClient) GetLogsets() ([]*Logset, error) {
 	var logsets Logsets
 	if err := client.get(LOGSETS_PATH, &logsets); err != nil {
 		return nil, err
@@ -65,12 +65,12 @@ func (client *InsightClient) GetLogset(logsetId string) (*Logset, error) {
 	if err := client.get(endpoint, &logsetRequest); err != nil {
 		return nil, err
 	}
-	return &logsetRequest.Logset, nil
+	return logsetRequest.Logset, nil
 }
 
 // PostLogset creates a new LogSet
 func (client *InsightClient) PostLogset(logset *Logset) error {
-	logsetRequest := LogsetRequest{*logset}
+	logsetRequest := LogsetRequest{logset}
 	resp, err := client.post(LOGSETS_PATH, logsetRequest)
 	if err != nil {
 		return err
@@ -79,13 +79,12 @@ func (client *InsightClient) PostLogset(logset *Logset) error {
 	if err != nil {
 		return err
 	}
-	logset = &logsetRequest.Logset
 	return nil
 }
 
 // PutTag updates an existing Logset
 func (client *InsightClient) PutLogset(logset *Logset) error {
-	logsetRequest := LogsetRequest{*logset}
+	logsetRequest := LogsetRequest{logset}
 	endpoint, err := client.getLogsetEndpoint(logset.Id)
 	if err != nil {
 		return err
@@ -98,7 +97,6 @@ func (client *InsightClient) PutLogset(logset *Logset) error {
 	if err != nil {
 		return err
 	}
-	logset = &logsetRequest.Logset
 	return nil
 }
 

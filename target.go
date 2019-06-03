@@ -15,13 +15,13 @@ const (
 
 // Target represents the entity used to get an existing target from the insight API
 type Target struct {
-	Id              string                `json:"id,omitempty"`
-	Type            string                `json:"type"`
-	Name            string                `json:"name"`
-	Description     string                `json:"description"`
-	ParameterSet    TargetParameterSet    `json:"params_set"`
-	UserData        map[string]string     `json:"user_data"`
-	AlertContentSet TargetAlertContentSet `json:"alert_content_set"`
+	Id              string                 `json:"id,omitempty"`
+	Type            string                 `json:"type"`
+	Name            string                 `json:"name"`
+	Description     string                 `json:"description"`
+	ParameterSet    *TargetParameterSet    `json:"params_set"`
+	UserData        map[string]string      `json:"user_data"`
+	AlertContentSet *TargetAlertContentSet `json:"alert_content_set"`
 }
 
 type TargetParameterSet struct {
@@ -38,15 +38,15 @@ type TargetAlertContentSet struct {
 }
 
 type Targets struct {
-	Targets []Target `json:"targets"`
+	Targets []*Target `json:"targets"`
 }
 
 type TargetRequest struct {
-	Target Target `json:"target"`
+	Target *Target `json:"target"`
 }
 
 // GetTargets gets details of a list of all Targets
-func (client *InsightClient) GetTargets() ([]Target, error) {
+func (client *InsightClient) GetTargets() ([]*Target, error) {
 	var targets Targets
 	if err := client.get(TARGETS_PATH, &targets); err != nil {
 		return nil, err
@@ -64,12 +64,12 @@ func (client *InsightClient) GetTarget(targetId string) (*Target, error) {
 	if err := client.get(endpoint, &targetRequest); err != nil {
 		return nil, err
 	}
-	return &targetRequest.Target, nil
+	return targetRequest.Target, nil
 }
 
 // GetTarget gets a specific Target from an account by name
-func (client *InsightClient) GetTargetsByName(name string) ([]Target, error) {
-	var result []Target
+func (client *InsightClient) GetTargetsByName(name string) ([]*Target, error) {
+	var result []*Target
 	targets, err := client.GetTargets()
 	if err != nil {
 		return nil, err
@@ -84,7 +84,7 @@ func (client *InsightClient) GetTargetsByName(name string) ([]Target, error) {
 
 // PostTag creates a new Target
 func (client *InsightClient) PostTarget(target *Target) error {
-	targetRequest := TargetRequest{*target}
+	targetRequest := TargetRequest{target}
 	resp, err := client.post(TARGETS_PATH, targetRequest)
 	if err != nil {
 		return err
@@ -93,13 +93,12 @@ func (client *InsightClient) PostTarget(target *Target) error {
 	if err != nil {
 		return err
 	}
-	target = &targetRequest.Target
 	return nil
 }
 
 // PutTag updates an existing Target
 func (client *InsightClient) PutTarget(target *Target) error {
-	targetRequest := TargetRequest{*target}
+	targetRequest := TargetRequest{target}
 	endpoint, err := client.getTargetEndpoint(target.Id)
 	if err != nil {
 		return err
@@ -112,7 +111,6 @@ func (client *InsightClient) PutTarget(target *Target) error {
 	if err != nil {
 		return err
 	}
-	target = &targetRequest.Target
 	return nil
 }
 

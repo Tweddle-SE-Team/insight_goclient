@@ -9,16 +9,16 @@ import (
 
 func TestLogsets_GetLogsets(t *testing.T) {
 
-	expectedLogsets := []Logset{
+	expectedLogsets := []*Logset{
 		{
 			Id:          "log-set-uuid",
 			Name:        "MyLogset",
 			Description: "some description",
-			LogsInfo: []Info{
+			LogsInfo: []*Info{
 				{
 					Id:   "logs-info-uuid",
 					Name: "MyLog",
-					Links: []Link{
+					Links: []*Link{
 						{
 							Href: "https://eu.rest.logs.insight.rapid7.com/management/logs/logs-info-uuid",
 							Rel:  "Self",
@@ -38,15 +38,15 @@ func TestLogsets_GetLogsets(t *testing.T) {
 
 func TestLogsets_GetLogset(t *testing.T) {
 
-	expectedLogset := Logset{
+	expectedLogset := &Logset{
 		Id:          "log-set-uuid",
 		Name:        "MyLogset",
 		Description: "some description",
-		LogsInfo: []Info{
+		LogsInfo: []*Info{
 			{
 				Id:   "logs-info-uuid",
 				Name: "Lambda Log",
-				Links: []Link{
+				Links: []*Link{
 					{
 						Href: "https://eu.rest.logs.insight.rapid7.com/management/logs/logs-info-uuid",
 						Rel:  "Self",
@@ -77,7 +77,7 @@ func TestLogsets_PostLogset(t *testing.T) {
 	p := Logset{
 		Name:        "MyLogset2",
 		Description: "some description",
-		LogsInfo: []Info{
+		LogsInfo: []*Info{
 			{
 				Id: "logs-info-uuid",
 			},
@@ -89,11 +89,11 @@ func TestLogsets_PostLogset(t *testing.T) {
 		Id:          "log-set-uuid",
 		Name:        p.Name,
 		Description: p.Description,
-		LogsInfo: []Info{
+		LogsInfo: []*Info{
 			{
 				Id:   p.LogsInfo[0].Id,
 				Name: "mylog",
-				Links: []Link{
+				Links: []*Link{
 					{
 						Href: "https://eu.rest.logs.insight.rapid7.com/management/logs/logs-info-uuid",
 						Rel:  "Self",
@@ -119,11 +119,11 @@ func TestLogsets_PutLogset(t *testing.T) {
 		Id:          logsetId,
 		Name:        "New Name",
 		Description: "updated description",
-		LogsInfo: []Info{
+		LogsInfo: []*Info{
 			{
 				Id:   "logs-info-uuid",
 				Name: "Lambda Log",
-				Links: []Link{
+				Links: []*Link{
 					{
 						Href: "https://eu.rest.logs.insight.rapid7.com/management/logs/logs-info-uuid",
 						Rel:  "Self",
@@ -138,11 +138,11 @@ func TestLogsets_PutLogset(t *testing.T) {
 		Id:          logsetId,
 		Name:        p.Name,
 		Description: p.Description,
-		LogsInfo: []Info{
+		LogsInfo: []*Info{
 			{
 				Id:   p.LogsInfo[0].Id,
 				Name: p.LogsInfo[0].Name,
-				Links: []Link{
+				Links: []*Link{
 					{
 						Href: p.LogsInfo[0].Links[0].Href,
 						Rel:  p.LogsInfo[0].Links[0].Rel,

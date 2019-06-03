@@ -15,26 +15,26 @@ const (
 
 // Action represents the entity used to get an existing action from the insight API
 type Action struct {
-	Id               string   `json:"id,omitempty"`
-	MinMatchesCount  int      `json:"min_matches_count"`
-	MinReportCount   int      `json:"min_report_count"`
-	MinMatchesPeriod string   `json:"min_matches_period"`
-	MinReportPeriod  string   `json:"min_report_period"`
-	Targets          []Target `json:"targets"`
-	Enabled          bool     `json:"enabled"`
-	Type             string   `json:"type"`
+	Id               string    `json:"id,omitempty"`
+	MinMatchesCount  int       `json:"min_matches_count"`
+	MinReportCount   int       `json:"min_report_count"`
+	MinMatchesPeriod string    `json:"min_matches_period"`
+	MinReportPeriod  string    `json:"min_report_period"`
+	Targets          []*Target `json:"targets"`
+	Enabled          bool      `json:"enabled"`
+	Type             string    `json:"type"`
 }
 
 type ActionRequest struct {
-	Action Action `json:"action"`
+	Action *Action `json:"action"`
 }
 
 type Actions struct {
-	Actions []Action `json:"actions"`
+	Actions []*Action `json:"actions"`
 }
 
 // GetActions gets details of a list of all Actions
-func (client *InsightClient) GetActions() ([]Action, error) {
+func (client *InsightClient) GetActions() ([]*Action, error) {
 	var actions Actions
 	if err := client.get(ACTIONS_PATH, &actions); err != nil {
 		return nil, err
@@ -52,12 +52,12 @@ func (client *InsightClient) GetAction(actionId string) (*Action, error) {
 	if err := client.get(endpoint, &actionRequest); err != nil {
 		return nil, err
 	}
-	return &actionRequest.Action, nil
+	return actionRequest.Action, nil
 }
 
 // PostTag creates a new Action
 func (client *InsightClient) PostAction(action *Action) error {
-	actionRequest := ActionRequest{*action}
+	actionRequest := ActionRequest{action}
 	resp, err := client.post(ACTIONS_PATH, actionRequest)
 	if err != nil {
 		return err
@@ -66,13 +66,12 @@ func (client *InsightClient) PostAction(action *Action) error {
 	if err != nil {
 		return err
 	}
-	action = &actionRequest.Action
 	return nil
 }
 
 // PutTag updates an existing Action
 func (client *InsightClient) PutAction(action *Action) error {
-	actionRequest := ActionRequest{*action}
+	actionRequest := ActionRequest{action}
 	endpoint, err := client.getActionEndpoint(action.Id)
 	if err != nil {
 		return err
@@ -85,7 +84,6 @@ func (client *InsightClient) PutAction(action *Action) error {
 	if err != nil {
 		return err
 	}
-	action = &actionRequest.Action
 	return nil
 }
 

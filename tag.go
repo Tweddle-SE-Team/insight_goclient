@@ -17,13 +17,13 @@ const (
 
 // Tag represents the entity used to get an existing tag from the insight API
 type Tag struct {
-	Id       string   `json:"id,omitempty"`
-	Type     string   `json:"type"`
-	Name     string   `json:"name"`
-	Sources  []Source `json:"sources"`
-	Actions  []Action `json:"actions"`
-	Patterns []string `json:"patterns"`
-	Labels   []Label  `json:"labels"`
+	Id       string    `json:"id,omitempty"`
+	Type     string    `json:"type"`
+	Name     string    `json:"name"`
+	Sources  []*Source `json:"sources"`
+	Actions  []*Action `json:"actions"`
+	Patterns []string  `json:"patterns"`
+	Labels   []*Label  `json:"labels,omitempty"`
 }
 
 // source represents the source log associated with the Tag
@@ -35,15 +35,15 @@ type Source struct {
 }
 
 type Tags struct {
-	Tags []Tag `json:"tags"`
+	Tags []*Tag `json:"tags"`
 }
 
 type TagRequest struct {
-	Tag Tag `json:"tag"`
+	Tag *Tag `json:"tag"`
 }
 
 // GetTags gets details of an existing Tag and Alert
-func (client *InsightClient) GetTags() ([]Tag, error) {
+func (client *InsightClient) GetTags() ([]*Tag, error) {
 	var tags Tags
 	if err := client.get(TAGS_PATH, &tags); err != nil {
 		return nil, err
@@ -61,12 +61,12 @@ func (client *InsightClient) GetTag(tagId string) (*Tag, error) {
 	if err := client.get(endpoint, &tagRequest); err != nil {
 		return nil, err
 	}
-	return &tagRequest.Tag, nil
+	return tagRequest.Tag, nil
 }
 
 // PostTag creates a new Tag and Alert
 func (client *InsightClient) PostTag(tag *Tag) error {
-	tagRequest := TagRequest{*tag}
+	tagRequest := TagRequest{tag}
 	resp, err := client.post(TAGS_PATH, tagRequest)
 	if err != nil {
 		return err
@@ -75,13 +75,12 @@ func (client *InsightClient) PostTag(tag *Tag) error {
 	if err != nil {
 		return err
 	}
-	tag = &tagRequest.Tag
 	return nil
 }
 
 // PutTag updates an existing Tag and Alert
 func (client *InsightClient) PutTag(tag *Tag) error {
-	tagRequest := TagRequest{*tag}
+	tagRequest := TagRequest{tag}
 	endpoint, err := client.getTagEndpoint(tag.Id)
 	if err != nil {
 		return err
@@ -94,7 +93,6 @@ func (client *InsightClient) PutTag(tag *Tag) error {
 	if err != nil {
 		return err
 	}
-	tag = &tagRequest.Tag
 	return nil
 }
 

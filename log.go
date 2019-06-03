@@ -18,34 +18,34 @@ const (
 
 // Log represents the entity used to get an existing log from the insight API
 type Log struct {
-	Id              string      `json:"id,omitempty"`
-	Name            string      `json:"name"`
-	LogsetsInfo     []Info      `json:"logsets_info"`
-	UserData        LogUserData `json:"user_data"`
-	Tokens          []string    `json:"tokens"`
-	SourceType      string      `json:"source_type"`
-	TokenSeed       string      `json:"token_seed"`
-	Structures      []string    `json:"structures"`
-	RetentionPeriod string      `json:"retention_period"`
-	Links           []Link      `json:"links,omitempty"`
+	Id              string       `json:"id,omitempty"`
+	Name            string       `json:"name"`
+	LogsetsInfo     []*Info      `json:"logsets_info,omitempty"`
+	UserData        *LogUserData `json:"user_data,omitempty"`
+	Tokens          []string     `json:"tokens,omitempty"`
+	SourceType      string       `json:"source_type,omitempty"`
+	TokenSeed       string       `json:"token_seed,omitempty"`
+	Structures      []string     `json:"structures,omitempty"`
+	RetentionPeriod string       `json:"retention_period,omitempty"`
+	Links           []*Link      `json:"links,omitempty"`
 }
 
 // LogUserData represents user metadata
 type LogUserData struct {
-	AgentFileName string `json:"le_agent_filename"`
-	AgentFollow   string `json:"le_agent_follow"`
+	AgentFileName string `json:"le_agent_filename,omitempty"`
+	AgentFollow   string `json:"le_agent_follow,omitempty"`
 }
 
 type Logs struct {
-	Logs []Log `json:"logs"`
+	Logs []*Log `json:"logs"`
 }
 
 type LogRequest struct {
-	Log Log `json:"log"`
+	Log *Log `json:"log"`
 }
 
 // GetLogs lists all Logs for an account
-func (client *InsightClient) GetLogs() ([]Log, error) {
+func (client *InsightClient) GetLogs() ([]*Log, error) {
 	var logs Logs
 	if err := client.get(LOGS_PATH, &logs); err != nil {
 		return nil, err
@@ -63,12 +63,12 @@ func (client *InsightClient) GetLog(logId string) (*Log, error) {
 	if err := client.get(endpoint, &logRequest); err != nil {
 		return nil, err
 	}
-	return &logRequest.Log, nil
+	return logRequest.Log, nil
 }
 
 // PostTag creates a new Log
 func (client *InsightClient) PostLog(log *Log) error {
-	logRequest := LogRequest{*log}
+	logRequest := LogRequest{log}
 	resp, err := client.post(LOGS_PATH, logRequest)
 	if err != nil {
 		return err
@@ -77,13 +77,12 @@ func (client *InsightClient) PostLog(log *Log) error {
 	if err != nil {
 		return err
 	}
-	log = &logRequest.Log
 	return nil
 }
 
 // PutTag updates an existing Log
 func (client *InsightClient) PutLog(log *Log) error {
-	logRequest := LogRequest{*log}
+	logRequest := LogRequest{log}
 	endpoint, err := client.getLogEndpoint(log.Id)
 	if err != nil {
 		return err
@@ -96,7 +95,6 @@ func (client *InsightClient) PutLog(log *Log) error {
 	if err != nil {
 		return err
 	}
-	log = &logRequest.Log
 	return nil
 }
 

@@ -23,15 +23,15 @@ type Label struct {
 }
 
 type Labels struct {
-	Labels []Label `json:"labels"`
+	Labels []*Label `json:"labels"`
 }
 
 type LabelRequest struct {
-	Label Label `json:"label"`
+	Label *Label `json:"label"`
 }
 
 // GetLabels gets details of a list of all Labels
-func (client *InsightClient) GetLabels() ([]Label, error) {
+func (client *InsightClient) GetLabels() ([]*Label, error) {
 	var labels Labels
 	if err := client.get(LABELS_PATH, &labels); err != nil {
 		return nil, err
@@ -49,12 +49,12 @@ func (client *InsightClient) GetLabel(labelId string) (*Label, error) {
 	if err := client.get(endpoint, &labelRequest); err != nil {
 		return nil, err
 	}
-	return &labelRequest.Label, nil
+	return labelRequest.Label, nil
 }
 
 // GetLabel gets a specific Label from an account by name
-func (client *InsightClient) GetLabelsByName(name, color string) ([]Label, error) {
-	var result []Label
+func (client *InsightClient) GetLabelsByName(name, color string) ([]*Label, error) {
+	var result []*Label
 	labels, err := client.GetLabels()
 	if err != nil {
 		return nil, err
@@ -72,7 +72,7 @@ func (client *InsightClient) GetLabelsByName(name, color string) ([]Label, error
 
 // PostTag creates a new Label
 func (client *InsightClient) PostLabel(label *Label) error {
-	labelRequest := LabelRequest{*label}
+	labelRequest := LabelRequest{label}
 	resp, err := client.post(LABELS_PATH, labelRequest)
 	if err != nil {
 		return err
@@ -81,13 +81,12 @@ func (client *InsightClient) PostLabel(label *Label) error {
 	if err != nil {
 		return err
 	}
-	label = &labelRequest.Label
 	return nil
 }
 
 // PutTag updates an existing Label
 func (client *InsightClient) PutLabel(label *Label) error {
-	labelRequest := LabelRequest{*label}
+	labelRequest := LabelRequest{label}
 	endpoint, err := client.getLabelEndpoint(label.Id)
 	if err != nil {
 		return err
@@ -100,7 +99,6 @@ func (client *InsightClient) PutLabel(label *Label) error {
 	if err != nil {
 		return err
 	}
-	label = &labelRequest.Label
 	return nil
 }
 

@@ -9,15 +9,15 @@ import (
 
 func TestLogs_GetLogs(t *testing.T) {
 
-	expectedLogs := []Log{
+	expectedLogs := []*Log{
 		{
 			Id:   "log-uuid",
 			Name: "MyLogset",
-			LogsetsInfo: []Info{
+			LogsetsInfo: []*Info{
 				{
 					Id:   "log-set-uuid",
 					Name: "MyLogset",
-					Links: []Link{
+					Links: []*Link{
 						{
 							Href: "https://eu.rest.logs.insight.rapid7.com/management/logsets/log-set-uuid",
 							Rel:  "self",
@@ -29,7 +29,7 @@ func TestLogs_GetLogs(t *testing.T) {
 			SourceType: "AGENT",
 			TokenSeed:  "",
 			Structures: []string{},
-			UserData: LogUserData{
+			UserData: &LogUserData{
 				AgentFileName: "",
 				AgentFollow:   "",
 			},
@@ -45,14 +45,14 @@ func TestLogs_GetLogs(t *testing.T) {
 
 func TestLogs_GetLog(t *testing.T) {
 
-	expectedLog := Log{
+	expectedLog := &Log{
 		Id:   "log-uuid",
 		Name: "MyLogset",
-		LogsetsInfo: []Info{
+		LogsetsInfo: []*Info{
 			{
 				Id:   "log-set-uuid",
 				Name: "MyLogset",
-				Links: []Link{
+				Links: []*Link{
 					{
 						Href: "https://eu.rest.logs.insight.rapid7.com/management/logsets/log-set-uuid",
 						Rel:  "self",
@@ -64,7 +64,7 @@ func TestLogs_GetLog(t *testing.T) {
 		SourceType: "AGENT",
 		TokenSeed:  "",
 		Structures: []string{},
-		UserData: LogUserData{
+		UserData: &LogUserData{
 			AgentFileName: "",
 			AgentFollow:   "",
 		},
@@ -75,7 +75,7 @@ func TestLogs_GetLog(t *testing.T) {
 	client := getTestClient(requestMatcher)
 	returnedLog, err := client.GetLog(expectedLog.Id)
 	assert.Nil(t, err)
-	assert.EqualValues(t, &expectedLog, returnedLog)
+	assert.EqualValues(t, expectedLog, returnedLog)
 }
 
 func TestLogs_GetLogErrorsIfLogsetIdIsEmpty(t *testing.T) {
@@ -88,28 +88,28 @@ func TestLogs_GetLogErrorsIfLogsetIdIsEmpty(t *testing.T) {
 
 func TestLogs_PostLog(t *testing.T) {
 
-	p := Log{
+	p := &Log{
 		Name:       "My New Awesome Log",
 		Structures: []string{},
 		SourceType: "token",
-		LogsetsInfo: []Info{
+		LogsetsInfo: []*Info{
 			{Id: "log-set-uuid"},
 		},
-		UserData: LogUserData{
+		UserData: &LogUserData{
 			AgentFileName: "",
 			AgentFollow:   "false",
 		},
 	}
 
-	expectedLog := Log{
+	expectedLog := &Log{
 		Id:         "log-set-uuid",
 		Name:       p.Name,
 		Tokens:     []string{"daf42867-a82f-487e-95b7-8d10dba6c4f5"},
 		Structures: []string{},
-		LogsetsInfo: []Info{
+		LogsetsInfo: []*Info{
 			{Id: p.LogsetsInfo[0].Id},
 		},
-		UserData: LogUserData{
+		UserData: &LogUserData{
 			AgentFileName: p.UserData.AgentFileName,
 			AgentFollow:   p.UserData.AgentFollow,
 		},
@@ -117,7 +117,7 @@ func TestLogs_PostLog(t *testing.T) {
 
 	requestMatcher := NewRequestMatcher(http.MethodPost, "/management/logs", p, http.StatusCreated, LogRequest{expectedLog})
 	client := getTestClient(requestMatcher)
-	err := client.PostLog(&p)
+	err := client.PostLog(p)
 	assert.Nil(t, err)
 	assert.EqualValues(t, expectedLog, p)
 
@@ -132,11 +132,11 @@ func TestLogs_PutLog(t *testing.T) {
 		Name:       "My New Awesome Log",
 		Structures: []string{},
 		SourceType: "token",
-		LogsetsInfo: []Info{
+		LogsetsInfo: []*Info{
 			{
 				Id:   "log-set-uuid",
 				Name: "ibtest",
-				Links: []Link{
+				Links: []*Link{
 					{
 						Href: "https://eu.rest.logs.insight.rapid7.com/management/logsets/log-set-uuid",
 						Rel:  "Self",
@@ -144,22 +144,22 @@ func TestLogs_PutLog(t *testing.T) {
 				},
 			},
 		},
-		UserData: LogUserData{
+		UserData: &LogUserData{
 			AgentFileName: "",
 			AgentFollow:   "false",
 		},
 	}
 
-	expectedLog := Log{
+	expectedLog := &Log{
 		Id:         logId,
 		Name:       p.Name,
 		Tokens:     []string{"daf42867-a82f-487e-95b7-8d10dba6c4f5"},
 		Structures: []string{},
-		LogsetsInfo: []Info{
+		LogsetsInfo: []*Info{
 			{
 				Id:   p.LogsetsInfo[0].Id,
 				Name: p.LogsetsInfo[0].Name,
-				Links: []Link{
+				Links: []*Link{
 					{
 						Href: p.LogsetsInfo[0].Links[0].Href,
 						Rel:  p.LogsetsInfo[0].Links[0].Rel,
@@ -167,7 +167,7 @@ func TestLogs_PutLog(t *testing.T) {
 				},
 			},
 		},
-		UserData: LogUserData{
+		UserData: &LogUserData{
 			AgentFileName: p.UserData.AgentFileName,
 			AgentFollow:   p.UserData.AgentFollow,
 		},
@@ -178,7 +178,7 @@ func TestLogs_PutLog(t *testing.T) {
 	client := getTestClient(requestMatcher)
 	err := client.PutLog(p)
 	assert.Nil(t, err)
-	assert.EqualValues(t, &expectedLog, p)
+	assert.EqualValues(t, expectedLog, p)
 }
 
 func TestLogs_PutLogErrorsIfLogsetIdIsEmpty(t *testing.T) {

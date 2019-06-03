@@ -9,12 +9,12 @@ import (
 
 func TestTags_GetTags(t *testing.T) {
 
-	expectedTags := []Tag{
+	expectedTags := []*Tag{
 		{
 			Id:   "tag-uuid",
 			Name: "Login Failure",
 			Type: "Alert",
-			Sources: []Source{
+			Sources: []*Source{
 				{
 					Id:              "source-uuid",
 					Name:            "auth.log",
@@ -22,30 +22,30 @@ func TestTags_GetTags(t *testing.T) {
 					StoredDays:      []int{},
 				},
 			},
-			Actions: []Action{
+			Actions: []*Action{
 				{
 					Id:               "action-uuid",
 					MinMatchesCount:  1,
 					MinReportCount:   1,
 					MinMatchesPeriod: "Day",
 					MinReportPeriod:  "Day",
-					Targets: []Target{
+					Targets: []*Target{
 						{
 							Id:   "",
 							Type: "",
-							ParameterSet: TargetParameterSet{
+							ParameterSet: &TargetParameterSet{
 								Direct: "user@example.com",
 								Teams:  "some-team",
 								Users:  "user@example.com",
 							},
-							AlertContentSet: TargetAlertContentSet{},
+							AlertContentSet: &TargetAlertContentSet{},
 						},
 					},
 					Enabled: true,
 					Type:    "Alert",
 				},
 			},
-			Labels: []Label{
+			Labels: []*Label{
 				{
 					Id:       "label-uuid",
 					Name:     "Login Failure",
@@ -67,11 +67,11 @@ func TestTags_GetTags(t *testing.T) {
 
 func TestTags_GetTag(t *testing.T) {
 
-	expectedTag := Tag{
+	expectedTag := &Tag{
 		Id:   "tag-uuid",
 		Name: "Login Failure",
 		Type: "Alert",
-		Sources: []Source{
+		Sources: []*Source{
 			{
 				Id:              "source-uuid",
 				Name:            "auth.log",
@@ -79,30 +79,30 @@ func TestTags_GetTag(t *testing.T) {
 				StoredDays:      []int{},
 			},
 		},
-		Actions: []Action{
+		Actions: []*Action{
 			{
 				Id:               "action-uuid",
 				MinMatchesCount:  1,
 				MinReportCount:   1,
 				MinMatchesPeriod: "Day",
 				MinReportPeriod:  "Day",
-				Targets: []Target{
+				Targets: []*Target{
 					{
 						Id:   "",
 						Type: "",
-						ParameterSet: TargetParameterSet{
+						ParameterSet: &TargetParameterSet{
 							Direct: "user@example.com",
 							Teams:  "some-team",
 							Users:  "user@example.com",
 						},
-						AlertContentSet: TargetAlertContentSet{},
+						AlertContentSet: &TargetAlertContentSet{},
 					},
 				},
 				Enabled: true,
 				Type:    "Alert",
 			},
 		},
-		Labels: []Label{
+		Labels: []*Label{
 			{
 				Id:       "label-uuid",
 				Name:     "Login Failure",
@@ -119,11 +119,11 @@ func TestTags_GetTag(t *testing.T) {
 	client := getTestClient(requestMatcher)
 	returnedTag, err := client.GetTag(expectedTag.Id)
 	assert.Nil(t, err)
-	assert.EqualValues(t, &expectedTag, returnedTag)
+	assert.EqualValues(t, expectedTag, returnedTag)
 }
 
 func TestTags_GetTagErrorsIfTagIdIsEmpty(t *testing.T) {
-	requestMatcher := NewRequestMatcher(http.MethodGet, "/management/tags/", nil, http.StatusOK, TagRequest{Tag{}})
+	requestMatcher := NewRequestMatcher(http.MethodGet, "/management/tags/", nil, http.StatusOK, TagRequest{&Tag{}})
 	client := getTestClient(requestMatcher)
 	_, err := client.GetTag("")
 	assert.NotNil(t, err)
@@ -132,27 +132,27 @@ func TestTags_GetTagErrorsIfTagIdIsEmpty(t *testing.T) {
 
 func TestTags_PostTag(t *testing.T) {
 
-	p := Tag{
+	p := &Tag{
 		Name: "Foo Bar Tag",
 		Type: "Alert",
-		Sources: []Source{
+		Sources: []*Source{
 			{
 				Id: "source-uuid",
 			},
 		},
-		Actions: []Action{
+		Actions: []*Action{
 			{
 				MinMatchesCount:  1,
 				MinReportCount:   1,
 				MinMatchesPeriod: "Day",
 				MinReportPeriod:  "Day",
-				Targets: []Target{
+				Targets: []*Target{
 					{
 						Type: "mailto",
-						ParameterSet: TargetParameterSet{
+						ParameterSet: &TargetParameterSet{
 							Direct: "test@test.com",
 						},
-						AlertContentSet: TargetAlertContentSet{
+						AlertContentSet: &TargetAlertContentSet{
 							Context: "true",
 						},
 					},
@@ -161,7 +161,7 @@ func TestTags_PostTag(t *testing.T) {
 				Type:    "Alert",
 			},
 		},
-		Labels: []Label{
+		Labels: []*Label{
 			{
 				Id:       "label-uuid",
 				Name:     "Login Failure",
@@ -173,11 +173,11 @@ func TestTags_PostTag(t *testing.T) {
 		Patterns: []string{"/Foo Bar/"},
 	}
 
-	expectedTag := Tag{
+	expectedTag := &Tag{
 		Id:   "new-tag-uuid",
 		Name: p.Name,
 		Type: p.Type,
-		Sources: []Source{
+		Sources: []*Source{
 			{
 				Id:              p.Sources[0].Id,
 				Name:            "auth.log",
@@ -185,18 +185,18 @@ func TestTags_PostTag(t *testing.T) {
 				StoredDays:      []int{},
 			},
 		},
-		Actions: []Action{
+		Actions: []*Action{
 			{
 				Id:               "new-action-uuid",
 				MinMatchesCount:  p.Actions[0].MinMatchesCount,
 				MinReportCount:   p.Actions[0].MinReportCount,
 				MinMatchesPeriod: p.Actions[0].MinMatchesPeriod,
 				MinReportPeriod:  p.Actions[0].MinReportPeriod,
-				Targets: []Target{
+				Targets: []*Target{
 					{
 						Id:   "new-target-uuid",
 						Type: p.Actions[0].Targets[0].Type,
-						ParameterSet: TargetParameterSet{
+						ParameterSet: &TargetParameterSet{
 							Direct: p.Actions[0].Targets[0].ParameterSet.Direct,
 							Teams:  p.Actions[0].Targets[0].ParameterSet.Teams,
 							Users:  p.Actions[0].Targets[0].ParameterSet.Users,
@@ -208,7 +208,7 @@ func TestTags_PostTag(t *testing.T) {
 				Type:    p.Actions[0].Type,
 			},
 		},
-		Labels: []Label{
+		Labels: []*Label{
 			{
 				Id:       p.Labels[0].Id,
 				Name:     p.Labels[0].Name,
@@ -222,7 +222,7 @@ func TestTags_PostTag(t *testing.T) {
 
 	requestMatcher := NewRequestMatcher(http.MethodPost, "/management/tags", p, http.StatusCreated, TagRequest{expectedTag})
 	client := getTestClient(requestMatcher)
-	err := client.PostTag(&p)
+	err := client.PostTag(p)
 	assert.Nil(t, err)
 	assert.EqualValues(t, expectedTag, p)
 }
@@ -231,28 +231,28 @@ func TestTags_PutTag(t *testing.T) {
 
 	tagId := "tagId"
 
-	putTag := Tag{
+	putTag := &Tag{
 		Id:   tagId,
 		Name: "Foo Bar Tag",
 		Type: "Alert",
-		Sources: []Source{
+		Sources: []*Source{
 			{
 				Id: "source-uuid",
 			},
 		},
-		Actions: []Action{
+		Actions: []*Action{
 			{
 				MinMatchesCount:  0,
 				MinReportCount:   1,
 				MinMatchesPeriod: "Hour",
 				MinReportPeriod:  "Hour",
-				Targets: []Target{
+				Targets: []*Target{
 					{
 						Type: "mailto",
-						ParameterSet: TargetParameterSet{
+						ParameterSet: &TargetParameterSet{
 							Direct: "test@test.com",
 						},
-						AlertContentSet: TargetAlertContentSet{
+						AlertContentSet: &TargetAlertContentSet{
 							Context: "true",
 						},
 					},
@@ -261,7 +261,7 @@ func TestTags_PutTag(t *testing.T) {
 				Type:    "Alert",
 			},
 		},
-		Labels: []Label{
+		Labels: []*Label{
 			{
 				Id:       "label-uuid",
 				Name:     "Test Label",
@@ -273,11 +273,11 @@ func TestTags_PutTag(t *testing.T) {
 		Patterns: []string{"/Foo Bar/"},
 	}
 
-	expectedTag := Tag{
+	expectedTag := &Tag{
 		Id:   "new-tag-uuid",
 		Name: putTag.Name,
 		Type: putTag.Type,
-		Sources: []Source{
+		Sources: []*Source{
 			{
 				Id:              putTag.Sources[0].Id,
 				Name:            "auth.log",
@@ -285,18 +285,18 @@ func TestTags_PutTag(t *testing.T) {
 				StoredDays:      []int{},
 			},
 		},
-		Actions: []Action{
+		Actions: []*Action{
 			{
 				Id:               "new-action-uuid",
 				MinMatchesCount:  putTag.Actions[0].MinMatchesCount,
 				MinReportCount:   putTag.Actions[0].MinReportCount,
 				MinMatchesPeriod: putTag.Actions[0].MinMatchesPeriod,
 				MinReportPeriod:  putTag.Actions[0].MinReportPeriod,
-				Targets: []Target{
+				Targets: []*Target{
 					{
 						Id:   "new-target-uuid",
 						Type: putTag.Actions[0].Targets[0].Type,
-						ParameterSet: TargetParameterSet{
+						ParameterSet: &TargetParameterSet{
 							Direct: putTag.Actions[0].Targets[0].ParameterSet.Direct,
 							Teams:  putTag.Actions[0].Targets[0].ParameterSet.Teams,
 							Users:  putTag.Actions[0].Targets[0].ParameterSet.Users,
@@ -308,7 +308,7 @@ func TestTags_PutTag(t *testing.T) {
 				Type:    putTag.Actions[0].Type,
 			},
 		},
-		Labels: []Label{
+		Labels: []*Label{
 			{
 				Id:       putTag.Labels[0].Id,
 				Name:     putTag.Labels[0].Name,
@@ -323,13 +323,13 @@ func TestTags_PutTag(t *testing.T) {
 	url := fmt.Sprintf("/management/tags/%s", tagId)
 	requestMatcher := NewRequestMatcher(http.MethodPut, url, putTag, http.StatusOK, TagRequest{expectedTag})
 	client := getTestClient(requestMatcher)
-	err := client.PutTag(&putTag)
+	err := client.PutTag(putTag)
 	assert.Nil(t, err)
 	assert.EqualValues(t, expectedTag, putTag)
 }
 
 func TestTags_PutTagErrorsIfTagIdIsEmpty(t *testing.T) {
-	requestMatcher := NewRequestMatcher(http.MethodGet, "/management/tags/", nil, http.StatusOK, TagRequest{Tag{}})
+	requestMatcher := NewRequestMatcher(http.MethodGet, "/management/tags/", nil, http.StatusOK, TagRequest{&Tag{}})
 	client := getTestClient(requestMatcher)
 	err := client.PutTag(&Tag{})
 	assert.NotNil(t, err)

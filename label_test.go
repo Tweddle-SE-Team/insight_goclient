@@ -9,7 +9,7 @@ import (
 
 func TestLabels_GetLabels(t *testing.T) {
 
-	expectedLabels := []Label{
+	expectedLabels := []*Label{
 		{
 			Id:       "label-uuid",
 			Name:     "Login Failure",
@@ -28,7 +28,7 @@ func TestLabels_GetLabels(t *testing.T) {
 
 func TestTags_GetLabel(t *testing.T) {
 
-	expectedLabel := Label{
+	expectedLabel := &Label{
 		Id:       "label-uuid",
 		Name:     "Login Failure",
 		Reserved: false,
@@ -41,7 +41,7 @@ func TestTags_GetLabel(t *testing.T) {
 	client := getTestClient(requestMatcher)
 	returnedLabel, err := client.GetLabel(expectedLabel.Id)
 	assert.Nil(t, err)
-	assert.EqualValues(t, &expectedLabel, returnedLabel)
+	assert.EqualValues(t, expectedLabel, returnedLabel)
 }
 
 func TestTags_GetLabelErrorsIfTagIdIsEmpty(t *testing.T) {
@@ -63,12 +63,12 @@ func TestLabels_DeleteLabel(t *testing.T) {
 
 func TestLabels_PostLabel(t *testing.T) {
 
-	p := Label{
+	p := &Label{
 		Name:  "My Label",
 		Color: "ff0000",
 	}
 
-	expectedLabel := Label{
+	expectedLabel := &Label{
 		Id:       "label-uuid",
 		Name:     p.Name,
 		Color:    p.Color,
@@ -78,7 +78,7 @@ func TestLabels_PostLabel(t *testing.T) {
 
 	requestMatcher := NewRequestMatcher(http.MethodPost, "/management/labels", p, http.StatusCreated, LabelRequest{expectedLabel})
 	client := getTestClient(requestMatcher)
-	err := client.PostLabel(&p)
+	err := client.PostLabel(p)
 	assert.Nil(t, err)
 	assert.EqualValues(t, expectedLabel, p)
 }
