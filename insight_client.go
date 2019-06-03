@@ -43,6 +43,7 @@ func (client *InsightClient) sendRequest(request *http.Request, expectedResponse
 		}
 		requestBodyBuffer := new(bytes.Buffer)
 		requestBodyBuffer.ReadFrom(requestBody)
+		request.Header.Set("Content-Type", "application/json")
 	}
 	request.Header.Set("x-api-key", client.ApiKey)
 	response, err := client.HttpClient.Do(request)
