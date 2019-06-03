@@ -30,8 +30,8 @@ func TestLogs_GetLogs(t *testing.T) {
 			TokenSeed:  "",
 			Structures: []string{},
 			UserData: LogUserData{
-				LogEntriesAgentFileName: "",
-				LogEntriesAgentFollow:   "",
+				AgentFileName: "",
+				AgentFollow:   "",
 			},
 		},
 	}
@@ -65,8 +65,8 @@ func TestLogs_GetLog(t *testing.T) {
 		TokenSeed:  "",
 		Structures: []string{},
 		UserData: LogUserData{
-			LogEntriesAgentFileName: "",
-			LogEntriesAgentFollow:   "",
+			AgentFileName: "",
+			AgentFollow:   "",
 		},
 	}
 
@@ -96,8 +96,8 @@ func TestLogs_PostLog(t *testing.T) {
 			{Id: "log-set-uuid"},
 		},
 		UserData: LogUserData{
-			LogEntriesAgentFileName: "",
-			LogEntriesAgentFollow:   "false",
+			AgentFileName: "",
+			AgentFollow:   "false",
 		},
 	}
 
@@ -110,8 +110,8 @@ func TestLogs_PostLog(t *testing.T) {
 			{Id: p.LogsetsInfo[0].Id},
 		},
 		UserData: LogUserData{
-			LogEntriesAgentFileName: p.UserData.LogEntriesAgentFileName,
-			LogEntriesAgentFollow:   p.UserData.LogEntriesAgentFollow,
+			AgentFileName: p.UserData.AgentFileName,
+			AgentFollow:   p.UserData.AgentFollow,
 		},
 	}
 
@@ -145,8 +145,8 @@ func TestLogs_PutLog(t *testing.T) {
 			},
 		},
 		UserData: LogUserData{
-			LogEntriesAgentFileName: "",
-			LogEntriesAgentFollow:   "false",
+			AgentFileName: "",
+			AgentFollow:   "false",
 		},
 	}
 
@@ -168,8 +168,8 @@ func TestLogs_PutLog(t *testing.T) {
 			},
 		},
 		UserData: LogUserData{
-			LogEntriesAgentFileName: p.UserData.LogEntriesAgentFileName,
-			LogEntriesAgentFollow:   p.UserData.LogEntriesAgentFollow,
+			AgentFileName: p.UserData.AgentFileName,
+			AgentFollow:   p.UserData.AgentFollow,
 		},
 	}
 

@@ -222,9 +222,9 @@ func TestTags_PostTag(t *testing.T) {
 
 	requestMatcher := NewRequestMatcher(http.MethodPost, "/management/tags", p, http.StatusCreated, expectedTag)
 	client := getTestClient(requestMatcher)
-	returnedTag, err := client.PostTag(p)
+	err := client.PostTag(&p)
 	assert.Nil(t, err)
-	assert.EqualValues(t, &expectedTag, returnedTag)
+	assert.EqualValues(t, expectedTag, p)
 }
 
 func TestTags_PutTag(t *testing.T) {

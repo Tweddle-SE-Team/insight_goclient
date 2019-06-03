@@ -59,17 +59,16 @@ func (client *InsightClient) GetTag(tagId string) (*Tag, error) {
 }
 
 // PostTag creates a new Tag and Alert
-func (client *InsightClient) PostTag(body Tag) (*Tag, error) {
-	resp, err := client.post(TAGS_PATH, body)
+func (client *InsightClient) PostTag(tag *Tag) error {
+	resp, err := client.post(TAGS_PATH, tag)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	var tag Tag
 	err = json.Unmarshal(resp, &tag)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return &tag, nil
+	return nil
 }
 
 // PutTag updates an existing Tag and Alert
