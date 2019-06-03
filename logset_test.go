@@ -29,11 +29,11 @@ func TestLogsets_GetLogsets(t *testing.T) {
 		},
 	}
 
-	requestMatcher := NewRequestMatcher(http.MethodGet, "/management/logsets", nil, http.StatusOK, expectedLogsets)
+	requestMatcher := NewRequestMatcher(http.MethodGet, "/management/logsets", nil, http.StatusOK, Logsets{expectedLogsets})
 	client := getTestClient(requestMatcher)
 	returnedLogsets, err := client.GetLogsets()
 	assert.Nil(t, err)
-	assert.EqualValues(t, &expectedLogsets, returnedLogsets)
+	assert.EqualValues(t, expectedLogsets, returnedLogsets)
 }
 
 func TestLogsets_GetLogset(t *testing.T) {
@@ -57,7 +57,7 @@ func TestLogsets_GetLogset(t *testing.T) {
 	}
 
 	url := fmt.Sprintf("/management/logsets/%s", expectedLogset.Id)
-	requestMatcher := NewRequestMatcher(http.MethodGet, url, nil, http.StatusOK, expectedLogset)
+	requestMatcher := NewRequestMatcher(http.MethodGet, url, nil, http.StatusOK, LogsetRequest{expectedLogset})
 	client := getTestClient(requestMatcher)
 	returnedLogset, err := client.GetLogset(expectedLogset.Id)
 	assert.Nil(t, err)

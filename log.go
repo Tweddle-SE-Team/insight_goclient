@@ -36,57 +36,67 @@ type LogUserData struct {
 	AgentFollow   string `json:"le_agent_follow"`
 }
 
-type Logs []Log
+type Logs struct {
+	Logs []Log `json:"logs"`
+}
+
+type LogRequest struct {
+	Log Log `json:"log"`
+}
 
 // GetLogs lists all Logs for an account
-func (client *InsightClient) GetLogs() (*Logs, error) {
+func (client *InsightClient) GetLogs() ([]Log, error) {
 	var logs Logs
 	if err := client.get(LOGS_PATH, &logs); err != nil {
 		return nil, err
 	}
-	return &logs, nil
+	return logs.Logs, nil
 }
 
 // GetLog gets a specific Log from an account
 func (client *InsightClient) GetLog(logId string) (*Log, error) {
-	var log Log
+	var logRequest LogRequest
 	endpoint, err := client.getLogEndpoint(logId)
 	if err != nil {
 		return nil, err
 	}
-	if err := client.get(endpoint, &log); err != nil {
+	if err := client.get(endpoint, &logRequest); err != nil {
 		return nil, err
 	}
-	return &log, nil
+	return &logRequest.Log, nil
 }
 
 // PostTag creates a new Log
 func (client *InsightClient) PostLog(log *Log) error {
-	resp, err := client.post(LOGS_PATH, log)
+	logRequest := LogRequest{*log}
+	resp, err := client.post(LOGS_PATH, logRequest)
 	if err != nil {
 		return err
 	}
-	err = json.Unmarshal(resp, &log)
+	err = json.Unmarshal(resp, &logRequest)
 	if err != nil {
 		return err
 	}
+	log = &logRequest.Log
 	return nil
 }
 
 // PutTag updates an existing Log
 func (client *InsightClient) PutLog(log *Log) error {
+	logRequest := LogRequest{*log}
 	endpoint, err := client.getLogEndpoint(log.Id)
 	if err != nil {
 		return err
 	}
-	resp, err := client.put(endpoint, log)
+	resp, err := client.put(endpoint, logRequest)
 	if err != nil {
 		return err
 	}
-	err = json.Unmarshal(resp, &log)
+	err = json.Unmarshal(resp, &logRequest)
 	if err != nil {
 		return err
 	}
+	log = &logRequest.Log
 	return nil
 }
 

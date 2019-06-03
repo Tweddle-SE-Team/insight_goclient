@@ -25,57 +25,67 @@ type Action struct {
 	Type             string   `json:"type"`
 }
 
-type Actions []Action
+type ActionRequest struct {
+	Action Action `json:"action"`
+}
+
+type Actions struct {
+	Actions []Action `json:"actions"`
+}
 
 // GetActions gets details of a list of all Actions
-func (client *InsightClient) GetActions() (*Actions, error) {
+func (client *InsightClient) GetActions() ([]Action, error) {
 	var actions Actions
 	if err := client.get(ACTIONS_PATH, &actions); err != nil {
 		return nil, err
 	}
-	return &actions, nil
+	return actions.Actions, nil
 }
 
 // GetAction gets a specific Action from an account
 func (client *InsightClient) GetAction(actionId string) (*Action, error) {
-	var action Action
+	var actionRequest ActionRequest
 	endpoint, err := client.getActionEndpoint(actionId)
 	if err != nil {
 		return nil, err
 	}
-	if err := client.get(endpoint, &action); err != nil {
+	if err := client.get(endpoint, &actionRequest); err != nil {
 		return nil, err
 	}
-	return &action, nil
+	return &actionRequest.Action, nil
 }
 
 // PostTag creates a new Action
 func (client *InsightClient) PostAction(action *Action) error {
-	resp, err := client.post(ACTIONS_PATH, action)
+	actionRequest := ActionRequest{*action}
+	resp, err := client.post(ACTIONS_PATH, actionRequest)
 	if err != nil {
 		return err
 	}
-	err = json.Unmarshal(resp, &action)
+	err = json.Unmarshal(resp, &actionRequest)
 	if err != nil {
 		return err
 	}
+	action = &actionRequest.Action
 	return nil
 }
 
 // PutTag updates an existing Action
 func (client *InsightClient) PutAction(action *Action) error {
+	actionRequest := ActionRequest{*action}
 	endpoint, err := client.getActionEndpoint(action.Id)
 	if err != nil {
 		return err
 	}
-	resp, err := client.put(endpoint, action)
+	resp, err := client.put(endpoint, actionRequest)
 	if err != nil {
 		return err
 	}
-	err = json.Unmarshal(resp, &action)
+	err = json.Unmarshal(resp, &actionRequest)
 	if err != nil {
 		return err
 	}
+	action = &actionRequest.Action
 	return nil
 }
 

@@ -45,7 +45,7 @@ func TestTags_GetTags(t *testing.T) {
 					Type:    "Alert",
 				},
 			},
-			Labels: Labels{
+			Labels: []Label{
 				{
 					Id:       "label-uuid",
 					Name:     "Login Failure",
@@ -58,7 +58,7 @@ func TestTags_GetTags(t *testing.T) {
 		},
 	}
 
-	requestMatcher := NewRequestMatcher(http.MethodGet, "/management/tags", nil, http.StatusOK, expectedTags)
+	requestMatcher := NewRequestMatcher(http.MethodGet, "/management/tags", nil, http.StatusOK, Tags{expectedTags})
 	client := getTestClient(requestMatcher)
 	returnedTags, err := client.GetTags()
 	assert.Nil(t, err)
@@ -102,7 +102,7 @@ func TestTags_GetTag(t *testing.T) {
 				Type:    "Alert",
 			},
 		},
-		Labels: Labels{
+		Labels: []Label{
 			{
 				Id:       "label-uuid",
 				Name:     "Login Failure",
@@ -115,7 +115,7 @@ func TestTags_GetTag(t *testing.T) {
 	}
 
 	url := fmt.Sprintf("/management/tags/%s", expectedTag.Id)
-	requestMatcher := NewRequestMatcher(http.MethodGet, url, nil, http.StatusOK, expectedTag)
+	requestMatcher := NewRequestMatcher(http.MethodGet, url, nil, http.StatusOK, TagRequest{expectedTag})
 	client := getTestClient(requestMatcher)
 	returnedTag, err := client.GetTag(expectedTag.Id)
 	assert.Nil(t, err)
@@ -123,7 +123,7 @@ func TestTags_GetTag(t *testing.T) {
 }
 
 func TestTags_GetTagErrorsIfTagIdIsEmpty(t *testing.T) {
-	requestMatcher := NewRequestMatcher(http.MethodGet, "/management/tags/", nil, http.StatusOK, Tag{})
+	requestMatcher := NewRequestMatcher(http.MethodGet, "/management/tags/", nil, http.StatusOK, TagRequest{Tag{}})
 	client := getTestClient(requestMatcher)
 	_, err := client.GetTag("")
 	assert.NotNil(t, err)
@@ -161,7 +161,7 @@ func TestTags_PostTag(t *testing.T) {
 				Type:    "Alert",
 			},
 		},
-		Labels: Labels{
+		Labels: []Label{
 			{
 				Id:       "label-uuid",
 				Name:     "Login Failure",
@@ -208,7 +208,7 @@ func TestTags_PostTag(t *testing.T) {
 				Type:    p.Actions[0].Type,
 			},
 		},
-		Labels: Labels{
+		Labels: []Label{
 			{
 				Id:       p.Labels[0].Id,
 				Name:     p.Labels[0].Name,
@@ -220,7 +220,7 @@ func TestTags_PostTag(t *testing.T) {
 		Patterns: p.Patterns,
 	}
 
-	requestMatcher := NewRequestMatcher(http.MethodPost, "/management/tags", p, http.StatusCreated, expectedTag)
+	requestMatcher := NewRequestMatcher(http.MethodPost, "/management/tags", p, http.StatusCreated, TagRequest{expectedTag})
 	client := getTestClient(requestMatcher)
 	err := client.PostTag(&p)
 	assert.Nil(t, err)
@@ -261,7 +261,7 @@ func TestTags_PutTag(t *testing.T) {
 				Type:    "Alert",
 			},
 		},
-		Labels: Labels{
+		Labels: []Label{
 			{
 				Id:       "label-uuid",
 				Name:     "Test Label",
@@ -308,7 +308,7 @@ func TestTags_PutTag(t *testing.T) {
 				Type:    putTag.Actions[0].Type,
 			},
 		},
-		Labels: Labels{
+		Labels: []Label{
 			{
 				Id:       putTag.Labels[0].Id,
 				Name:     putTag.Labels[0].Name,
@@ -321,7 +321,7 @@ func TestTags_PutTag(t *testing.T) {
 	}
 
 	url := fmt.Sprintf("/management/tags/%s", tagId)
-	requestMatcher := NewRequestMatcher(http.MethodPut, url, putTag, http.StatusOK, expectedTag)
+	requestMatcher := NewRequestMatcher(http.MethodPut, url, putTag, http.StatusOK, TagRequest{expectedTag})
 	client := getTestClient(requestMatcher)
 	err := client.PutTag(&putTag)
 	assert.Nil(t, err)
@@ -329,7 +329,7 @@ func TestTags_PutTag(t *testing.T) {
 }
 
 func TestTags_PutTagErrorsIfTagIdIsEmpty(t *testing.T) {
-	requestMatcher := NewRequestMatcher(http.MethodGet, "/management/tags/", nil, http.StatusOK, Tag{})
+	requestMatcher := NewRequestMatcher(http.MethodGet, "/management/tags/", nil, http.StatusOK, TagRequest{Tag{}})
 	client := getTestClient(requestMatcher)
 	err := client.PutTag(&Tag{})
 	assert.NotNil(t, err)

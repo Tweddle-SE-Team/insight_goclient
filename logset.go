@@ -23,7 +23,7 @@ type Logset struct {
 	Name        string            `json:"name"`
 	Description string            `json:"description,omitempty"`
 	LogsInfo    []Info            `json:"logs_info,omitempty"`
-	UserData    map[string]string `json:"user_data"`
+	UserData    map[string]string `json:"user_data,omitempty"`
 }
 
 // LogsetInfo represent information about the logset
@@ -38,57 +38,67 @@ type Link struct {
 	Href string `json:"href"`
 }
 
-type Logsets []Logset
+type Logsets struct {
+	Logsets []Logset `json:"logsets"`
+}
+
+type LogsetRequest struct {
+	Logset Logset `json:"logset"`
+}
 
 // GetLogset gets details of a list of all Log Sets
-func (client *InsightClient) GetLogsets() (*Logsets, error) {
+func (client *InsightClient) GetLogsets() ([]Logset, error) {
 	var logsets Logsets
 	if err := client.get(LOGSETS_PATH, &logsets); err != nil {
 		return nil, err
 	}
-	return &logsets, nil
+	return logsets.Logsets, nil
 }
 
 // GetLogsets gets details of an existing Log Set
 func (client *InsightClient) GetLogset(logsetId string) (*Logset, error) {
-	var logset Logset
+	var logsetRequest LogsetRequest
 	endpoint, err := client.getLogsetEndpoint(logsetId)
 	if err != nil {
 		return nil, err
 	}
-	if err := client.get(endpoint, &logset); err != nil {
+	if err := client.get(endpoint, &logsetRequest); err != nil {
 		return nil, err
 	}
-	return &logset, nil
+	return &logsetRequest.Logset, nil
 }
 
 // PostLogset creates a new LogSet
 func (client *InsightClient) PostLogset(logset *Logset) error {
-	resp, err := client.post(LOGSETS_PATH, logset)
+	logsetRequest := LogsetRequest{*logset}
+	resp, err := client.post(LOGSETS_PATH, logsetRequest)
 	if err != nil {
 		return err
 	}
-	err = json.Unmarshal(resp, &logset)
+	err = json.Unmarshal(resp, &logsetRequest)
 	if err != nil {
 		return err
 	}
+	logset = &logsetRequest.Logset
 	return nil
 }
 
 // PutTag updates an existing Logset
 func (client *InsightClient) PutLogset(logset *Logset) error {
+	logsetRequest := LogsetRequest{*logset}
 	endpoint, err := client.getLogsetEndpoint(logset.Id)
 	if err != nil {
 		return err
 	}
-	resp, err := client.put(endpoint, logset)
+	resp, err := client.put(endpoint, logsetRequest)
 	if err != nil {
 		return err
 	}
-	err = json.Unmarshal(resp, &logset)
+	err = json.Unmarshal(resp, &logsetRequest)
 	if err != nil {
 		return err
 	}
+	logset = &logsetRequest.Logset
 	return nil
 }
 

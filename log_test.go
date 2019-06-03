@@ -36,11 +36,11 @@ func TestLogs_GetLogs(t *testing.T) {
 		},
 	}
 
-	requestMatcher := NewRequestMatcher(http.MethodGet, "/management/logs", nil, http.StatusOK, expectedLogs)
+	requestMatcher := NewRequestMatcher(http.MethodGet, "/management/logs", nil, http.StatusOK, Logs{expectedLogs})
 	logs := getTestClient(requestMatcher)
 	returnedLogs, err := logs.GetLogs()
 	assert.Nil(t, err)
-	assert.EqualValues(t, &expectedLogs, returnedLogs)
+	assert.EqualValues(t, expectedLogs, returnedLogs)
 }
 
 func TestLogs_GetLog(t *testing.T) {
@@ -71,7 +71,7 @@ func TestLogs_GetLog(t *testing.T) {
 	}
 
 	url := fmt.Sprintf("/management/logs/%s", expectedLog.Id)
-	requestMatcher := NewRequestMatcher(http.MethodGet, url, nil, http.StatusOK, expectedLog)
+	requestMatcher := NewRequestMatcher(http.MethodGet, url, nil, http.StatusOK, LogRequest{expectedLog})
 	client := getTestClient(requestMatcher)
 	returnedLog, err := client.GetLog(expectedLog.Id)
 	assert.Nil(t, err)
@@ -115,7 +115,7 @@ func TestLogs_PostLog(t *testing.T) {
 		},
 	}
 
-	requestMatcher := NewRequestMatcher(http.MethodPost, "/management/logs", p, http.StatusCreated, expectedLog)
+	requestMatcher := NewRequestMatcher(http.MethodPost, "/management/logs", p, http.StatusCreated, LogRequest{expectedLog})
 	client := getTestClient(requestMatcher)
 	err := client.PostLog(&p)
 	assert.Nil(t, err)
@@ -174,7 +174,7 @@ func TestLogs_PutLog(t *testing.T) {
 	}
 
 	url := fmt.Sprintf("/management/logs/%s", logId)
-	requestMatcher := NewRequestMatcher(http.MethodPut, url, p, http.StatusOK, expectedLog)
+	requestMatcher := NewRequestMatcher(http.MethodPut, url, p, http.StatusOK, LogRequest{expectedLog})
 	client := getTestClient(requestMatcher)
 	err := client.PutLog(p)
 	assert.Nil(t, err)

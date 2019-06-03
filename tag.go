@@ -23,7 +23,7 @@ type Tag struct {
 	Sources  []Source `json:"sources"`
 	Actions  []Action `json:"actions"`
 	Patterns []string `json:"patterns"`
-	Labels   Labels   `json:"labels"`
+	Labels   []Label  `json:"labels"`
 }
 
 // source represents the source log associated with the Tag
@@ -34,57 +34,67 @@ type Source struct {
 	StoredDays      []int  `json:"stored_days"`
 }
 
-type Tags []Tag
+type Tags struct {
+	Tags []Tag `json:"tags"`
+}
+
+type TagRequest struct {
+	Tag Tag `json:"tag"`
+}
 
 // GetTags gets details of an existing Tag and Alert
-func (client *InsightClient) GetTags() (*Tags, error) {
+func (client *InsightClient) GetTags() ([]Tag, error) {
 	var tags Tags
 	if err := client.get(TAGS_PATH, &tags); err != nil {
 		return nil, err
 	}
-	return &tags, nil
+	return tags.Tags, nil
 }
 
 // GetTag gets details of a list of all Tags and Alerts
 func (client *InsightClient) GetTag(tagId string) (*Tag, error) {
-	var tag Tag
+	var tagRequest TagRequest
 	endpoint, err := client.getTagEndpoint(tagId)
 	if err != nil {
 		return nil, err
 	}
-	if err := client.get(endpoint, &tag); err != nil {
+	if err := client.get(endpoint, &tagRequest); err != nil {
 		return nil, err
 	}
-	return &tag, nil
+	return &tagRequest.Tag, nil
 }
 
 // PostTag creates a new Tag and Alert
 func (client *InsightClient) PostTag(tag *Tag) error {
-	resp, err := client.post(TAGS_PATH, tag)
+	tagRequest := TagRequest{*tag}
+	resp, err := client.post(TAGS_PATH, tagRequest)
 	if err != nil {
 		return err
 	}
-	err = json.Unmarshal(resp, &tag)
+	err = json.Unmarshal(resp, &tagRequest)
 	if err != nil {
 		return err
 	}
+	tag = &tagRequest.Tag
 	return nil
 }
 
 // PutTag updates an existing Tag and Alert
 func (client *InsightClient) PutTag(tag *Tag) error {
+	tagRequest := TagRequest{*tag}
 	endpoint, err := client.getTagEndpoint(tag.Id)
 	if err != nil {
 		return err
 	}
-	resp, err := client.put(endpoint, tag)
+	resp, err := client.put(endpoint, tagRequest)
 	if err != nil {
 		return err
 	}
-	err = json.Unmarshal(resp, &tag)
+	err = json.Unmarshal(resp, &tagRequest)
 	if err != nil {
 		return err
 	}
+	tag = &tagRequest.Tag
 	return nil
 }
 

@@ -19,11 +19,11 @@ func TestLabels_GetLabels(t *testing.T) {
 		},
 	}
 
-	requestMatcher := NewRequestMatcher(http.MethodGet, "/management/labels", nil, http.StatusOK, expectedLabels)
+	requestMatcher := NewRequestMatcher(http.MethodGet, "/management/labels", nil, http.StatusOK, Labels{expectedLabels})
 	client := getTestClient(requestMatcher)
 	returnedLabels, err := client.GetLabels()
 	assert.Nil(t, err)
-	assert.EqualValues(t, &expectedLabels, returnedLabels)
+	assert.EqualValues(t, expectedLabels, returnedLabels)
 }
 
 func TestTags_GetLabel(t *testing.T) {
@@ -37,7 +37,7 @@ func TestTags_GetLabel(t *testing.T) {
 	}
 
 	url := fmt.Sprintf("/management/labels/%s", expectedLabel.Id)
-	requestMatcher := NewRequestMatcher(http.MethodGet, url, nil, http.StatusOK, expectedLabel)
+	requestMatcher := NewRequestMatcher(http.MethodGet, url, nil, http.StatusOK, LabelRequest{expectedLabel})
 	client := getTestClient(requestMatcher)
 	returnedLabel, err := client.GetLabel(expectedLabel.Id)
 	assert.Nil(t, err)
@@ -76,7 +76,7 @@ func TestLabels_PostLabel(t *testing.T) {
 		SN:       1021,
 	}
 
-	requestMatcher := NewRequestMatcher(http.MethodPost, "/management/labels", p, http.StatusCreated, expectedLabel)
+	requestMatcher := NewRequestMatcher(http.MethodPost, "/management/labels", p, http.StatusCreated, LabelRequest{expectedLabel})
 	client := getTestClient(requestMatcher)
 	err := client.PostLabel(&p)
 	assert.Nil(t, err)
