@@ -25,13 +25,11 @@ func TestLogs_GetLogs(t *testing.T) {
 					},
 				},
 			},
-			Tokens:     []string{},
 			SourceType: "AGENT",
 			TokenSeed:  "",
-			Structures: []string{},
 			UserData: &LogUserData{
 				AgentFileName: "",
-				AgentFollow:   "",
+				AgentFollow:   StringBool(true),
 			},
 		},
 	}
@@ -60,13 +58,11 @@ func TestLogs_GetLog(t *testing.T) {
 				},
 			},
 		},
-		Tokens:     []string{},
 		SourceType: "AGENT",
 		TokenSeed:  "",
-		Structures: []string{},
 		UserData: &LogUserData{
 			AgentFileName: "",
-			AgentFollow:   "",
+			AgentFollow:   StringBool(true),
 		},
 	}
 
@@ -90,22 +86,21 @@ func TestLogs_PostLog(t *testing.T) {
 
 	p := &Log{
 		Name:       "My New Awesome Log",
-		Structures: []string{},
 		SourceType: "token",
 		LogsetsInfo: []*Info{
 			{Id: "log-set-uuid"},
 		},
 		UserData: &LogUserData{
 			AgentFileName: "",
-			AgentFollow:   "false",
+			AgentFollow:   StringBool(false),
 		},
 	}
 
 	expectedLog := &Log{
 		Id:         "log-set-uuid",
+		SourceType: "token",
 		Name:       p.Name,
 		Tokens:     []string{"daf42867-a82f-487e-95b7-8d10dba6c4f5"},
-		Structures: []string{},
 		LogsetsInfo: []*Info{
 			{Id: p.LogsetsInfo[0].Id},
 		},
@@ -115,7 +110,7 @@ func TestLogs_PostLog(t *testing.T) {
 		},
 	}
 
-	requestMatcher := NewRequestMatcher(http.MethodPost, "/management/logs", p, http.StatusCreated, LogRequest{expectedLog})
+	requestMatcher := NewRequestMatcher(http.MethodPost, "/management/logs", LogRequest{p}, http.StatusCreated, LogRequest{expectedLog})
 	client := getTestClient(requestMatcher)
 	err := client.PostLog(p)
 	assert.Nil(t, err)
@@ -130,8 +125,8 @@ func TestLogs_PutLog(t *testing.T) {
 	p := &Log{
 		Id:         logId,
 		Name:       "My New Awesome Log",
-		Structures: []string{},
 		SourceType: "token",
+		Tokens:     []string{"daf42867-a82f-487e-95b7-8d10dba6c4f5"},
 		LogsetsInfo: []*Info{
 			{
 				Id:   "log-set-uuid",
@@ -146,15 +141,15 @@ func TestLogs_PutLog(t *testing.T) {
 		},
 		UserData: &LogUserData{
 			AgentFileName: "",
-			AgentFollow:   "false",
+			AgentFollow:   StringBool(false),
 		},
 	}
 
 	expectedLog := &Log{
 		Id:         logId,
 		Name:       p.Name,
+		SourceType: "token",
 		Tokens:     []string{"daf42867-a82f-487e-95b7-8d10dba6c4f5"},
-		Structures: []string{},
 		LogsetsInfo: []*Info{
 			{
 				Id:   p.LogsetsInfo[0].Id,
@@ -174,7 +169,7 @@ func TestLogs_PutLog(t *testing.T) {
 	}
 
 	url := fmt.Sprintf("/management/logs/%s", logId)
-	requestMatcher := NewRequestMatcher(http.MethodPut, url, p, http.StatusOK, LogRequest{expectedLog})
+	requestMatcher := NewRequestMatcher(http.MethodPut, url, LogRequest{p}, http.StatusOK, LogRequest{expectedLog})
 	client := getTestClient(requestMatcher)
 	err := client.PutLog(p)
 	assert.Nil(t, err)
@@ -182,7 +177,7 @@ func TestLogs_PutLog(t *testing.T) {
 }
 
 func TestLogs_PutLogErrorsIfLogsetIdIsEmpty(t *testing.T) {
-	requestMatcher := NewRequestMatcher(http.MethodGet, "/management/logs/", nil, http.StatusOK, Log{})
+	requestMatcher := NewRequestMatcher(http.MethodGet, "/management/logs/", nil, http.StatusOK, LogRequest{&Log{}})
 	client := getTestClient(requestMatcher)
 	err := client.PutLog(&Log{})
 	assert.NotNil(t, err)
@@ -199,7 +194,7 @@ func TestLogs_DeleteLog(t *testing.T) {
 }
 
 func TestLogs_DeleteLogErrorsIfLogsetIdIsEmpty(t *testing.T) {
-	requestMatcher := NewRequestMatcher(http.MethodGet, "/management/logs/", nil, http.StatusOK, Log{})
+	requestMatcher := NewRequestMatcher(http.MethodGet, "/management/logs/", nil, http.StatusOK, LogRequest{&Log{}})
 	client := getTestClient(requestMatcher)
 	err := client.DeleteLog("")
 	assert.NotNil(t, err)

@@ -61,11 +61,11 @@ func TestLogsets_GetLogset(t *testing.T) {
 	client := getTestClient(requestMatcher)
 	returnedLogset, err := client.GetLogset(expectedLogset.Id)
 	assert.Nil(t, err)
-	assert.EqualValues(t, &expectedLogset, returnedLogset)
+	assert.EqualValues(t, expectedLogset, returnedLogset)
 }
 
 func TestLogsets_GetLogsetErrorsIfLogsetIdIsEmpty(t *testing.T) {
-	requestMatcher := NewRequestMatcher(http.MethodGet, "/management/logsets/", nil, http.StatusOK, Logset{})
+	requestMatcher := NewRequestMatcher(http.MethodGet, "/management/logsets/", nil, http.StatusOK, LogsetRequest{&Logset{}})
 	client := getTestClient(requestMatcher)
 	_, err := client.GetLogset("")
 	assert.NotNil(t, err)
@@ -74,7 +74,7 @@ func TestLogsets_GetLogsetErrorsIfLogsetIdIsEmpty(t *testing.T) {
 
 func TestLogsets_PostLogset(t *testing.T) {
 
-	p := Logset{
+	p := &Logset{
 		Name:        "MyLogset2",
 		Description: "some description",
 		LogsInfo: []*Info{
@@ -85,7 +85,7 @@ func TestLogsets_PostLogset(t *testing.T) {
 		UserData: map[string]string{},
 	}
 
-	expectedLogset := Logset{
+	expectedLogset := &Logset{
 		Id:          "log-set-uuid",
 		Name:        p.Name,
 		Description: p.Description,
@@ -104,9 +104,9 @@ func TestLogsets_PostLogset(t *testing.T) {
 		UserData: map[string]string{},
 	}
 
-	requestMatcher := NewRequestMatcher(http.MethodPost, "/management/logsets", p, http.StatusCreated, expectedLogset)
+	requestMatcher := NewRequestMatcher(http.MethodPost, "/management/logsets", LogsetRequest{p}, http.StatusCreated, LogsetRequest{expectedLogset})
 	client := getTestClient(requestMatcher)
-	err := client.PostLogset(&p)
+	err := client.PostLogset(p)
 	assert.Nil(t, err)
 	assert.EqualValues(t, expectedLogset, p)
 }
@@ -115,7 +115,7 @@ func TestLogsets_PutLogset(t *testing.T) {
 
 	logsetId := "log-set-uuid"
 
-	p := Logset{
+	p := &Logset{
 		Id:          logsetId,
 		Name:        "New Name",
 		Description: "updated description",
@@ -134,7 +134,7 @@ func TestLogsets_PutLogset(t *testing.T) {
 		UserData: map[string]string{},
 	}
 
-	expectedLogset := Logset{
+	expectedLogset := &Logset{
 		Id:          logsetId,
 		Name:        p.Name,
 		Description: p.Description,
@@ -154,15 +154,15 @@ func TestLogsets_PutLogset(t *testing.T) {
 	}
 
 	url := fmt.Sprintf("/management/logsets/%s", logsetId)
-	requestMatcher := NewRequestMatcher(http.MethodPut, url, p, http.StatusOK, expectedLogset)
+	requestMatcher := NewRequestMatcher(http.MethodPut, url, LogsetRequest{p}, http.StatusOK, LogsetRequest{expectedLogset})
 	client := getTestClient(requestMatcher)
-	err := client.PutLogset(&p)
+	err := client.PutLogset(p)
 	assert.Nil(t, err)
 	assert.EqualValues(t, expectedLogset, p)
 }
 
 func TestLogsets_PutLogsetSetErrorsIfLogsetIdIsEmpty(t *testing.T) {
-	requestMatcher := NewRequestMatcher(http.MethodGet, "/management/logsets/", nil, http.StatusOK, Logset{})
+	requestMatcher := NewRequestMatcher(http.MethodGet, "/management/logsets/", nil, http.StatusOK, LogsetRequest{&Logset{}})
 	client := getTestClient(requestMatcher)
 	err := client.PutLogset(&Logset{})
 	assert.NotNil(t, err)
@@ -179,7 +179,7 @@ func TestLogsets_DeleteLogset(t *testing.T) {
 }
 
 func TestLogsets_DeleteLogsetSetErrorsIfLogsetIdIsEmpty(t *testing.T) {
-	requestMatcher := NewRequestMatcher(http.MethodGet, "/management/logsets/", nil, http.StatusOK, Logset{})
+	requestMatcher := NewRequestMatcher(http.MethodGet, "/management/logsets/", nil, http.StatusOK, LogsetRequest{&Logset{}})
 	client := getTestClient(requestMatcher)
 	err := client.DeleteLogset("")
 	assert.NotNil(t, err)

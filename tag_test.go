@@ -62,7 +62,7 @@ func TestTags_GetTags(t *testing.T) {
 	client := getTestClient(requestMatcher)
 	returnedTags, err := client.GetTags()
 	assert.Nil(t, err)
-	assert.EqualValues(t, &expectedTags, returnedTags)
+	assert.EqualValues(t, expectedTags, returnedTags)
 }
 
 func TestTags_GetTag(t *testing.T) {
@@ -153,7 +153,7 @@ func TestTags_PostTag(t *testing.T) {
 							Direct: "test@test.com",
 						},
 						AlertContentSet: &TargetAlertContentSet{
-							Context: "true",
+							Context: StringBool(true),
 						},
 					},
 				},
@@ -220,7 +220,7 @@ func TestTags_PostTag(t *testing.T) {
 		Patterns: p.Patterns,
 	}
 
-	requestMatcher := NewRequestMatcher(http.MethodPost, "/management/tags", p, http.StatusCreated, TagRequest{expectedTag})
+	requestMatcher := NewRequestMatcher(http.MethodPost, "/management/tags", TagRequest{p}, http.StatusCreated, TagRequest{expectedTag})
 	client := getTestClient(requestMatcher)
 	err := client.PostTag(p)
 	assert.Nil(t, err)
@@ -253,7 +253,7 @@ func TestTags_PutTag(t *testing.T) {
 							Direct: "test@test.com",
 						},
 						AlertContentSet: &TargetAlertContentSet{
-							Context: "true",
+							Context: StringBool(true),
 						},
 					},
 				},
@@ -321,7 +321,7 @@ func TestTags_PutTag(t *testing.T) {
 	}
 
 	url := fmt.Sprintf("/management/tags/%s", tagId)
-	requestMatcher := NewRequestMatcher(http.MethodPut, url, putTag, http.StatusOK, TagRequest{expectedTag})
+	requestMatcher := NewRequestMatcher(http.MethodPut, url, TagRequest{putTag}, http.StatusOK, TagRequest{expectedTag})
 	client := getTestClient(requestMatcher)
 	err := client.PutTag(putTag)
 	assert.Nil(t, err)
@@ -346,7 +346,7 @@ func TestTags_DeleteTag(t *testing.T) {
 }
 
 func TestTags_DeleteTagErrorsIfTagIdIsEmpty(t *testing.T) {
-	requestMatcher := NewRequestMatcher(http.MethodGet, "/management/tags/", nil, http.StatusOK, Tag{})
+	requestMatcher := NewRequestMatcher(http.MethodGet, "/management/tags/", nil, http.StatusOK, TagRequest{&Tag{}})
 	client := getTestClient(requestMatcher)
 	err := client.DeleteTag("")
 	assert.NotNil(t, err)

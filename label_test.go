@@ -45,7 +45,7 @@ func TestTags_GetLabel(t *testing.T) {
 }
 
 func TestTags_GetLabelErrorsIfTagIdIsEmpty(t *testing.T) {
-	requestMatcher := NewRequestMatcher(http.MethodGet, "/management/labels/", nil, http.StatusOK, Label{})
+	requestMatcher := NewRequestMatcher(http.MethodGet, "/management/labels/", nil, http.StatusOK, LabelRequest{&Label{}})
 	client := getTestClient(requestMatcher)
 	_, err := client.GetLabel("")
 	assert.NotNil(t, err)
@@ -76,7 +76,7 @@ func TestLabels_PostLabel(t *testing.T) {
 		SN:       1021,
 	}
 
-	requestMatcher := NewRequestMatcher(http.MethodPost, "/management/labels", p, http.StatusCreated, LabelRequest{expectedLabel})
+	requestMatcher := NewRequestMatcher(http.MethodPost, "/management/labels", LabelRequest{p}, http.StatusCreated, LabelRequest{expectedLabel})
 	client := getTestClient(requestMatcher)
 	err := client.PostLabel(p)
 	assert.Nil(t, err)
