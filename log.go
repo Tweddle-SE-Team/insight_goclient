@@ -32,8 +32,8 @@ type Log struct {
 
 // LogUserData represents user metadata
 type LogUserData struct {
-	AgentFileName string     `json:"le_agent_filename,omitempty"`
-	AgentFollow   StringBool `json:"le_agent_follow,omitempty"`
+	AgentFileName string     `json:"le_agent_filename"`
+	AgentFollow   StringBool `json:"le_agent_follow"`
 }
 
 type Logs struct {
