@@ -31,7 +31,7 @@ type Source struct {
 	Id              string `json:"id"`
 	Name            string `json:"name,omitempty"`
 	RetentionPeriod string `json:"retention_period,omitempty"`
-	StoredDays      []int  `json:"stored_days"`
+	StoredDays      []int  `json:"stored_days,omitempty"`
 }
 
 type Tags struct {
