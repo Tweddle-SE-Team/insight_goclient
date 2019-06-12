@@ -15,6 +15,10 @@ func (c StringBool) MarshalJSON() ([]byte, error) {
 
 func (c *StringBool) UnmarshalJSON(in []byte) error {
 	value := string(in)
+	if value == `""` {
+		*c = false
+		return nil
+	}
 	unquoted, err := strconv.Unquote(value)
 	if err != nil {
 		return err
