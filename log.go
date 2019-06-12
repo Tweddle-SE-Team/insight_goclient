@@ -21,7 +21,7 @@ type Log struct {
 	Id              string       `json:"id,omitempty"`
 	Name            string       `json:"name"`
 	LogsetsInfo     []*Info      `json:"logsets_info,omitempty"`
-	UserData        *LogUserData `json:"user_data,omitempty"`
+	UserData        *LogUserData `json:"user_data"`
 	Tokens          []string     `json:"tokens,omitempty"`
 	SourceType      string       `json:"source_type,omitempty"`
 	TokenSeed       string       `json:"token_seed,omitempty"`
@@ -64,6 +64,24 @@ func (client *InsightClient) GetLog(logId string) (*Log, error) {
 		return nil, err
 	}
 	return logRequest.Log, nil
+}
+
+func (client *InsightClient) GetInsightToken(logsetName, logName string) (string, error) {
+	logset, err := client.GetLogsetByName(logsetName)
+	if err != nil {
+		return "", err
+	}
+
+	for _, logInfo := range logset.LogsInfo {
+		if logInfo.Name == logName {
+			log, err := client.GetLog(logInfo.Id)
+			if err != nil {
+				return "", err
+			}
+			return log.Tokens[0], nil
+		}
+	}
+	return "", fmt.Errorf("No tokens found for logset %s", logsetName)
 }
 
 // PostTag creates a new Log
