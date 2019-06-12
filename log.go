@@ -66,7 +66,7 @@ func (client *InsightClient) GetLog(logId string) (*Log, error) {
 	return logRequest.Log, nil
 }
 
-func (client *InsightClient) GetInsightToken(logsetName, logName string) (string, error) {
+func (client *InsightClient) GetLogToken(logsetName, logName string) (string, error) {
 	logset, err := client.GetLogsetByName(logsetName)
 	if err != nil {
 		return "", err
@@ -78,7 +78,11 @@ func (client *InsightClient) GetInsightToken(logsetName, logName string) (string
 			if err != nil {
 				return "", err
 			}
-			return log.Tokens[0], nil
+			if len(log.Tokens) > 0 {
+				return log.Tokens[0], nil
+			} else {
+				return "", fmt.Errorf("No tokens for log %s found", logInfo.Name)
+			}
 		}
 	}
 	return "", fmt.Errorf("No tokens found for logset %s", logsetName)
